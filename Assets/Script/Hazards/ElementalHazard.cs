@@ -4,8 +4,17 @@ public class ElementalHazard : MonoBehaviour
 {
     [SerializeField] private ElementalType hazardType;
 
+    public ElementalType HazardType => hazardType;
+
     private void OnTriggerEnter2D(Collider2D other)
     {
+        BlockHazardInteraction blockInteraction = other.GetComponent<BlockHazardInteraction>();
+        if (blockInteraction != null)
+        {
+            blockInteraction.OnTouchedHazard(this);
+            return;
+        }
+
         ElementalIdentity identity = other.GetComponent<ElementalIdentity>();
         if (identity == null)
         {

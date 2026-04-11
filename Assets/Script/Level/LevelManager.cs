@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
 
 public class LevelManager : MonoBehaviour
 {
@@ -7,6 +8,8 @@ public class LevelManager : MonoBehaviour
 
     [Header("Keys")]
     public int CollectedKeys { get; private set; }
+
+    public event Action<int> OnKeyCollected;
 
     private void Awake()
     {
@@ -47,5 +50,6 @@ public class LevelManager : MonoBehaviour
     public void RegisterKeyCollected()
     {
         CollectedKeys++;
+        OnKeyCollected?.Invoke(CollectedKeys);
     }
 }

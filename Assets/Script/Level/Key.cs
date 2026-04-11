@@ -4,6 +4,15 @@ public class Key : MonoBehaviour
 {
     private bool _collected;
 
+    [SerializeField] private Collider2D keyCollider;
+    [SerializeField] private TrailingMovement trailingMovement;
+
+    private void Reset()
+    {
+        keyCollider = GetComponent<Collider2D>();
+        trailingMovement = GetComponent<TrailingMovement>();
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (_collected)
@@ -11,7 +20,8 @@ public class Key : MonoBehaviour
             return;
         }
 
-        if (other.GetComponent<PlayerController>() == null)
+        PlayerController player = other.GetComponent<PlayerController>();
+        if (player == null)
         {
             return;
         }
@@ -22,6 +32,16 @@ public class Key : MonoBehaviour
         }
 
         _collected = true;
-        gameObject.SetActive(false);
+
+        if (keyCollider != null)
+        {
+            keyCollider.enabled = false;
+        }
+
+        if (trailingMovement != null)
+        {
+            trailingMovement.SetTarget(player.transform);
+            trailingMovement.SetTrailingEnabled(true);
+        }
     }
 }
