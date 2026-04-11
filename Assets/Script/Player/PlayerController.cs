@@ -77,6 +77,11 @@ public class PlayerController : MonoBehaviour
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
     }
 
+    public void ApplyBounce(float force)
+    {
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, force);
+    }
+
     public void SetControlEnabled(bool enabled)
     {
         if (_controlEnabled == enabled)

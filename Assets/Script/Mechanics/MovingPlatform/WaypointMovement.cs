@@ -15,9 +15,21 @@ public class WaypointMovement : MonoBehaviour
     private int _dir = 1;
     private bool _waiting;
 
+    private Rigidbody2D _rb;
+
+    private void Awake()
+    {
+        _rb = GetComponent<Rigidbody2D>();
+    }
+
     private void FixedUpdate()
     {
         if (_waiting)
+        {
+            return;
+        }
+
+        if (_rb == null)
         {
             return;
         }
@@ -33,10 +45,10 @@ public class WaypointMovement : MonoBehaviour
         }
 
         Vector3 target = waypoints[_index].position;
-        Vector3 next = Vector3.MoveTowards(transform.position, target, speed * Time.fixedDeltaTime);
-        transform.position = next;
+        Vector3 next = Vector3.MoveTowards(_rb.position, target, speed * Time.fixedDeltaTime);
+        _rb.MovePosition(next);
 
-        if ((transform.position - target).sqrMagnitude <= 0.0001f)
+        if (((Vector3)_rb.position - target).sqrMagnitude <= 0.0001f)
         {
             AdvanceIndex();
             if (waitAtWaypointSeconds > 0f)
