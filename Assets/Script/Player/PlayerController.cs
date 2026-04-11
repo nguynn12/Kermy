@@ -15,9 +15,11 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rb;
     private PlayerInputHandler inputHandler;
-    
+
     private bool isGrounded;
-    private bool wasJumpPressed;
+    private bool _controlEnabled = true;
+    private bool _jumpRequested;
+    private readonly Collider2D[] _groundHits = new Collider2D[1];
 
     private void Awake()
     {
@@ -27,37 +29,85 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        // 1. Kiểm tra chạm đất (có check null để tránh lỗi nếu quên kéo object vào)
-        if (groundCheck != null)
+        // Input should be sampled in Update. Physics should be applied in FixedUpdate.
+        if (!_controlEnabled)
         {
-            isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+            return;
         }
 
-        // 2. Xử lý nhảy (Trục Y của moveInput > 0 tức là đang bấm W hoặc Mũi tên lên)
-        bool isPressingUp = inputHandler.moveInput.y > 0.5f;
-
-        if (isPressingUp && isGrounded && !wasJumpPressed)
+        // Queue a jump request. We resolve whether it can actually jump inside FixedUpdate
+        // after updating ground state.
+        if (inputHandler != null && inputHandler.ConsumeJumpPressed())
         {
-            Jump();
-            wasJumpPressed = true;
-        }
-        else if (!isPressingUp)
-        {
-            wasJumpPressed = false; 
+            _jumpRequested = true;
         }
     }
 
     private void FixedUpdate()
     {
-        // 3. Xử lý di chuyển ngang bằng vật lý
-        float targetVelocityX = inputHandler.moveInput.x * moveSpeed;
-        rb.linearVelocity = new Vector2(targetVelocityX, rb.linearVelocity.y);
+        UpdateGrounded();
+
+        if (!_controlEnabled)
+        {
+            rb.velocity = new Vector2(0f, rb.velocity.y);
+            _jumpRequested = false;
+            return;
+        }
+
+        // Horizontal movement.
+        float moveX = inputHandler != null ? inputHandler.MoveInput.x : 0f;
+        float targetVelocityX = moveX * moveSpeed;
+        rb.velocity = new Vector2(targetVelocityX, rb.velocity.y);
+
+        // Jump.
+        if (_jumpRequested)
+        {
+            _jumpRequested = false;
+            if (isGrounded)
+            {
+                Jump();
+            }
+        }
     }
 
     private void Jump()
     {
-        rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0); 
+        // Reset vertical velocity to keep jump height consistent.
+        rb.velocity = new Vector2(rb.velocity.x, 0f);
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+    }
+
+    public void SetControlEnabled(bool enabled)
+    {
+        if (_controlEnabled == enabled)
+        {
+            return;
+        }
+
+        _controlEnabled = enabled;
+        if (inputHandler != null)
+        {
+            inputHandler.SetInputEnabled(enabled);
+        }
+
+        if (!enabled)
+        {
+            _jumpRequested = false;
+            rb.velocity = Vector2.zero;
+        }
+    }
+
+    private void UpdateGrounded()
+    {
+        // Check ground in FixedUpdate to align with physics.
+        if (groundCheck == null)
+        {
+            isGrounded = false;
+            return;
+        }
+
+        int count = Physics2D.OverlapCircleNonAlloc(groundCheck.position, groundCheckRadius, _groundHits, groundLayer);
+        isGrounded = count > 0;
     }
 
     // Vẽ vòng tròn đỏ để debug điểm chạm đất trong Scene
