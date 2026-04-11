@@ -1,9 +1,12 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PressurePlate : MonoBehaviour
 {
     public event Action<bool> PressedStateChanged;
+
+    [SerializeField] private UnityEvent<bool> pressedStateChanged;
 
     public bool IsPressed { get; private set; }
 
@@ -45,6 +48,7 @@ public class PressurePlate : MonoBehaviour
 
         IsPressed = pressed;
         PressedStateChanged?.Invoke(IsPressed);
+        pressedStateChanged?.Invoke(IsPressed);
     }
 
     private static bool IsValidPresser(Collider2D other)

@@ -73,5 +73,11 @@ public class BlockHazardInteraction : MonoBehaviour
         {
             rb.bodyType = RigidbodyType2D.Static;
         }
+
+        SpriteRenderer sr = hazardObject.GetComponent<SpriteRenderer>();
+        if (sr != null)
+        {
+            sr.color = Color.black; // Tạm thời đổi sang màu đen để nhận biết
+        }
     }
 }

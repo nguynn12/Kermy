@@ -3,13 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PushableBox : MonoBehaviour
 {
-    public enum BoxType
-    {
-        Normal = 0,
-        Heavy = 1,
-        Ice = 2,
-        Lava = 3
-    }
+    public enum BoxType { Normal, Heavy, Ice, Lava }
 
     [Header("Type")]
     [SerializeField] private BoxType boxType = BoxType.Normal;
@@ -23,159 +17,79 @@ public class PushableBox : MonoBehaviour
     private Rigidbody2D _rb;
     private RigidbodyConstraints2D _baseConstraints;
 
-    private int _pushingPlayerCount;
-    private int _pushingQualifiedElementCount;
-
+    private int _sidePushersCount;
+    private int _qualifiedElementPushersCount;
     private Vector2 _sumPushDirections;
 
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
         _baseConstraints = _rb.constraints;
-
-        if (boxType == BoxType.Ice)
-        {
-            requiredElementForElementBox = ElementalType.Water;
-        }
-        else if (boxType == BoxType.Lava)
-        {
-            requiredElementForElementBox = ElementalType.Fire;
-        }
+        if (boxType == BoxType.Ice) requiredElementForElementBox = ElementalType.Water;
+        else if (boxType == BoxType.Lava) requiredElementForElementBox = ElementalType.Fire;
     }
 
     private void FixedUpdate()
     {
         ApplyConstraintsForType();
+        // Reset biến đếm mỗi khung hình vật lý
+        _sidePushersCount = 0;
+        _qualifiedElementPushersCount = 0;
         _sumPushDirections = Vector2.zero;
     }
 
     private void ApplyConstraintsForType()
     {
         RigidbodyConstraints2D constraints = _baseConstraints;
-
         switch (boxType)
         {
             case BoxType.Normal:
-                _rb.constraints = constraints;
                 break;
-
             case BoxType.Heavy:
-                bool allowHeavyMove = ShouldAllowHeavyMovement();
-                if (!allowHeavyMove)
-                {
-                    constraints |= RigidbodyConstraints2D.FreezePositionX;
-                }
-                _rb.constraints = constraints;
+                if (!ShouldAllowHeavyMovement()) constraints |= RigidbodyConstraints2D.FreezePositionX;
                 break;
-
             case BoxType.Ice:
             case BoxType.Lava:
-                bool canPush = _pushingQualifiedElementCount > 0;
-                if (!canPush)
-                {
-                    constraints |= RigidbodyConstraints2D.FreezePositionX;
-                }
-                _rb.constraints = constraints;
+                if (_qualifiedElementPushersCount == 0) constraints |= RigidbodyConstraints2D.FreezePositionX;
                 break;
         }
+        _rb.constraints = constraints;
     }
 
     private bool ShouldAllowHeavyMovement()
     {
-        if (_pushingPlayerCount < 2)
-        {
-            return false;
-        }
-
-        Vector2 combined = _sumPushDirections;
-        if (combined.sqrMagnitude < 0.0001f)
-        {
-            return false;
-        }
-
-        combined.Normalize();
-
+        if (_sidePushersCount < 2) return false;
+        Vector2 combined = _sumPushDirections.normalized;
         return Mathf.Abs(combined.x) >= heavyRequiredDirectionDot;
     }
 
     private void OnCollisionStay2D(Collision2D collision)
     {
         PlayerController player = collision.collider.GetComponent<PlayerController>();
-        if (player == null)
-        {
-            return;
-        }
+        if (player == null) return;
 
         Vector2 avgNormal = Vector2.zero;
         for (int i = 0; i < collision.contactCount; i++)
         {
             avgNormal += collision.GetContact(i).normal;
         }
-        if (collision.contactCount > 0)
+        if (collision.contactCount > 0) avgNormal /= collision.contactCount;
+
+        // Chỉ tính là đang đẩy nếu tiếp xúc từ phương ngang (2 bên hông)
+        if (Mathf.Abs(avgNormal.x) > 0.5f)
         {
-            avgNormal /= collision.contactCount;
-        }
+            _sidePushersCount++;
+            _sumPushDirections += new Vector2(-avgNormal.x, 0f).normalized;
 
-        Vector2 pushDir = new Vector2(-avgNormal.x, 0f);
-        if (pushDir.sqrMagnitude > 0.0001f)
-        {
-            pushDir.Normalize();
-        }
-
-        _sumPushDirections += pushDir;
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        PlayerController player = collision.collider.GetComponent<PlayerController>();
-        if (player == null)
-        {
-            return;
-        }
-
-        _pushingPlayerCount++;
-
-        if (IsElementRestricted())
-        {
-            ElementalIdentity id = player.GetComponent<ElementalIdentity>();
-            if (id != null && id.Type == requiredElementForElementBox)
+            if (boxType == BoxType.Ice || boxType == BoxType.Lava)
             {
-                _pushingQualifiedElementCount++;
-            }
-        }
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        PlayerController player = collision.collider.GetComponent<PlayerController>();
-        if (player == null)
-        {
-            return;
-        }
-
-        _pushingPlayerCount--;
-        if (_pushingPlayerCount < 0)
-        {
-            _pushingPlayerCount = 0;
-        }
-
-        if (IsElementRestricted())
-        {
-            ElementalIdentity id = player.GetComponent<ElementalIdentity>();
-            if (id != null && id.Type == requiredElementForElementBox)
-            {
-                _pushingQualifiedElementCount--;
-                if (_pushingQualifiedElementCount < 0)
+                ElementalIdentity id = player.GetComponent<ElementalIdentity>();
+                if (id != null && id.Type == requiredElementForElementBox)
                 {
-                    _pushingQualifiedElementCount = 0;
+                    _qualifiedElementPushersCount++;
                 }
             }
         }
-    }
-
-    private bool IsElementRestricted()
-    {
-        return boxType == BoxType.Ice || boxType == BoxType.Lava;
     }
 
     public BoxType Type => boxType;
