@@ -72,4 +72,14 @@ public class FallingPlatform : MonoBehaviour
 
         return false;
     }
+
+    private void OnPlatformRespawn()
+    {
+        _armed = false;
+        if (_routine != null)
+        {
+            StopCoroutine(_routine);
+            _routine = null;
+        }
+    }
 }

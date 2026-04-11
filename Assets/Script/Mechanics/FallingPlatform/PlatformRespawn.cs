@@ -33,9 +33,12 @@ public class PlatformRespawn : MonoBehaviour
 
         if (_rb != null)
         {
-            _rb.linearVelocity = Vector2.zero;
+            _rb.velocity = Vector2.zero;
             _rb.angularVelocity = 0f;
             _rb.bodyType = RigidbodyType2D.Kinematic;
         }
+
+        // Báo hiệu cho các component khác trên cùng object biết nó vừa được reset
+        SendMessage("OnPlatformRespawn", SendMessageOptions.DontRequireReceiver);
     }
 }
