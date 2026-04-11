@@ -5,7 +5,6 @@ public class CameraStation : MonoBehaviour
     [Header("Setup")]
     [SerializeField] private CameraController cameraController;
     [SerializeField] private float interactRadius = 1.2f;
-    [SerializeField] private LayerMask playerLayer;
 
     [Header("Commander")]
     [SerializeField] private PlayerController commander;
@@ -41,14 +40,13 @@ public class CameraStation : MonoBehaviour
 
     private bool IsCommanderInRange()
     {
-        Vector2 origin = transform.position;
-        Collider2D hit = Physics2D.OverlapCircle(origin, interactRadius, playerLayer);
-        if (hit == null)
+        if (commander == null)
         {
             return false;
         }
-
-        return hit.GetComponent<PlayerController>() == commander;
+        
+        float distance = Vector2.Distance(transform.position, commander.transform.position);
+        return distance <= interactRadius;
     }
 
     private void ToggleUse()

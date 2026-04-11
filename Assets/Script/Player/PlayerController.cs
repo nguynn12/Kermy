@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour
 
         if (!_controlEnabled)
         {
-            rb.velocity = new Vector2(0f, rb.velocity.y);
+            rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
             _jumpRequested = false;
             return;
         }
@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviour
         // Horizontal movement.
         float moveX = inputHandler != null ? inputHandler.MoveInput.x : 0f;
         float targetVelocityX = moveX * moveSpeed;
-        rb.velocity = new Vector2(targetVelocityX, rb.velocity.y);
+        rb.linearVelocity = new Vector2(targetVelocityX, rb.linearVelocity.y);
 
         // Jump.
         if (_jumpRequested)
@@ -73,7 +73,7 @@ public class PlayerController : MonoBehaviour
     private void Jump()
     {
         // Reset vertical velocity to keep jump height consistent.
-        rb.velocity = new Vector2(rb.velocity.x, 0f);
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
     }
 
@@ -93,7 +93,7 @@ public class PlayerController : MonoBehaviour
         if (!enabled)
         {
             _jumpRequested = false;
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
         }
     }
 

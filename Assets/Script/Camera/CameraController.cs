@@ -80,9 +80,7 @@ public class CameraController : MonoBehaviour
 
         Vector2 input = commanderLookAction.action.ReadValue<Vector2>();
         Vector3 delta = new Vector3(input.x, input.y, 0f) * (freeLookSpeed * Time.deltaTime);
-        Vector3 target = transform.position + delta;
-        target.z = transform.position.z;
-        transform.position = target + new Vector3(freeLookOffset.x, freeLookOffset.y, 0f);
+        transform.position += delta; 
     }
 
     public void EnterStationMode(CameraStation station)

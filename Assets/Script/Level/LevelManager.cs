@@ -25,6 +25,25 @@ public class LevelManager : MonoBehaviour
         SceneManager.LoadScene(current.buildIndex);
     }
 
+    public void LoadNextLevel()
+    {
+        Scene current = SceneManager.GetActiveScene();
+        int nextBuildIndex = current.buildIndex + 1;
+        int sceneCount = SceneManager.sceneCountInBuildSettings;
+
+        if (sceneCount <= 0)
+        {
+            return;
+        }
+
+        if (nextBuildIndex >= sceneCount)
+        {
+            nextBuildIndex = sceneCount - 1;
+        }
+
+        SceneManager.LoadScene(nextBuildIndex);
+    }
+
     public void RegisterKeyCollected()
     {
         CollectedKeys++;
