@@ -15,7 +15,10 @@ public class RopePhysicsSoft : MonoBehaviour
             return;
         }
 
-        joint = gameObject.AddComponent<DistanceJoint2D>();
+        if (joint == null)
+        {
+            joint = gameObject.AddComponent<DistanceJoint2D>();
+        }
 
         joint.enableCollision = true;
         joint.connectedBody = rbB;
