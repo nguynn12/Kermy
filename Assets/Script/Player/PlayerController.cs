@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     public Transform groundCheck; 
     public float groundCheckRadius = 0.2f;
     public LayerMask groundLayer; 
+    public LayerMask jumpSupportLayer;
 
     private Rigidbody2D rb;
     private PlayerInputHandler inputHandler;
@@ -113,7 +114,8 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        int count = Physics2D.OverlapCircleNonAlloc(groundCheck.position, groundCheckRadius, _groundHits, groundLayer);
+        LayerMask mask = jumpSupportLayer.value != 0 ? jumpSupportLayer : groundLayer;
+        int count = Physics2D.OverlapCircleNonAlloc(groundCheck.position, groundCheckRadius, _groundHits, mask);
         isGrounded = count > 0;
     }
 
