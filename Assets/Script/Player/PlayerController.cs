@@ -57,7 +57,9 @@ public class PlayerController : MonoBehaviour
         // Horizontal movement.
         float moveX = inputHandler != null ? inputHandler.MoveInput.x : 0f;
         float targetVelocityX = moveX * moveSpeed;
-        rb.linearVelocity = new Vector2(targetVelocityX, rb.linearVelocity.y);
+        
+        float forceX = (targetVelocityX - rb.linearVelocity.x) * rb.mass / Time.fixedDeltaTime;
+        rb.AddForce(new Vector2(forceX, 0f));
 
         // Jump.
         if (_jumpRequested)

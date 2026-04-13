@@ -1,31 +1,73 @@
 ﻿using UnityEngine;
 
-public class RopePhysicsSoft : MonoBehaviour
+[RequireComponent(typeof(Rigidbody2D))]
+public class RopePhysics : MonoBehaviour
 {
-    [SerializeField] private Rigidbody2D rbA;
+    [Header("Bodies")]
     [SerializeField] private Rigidbody2D rbB;
 
-    private DistanceJoint2D joint;
+    [Header("Rope")]
+    [SerializeField] private bool autoSetLengthOnStart = true;
+    [SerializeField] private float ropeLength = 3.5f;
+    [SerializeField] private float extraSlack = 0.5f;
 
-    void Start()
+    [Header("Joint")]
+    [SerializeField] private bool enableCollisionBetweenPlayers = true;
+
+    private Rigidbody2D _rbA;
+    private DistanceJoint2D _joint;
+
+    private void Awake()
     {
-        if (rbA == null || rbB == null)
+        _rbA = GetComponent<Rigidbody2D>();
+        _joint = GetComponent<DistanceJoint2D>();
+        if (_joint == null)
         {
-            Debug.LogError("Chưa gán Rigidbody!");
+            _joint = gameObject.AddComponent<DistanceJoint2D>();
+        }
+    }
+
+    private void Start()
+    {
+        if (_rbA == null || rbB == null)
+        {
+            Debug.LogError("RopePhysics: Chưa gán rbB hoặc thiếu Rigidbody2D trên object chứa RopePhysics.");
+            enabled = false;
             return;
         }
 
-        if (joint == null)
+        ConfigureJoint();
+
+        if (autoSetLengthOnStart)
         {
-            joint = gameObject.AddComponent<DistanceJoint2D>();
+            float dist = Vector2.Distance(_rbA.position, rbB.position);
+            _joint.distance = dist + Mathf.Max(0f, extraSlack);
         }
+        else
+        {
+            _joint.distance = Mathf.Max(0.01f, ropeLength);
+        }
+    }
 
-        joint.enableCollision = true;
-        joint.connectedBody = rbB;
+    private void ConfigureJoint()
+    {
+        _joint.connectedBody = rbB;
+        _joint.enableCollision = enableCollisionBetweenPlayers;
 
-        joint.autoConfigureDistance = false;
-        joint.maxDistanceOnly = true;
+        _joint.autoConfigureDistance = false;
+        _joint.maxDistanceOnly = true;
 
-        joint.distance = Vector2.Distance(rbA.position, rbB.position);
+        _joint.autoConfigureConnectedAnchor = false;
+        _joint.anchor = Vector2.zero;
+        _joint.connectedAnchor = Vector2.zero;
+    }
+
+    public void SetRopeLength(float length)
+    {
+        ropeLength = Mathf.Max(0.01f, length);
+        if (_joint != null)
+        {
+            _joint.distance = ropeLength;
+        }
     }
 }
