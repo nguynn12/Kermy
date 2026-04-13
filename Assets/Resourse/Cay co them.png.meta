@@ -1,0 +1,1547 @@
+fileFormatVersion: 2
+guid: 74da2e45e65217949a9e7006bd09a964
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6534001099982235192
+    second: Cay co them_0
+  - first:
+      213: -5186550491671396644
+    second: Cay co them_1
+  - first:
+      213: 6322600356443774532
+    second: Cay co them_2
+  - first:
+      213: 7755800446663666996
+    second: Cay co them_3
+  - first:
+      213: 5421099555183289053
+    second: Cay co them_4
+  - first:
+      213: -2379222889716932241
+    second: Cay co them_5
+  - first:
+      213: -2273849365972529834
+    second: Cay co them_6
+  - first:
+      213: 2602698262011542378
+    second: Cay co them_7
+  - first:
+      213: -3647949769462770582
+    second: Cay co them_8
+  - first:
+      213: 3031341457814865459
+    second: Cay co them_9
+  - first:
+      213: -5699632544786443551
+    second: Cay co them_10
+  - first:
+      213: 4060538909993765411
+    second: Cay co them_11
+  - first:
+      213: 1799682262704171442
+    second: Cay co them_12
+  - first:
+      213: 1219197130590171925
+    second: Cay co them_13
+  - first:
+      213: 1539341831867764482
+    second: Cay co them_14
+  - first:
+      213: -6861525770901841833
+    second: Cay co them_15
+  - first:
+      213: -6406850013544035236
+    second: Cay co them_16
+  - first:
+      213: 3339974682150898465
+    second: Cay co them_17
+  - first:
+      213: 3383736884876145168
+    second: Cay co them_18
+  - first:
+      213: 9187380537063533476
+    second: Cay co them_19
+  - first:
+      213: 2081150965257147893
+    second: Cay co them_20
+  - first:
+      213: 2924352046240809118
+    second: Cay co them_21
+  - first:
+      213: -931268411716521582
+    second: Cay co them_22
+  - first:
+      213: -7577916103251207814
+    second: Cay co them_23
+  - first:
+      213: 7765964643621145152
+    second: Cay co them_24
+  - first:
+      213: -5833268995565729489
+    second: Cay co them_25
+  - first:
+      213: -4084444928432631314
+    second: Cay co them_26
+  - first:
+      213: 106502029161009458
+    second: Cay co them_27
+  - first:
+      213: -6196834260239441568
+    second: Cay co them_28
+  - first:
+      213: 2111578829443349991
+    second: Cay co them_29
+  - first:
+      213: 6311960389798086433
+    second: Cay co them_30
+  - first:
+      213: 3222046074701663028
+    second: Cay co them_31
+  - first:
+      213: -4359140749617315370
+    second: Cay co them_32
+  - first:
+      213: 5523389730018804468
+    second: Cay co them_33
+  - first:
+      213: 3822186569453475577
+    second: Cay co them_34
+  - first:
+      213: -8530774563013679811
+    second: Cay co them_35
+  - first:
+      213: -7115297834943311819
+    second: Cay co them_36
+  - first:
+      213: 6012481891696539516
+    second: Cay co them_37
+  - first:
+      213: 2191466156746422874
+    second: Cay co them_38
+  - first:
+      213: 7396309934665681998
+    second: Cay co them_39
+  - first:
+      213: 5028894621823845357
+    second: Cay co them_40
+  - first:
+      213: -2342447074665307564
+    second: Cay co them_41
+  - first:
+      213: -8227594313015506065
+    second: Cay co them_42
+  - first:
+      213: -6531364626720981631
+    second: Cay co them_43
+  - first:
+      213: 7479922108795602474
+    second: Cay co them_44
+  - first:
+      213: -4881611318200379479
+    second: Cay co them_45
+  - first:
+      213: 1446175028860316681
+    second: Cay co them_46
+  - first:
+      213: 6856759461448667018
+    second: Cay co them_47
+  - first:
+      213: 4243413383710657464
+    second: Cay co them_48
+  - first:
+      213: -211321772453171693
+    second: Cay co them_49
+  - first:
+      213: -1156992967277341577
+    second: Cay co them_50
+  - first:
+      213: -8513538206946283310
+    second: Cay co them_51
+  - first:
+      213: 2864526218500474074
+    second: Cay co them_52
+  - first:
+      213: -8484264142246358334
+    second: Cay co them_53
+  - first:
+      213: -9110101734618453684
+    second: Cay co them_54
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Cay co them_0
+      rect:
+        serializedVersion: 2
+        x: 157
+        y: 787
+        width: 86
+        height: 136
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 836e37eb16f6daa50800000000000000
+      internalID: 6534001099982235192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_1
+      rect:
+        serializedVersion: 2
+        x: 248
+        y: 785
+        width: 68
+        height: 104
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cde7c4eaecba508b0800000000000000
+      internalID: -5186550491671396644
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_2
+      rect:
+        serializedVersion: 2
+        x: 326
+        y: 790
+        width: 68
+        height: 107
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44ed69e86836eb750800000000000000
+      internalID: 6322600356443774532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_3
+      rect:
+        serializedVersion: 2
+        x: 403
+        y: 793
+        width: 64
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 43d243c0a6322ab60800000000000000
+      internalID: 7755800446663666996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_4
+      rect:
+        serializedVersion: 2
+        x: 459
+        y: 782
+        width: 60
+        height: 84
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd26abeb25d9b3b40800000000000000
+      internalID: 5421099555183289053
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_5
+      rect:
+        serializedVersion: 2
+        x: 561
+        y: 788
+        width: 96
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f61a1f0336d4bfed0800000000000000
+      internalID: -2379222889716932241
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_6
+      rect:
+        serializedVersion: 2
+        x: 689
+        y: 790
+        width: 42
+        height: 115
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65dc57c8c0aa170e0800000000000000
+      internalID: -2273849365972529834
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_7
+      rect:
+        serializedVersion: 2
+        x: 767
+        y: 852
+        width: 323
+        height: 73
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6b79b49744ae1420800000000000000
+      internalID: 2602698262011542378
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_8
+      rect:
+        serializedVersion: 2
+        x: 817
+        y: 812
+        width: 23
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6414b82301ef5dc0800000000000000
+      internalID: -3647949769462770582
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_9
+      rect:
+        serializedVersion: 2
+        x: 877
+        y: 780
+        width: 34
+        height: 113
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33648f1cefc711a20800000000000000
+      internalID: 3031341457814865459
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_10
+      rect:
+        serializedVersion: 2
+        x: 982
+        y: 819
+        width: 26
+        height: 61
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e29fb10666d6e0b0800000000000000
+      internalID: -5699632544786443551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_11
+      rect:
+        serializedVersion: 2
+        x: 1007
+        y: 814
+        width: 35
+        height: 61
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 32a84deff9ee95830800000000000000
+      internalID: 4060538909993765411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_12
+      rect:
+        serializedVersion: 2
+        x: 157
+        y: 617
+        width: 89
+        height: 140
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b9ad099b71c9f810800000000000000
+      internalID: 1799682262704171442
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_13
+      rect:
+        serializedVersion: 2
+        x: 265
+        y: 613
+        width: 84
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 513b008a4557be010800000000000000
+      internalID: 1219197130590171925
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_14
+      rect:
+        serializedVersion: 2
+        x: 472
+        y: 612
+        width: 75
+        height: 133
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20f80648d37dc5510800000000000000
+      internalID: 1539341831867764482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_15
+      rect:
+        serializedVersion: 2
+        x: 587
+        y: 621
+        width: 44
+        height: 120
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75815305aa6f6c0a0800000000000000
+      internalID: -6861525770901841833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_16
+      rect:
+        serializedVersion: 2
+        x: 667
+        y: 612
+        width: 94
+        height: 138
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c5c408d8bdb4617a0800000000000000
+      internalID: -6406850013544035236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_17
+      rect:
+        serializedVersion: 2
+        x: 748
+        y: 701
+        width: 17
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 12b07680749f95e20800000000000000
+      internalID: 3339974682150898465
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_18
+      rect:
+        serializedVersion: 2
+        x: 798
+        y: 708
+        width: 48
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 012fd6cd4c275fe20800000000000000
+      internalID: 3383736884876145168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_19
+      rect:
+        serializedVersion: 2
+        x: 806
+        y: 684
+        width: 47
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ab6200fbe1208f70800000000000000
+      internalID: 9187380537063533476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_20
+      rect:
+        serializedVersion: 2
+        x: 832
+        y: 620
+        width: 76
+        height: 137
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f51d18c6cbb1ec10800000000000000
+      internalID: 2081150965257147893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_21
+      rect:
+        serializedVersion: 2
+        x: 952
+        y: 613
+        width: 108
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e90ce5231b2659820800000000000000
+      internalID: 2924352046240809118
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_22
+      rect:
+        serializedVersion: 2
+        x: 373
+        y: 610
+        width: 64
+        height: 82
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 291381940587313f0800000000000000
+      internalID: -931268411716521582
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_23
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 686
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a79dfff1475d5d690800000000000000
+      internalID: -7577916103251207814
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 336
+        width: 297
+        height: 185
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04a084192bf36cb60800000000000000
+      internalID: 7765964643621145152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_25
+      rect:
+        serializedVersion: 2
+        x: 293
+        y: 383
+        width: 119
+        height: 198
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f29410821c01c0fa0800000000000000
+      internalID: -5833268995565729489
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_26
+      rect:
+        serializedVersion: 2
+        x: 427
+        y: 357
+        width: 129
+        height: 152
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee190285af22157c0800000000000000
+      internalID: -4084444928432631314
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_27
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 452
+        width: 128
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2311000080f5a7100800000000000000
+      internalID: 106502029161009458
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_28
+      rect:
+        serializedVersion: 2
+        x: 765
+        y: 439
+        width: 132
+        height: 135
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0612572921c600aa0800000000000000
+      internalID: -6196834260239441568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_29
+      rect:
+        serializedVersion: 2
+        x: 946
+        y: 411
+        width: 142
+        height: 166
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7edb43cf1c5dd4d10800000000000000
+      internalID: 2111578829443349991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_30
+      rect:
+        serializedVersion: 2
+        x: 315
+        y: 286
+        width: 170
+        height: 79
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 12740464886989750800000000000000
+      internalID: 6311960389798086433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_31
+      rect:
+        serializedVersion: 2
+        x: 555
+        y: 288
+        width: 106
+        height: 107
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 43bc88475d107bc20800000000000000
+      internalID: 3222046074701663028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_32
+      rect:
+        serializedVersion: 2
+        x: 695
+        y: 290
+        width: 93
+        height: 127
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d1412d75983183c0800000000000000
+      internalID: -4359140749617315370
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_33
+      rect:
+        serializedVersion: 2
+        x: 835
+        y: 288
+        width: 79
+        height: 82
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f2cfcdf1b507ac40800000000000000
+      internalID: 5523389730018804468
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_34
+      rect:
+        serializedVersion: 2
+        x: 903
+        y: 312
+        width: 18
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f61b812f622b0530800000000000000
+      internalID: 3822186569453475577
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_35
+      rect:
+        serializedVersion: 2
+        x: 942
+        y: 153
+        width: 148
+        height: 232
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d35a1a0abb99c9980800000000000000
+      internalID: -8530774563013679811
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_36
+      rect:
+        serializedVersion: 2
+        x: 169
+        y: 154
+        width: 115
+        height: 139
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 530191d4152614d90800000000000000
+      internalID: -7115297834943311819
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_37
+      rect:
+        serializedVersion: 2
+        x: 326
+        y: 154
+        width: 98
+        height: 95
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c777a0dcc60a07350800000000000000
+      internalID: 6012481891696539516
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_38
+      rect:
+        serializedVersion: 2
+        x: 457
+        y: 153
+        width: 83
+        height: 116
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5a3922dbd6a96e10800000000000000
+      internalID: 2191466156746422874
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_39
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 152
+        width: 60
+        height: 93
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4cc070c2b8f4a660800000000000000
+      internalID: 7396309934665681998
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_40
+      rect:
+        serializedVersion: 2
+        x: 642
+        y: 152
+        width: 62
+        height: 61
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de3ceaaa3093ac540800000000000000
+      internalID: 5028894621823845357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_41
+      rect:
+        serializedVersion: 2
+        x: 738
+        y: 154
+        width: 168
+        height: 105
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 452eb61ebc4fd7fd0800000000000000
+      internalID: -2342447074665307564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_42
+      rect:
+        serializedVersion: 2
+        x: 164
+        y: 0
+        width: 84
+        height: 117
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6bcfa06096b1dd80800000000000000
+      internalID: -8227594313015506065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_43
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 0
+        width: 76
+        height: 108
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18d7eb50a7eeb55a0800000000000000
+      internalID: -6531364626720981631
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_44
+      rect:
+        serializedVersion: 2
+        x: 398
+        y: 73
+        width: 14
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a264a5217850ec760800000000000000
+      internalID: 7479922108795602474
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_45
+      rect:
+        serializedVersion: 2
+        x: 399
+        y: 2
+        width: 36
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a7d327be58014cb0800000000000000
+      internalID: -4881611318200379479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_46
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 72
+        width: 30
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90c624ec688d11410800000000000000
+      internalID: 1446175028860316681
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_47
+      rect:
+        serializedVersion: 2
+        x: 441
+        y: 2
+        width: 43
+        height: 115
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a8f42f9c66a182f50800000000000000
+      internalID: 6856759461448667018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_48
+      rect:
+        serializedVersion: 2
+        x: 516
+        y: 2
+        width: 84
+        height: 104
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bb463b6df1a3ea30800000000000000
+      internalID: 4243413383710657464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_49
+      rect:
+        serializedVersion: 2
+        x: 662
+        y: 1
+        width: 67
+        height: 116
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31e6f93b7fb311df0800000000000000
+      internalID: -211321772453171693
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_50
+      rect:
+        serializedVersion: 2
+        x: 759
+        y: 2
+        width: 134
+        height: 125
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7741fc9b60981ffe0800000000000000
+      internalID: -1156992967277341577
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_51
+      rect:
+        serializedVersion: 2
+        x: 930
+        y: 1
+        width: 154
+        height: 100
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d030418b16d9d980800000000000000
+      internalID: -8513538206946283310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_52
+      rect:
+        serializedVersion: 2
+        x: 646
+        y: 37
+        width: 28
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad483873b67d0c720800000000000000
+      internalID: 2864526218500474074
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_53
+      rect:
+        serializedVersion: 2
+        x: 436
+        y: 2
+        width: 10
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c252d4d6b6d14a80800000000000000
+      internalID: -8484264142246358334
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cay co them_54
+      rect:
+        serializedVersion: 2
+        x: 644
+        y: 4
+        width: 21
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c49a5606dba629180800000000000000
+      internalID: -9110101734618453684
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Cay co them_0: 6534001099982235192
+      Cay co them_1: -5186550491671396644
+      Cay co them_10: -5699632544786443551
+      Cay co them_11: 4060538909993765411
+      Cay co them_12: 1799682262704171442
+      Cay co them_13: 1219197130590171925
+      Cay co them_14: 1539341831867764482
+      Cay co them_15: -6861525770901841833
+      Cay co them_16: -6406850013544035236
+      Cay co them_17: 3339974682150898465
+      Cay co them_18: 3383736884876145168
+      Cay co them_19: 9187380537063533476
+      Cay co them_2: 6322600356443774532
+      Cay co them_20: 2081150965257147893
+      Cay co them_21: 2924352046240809118
+      Cay co them_22: -931268411716521582
+      Cay co them_23: -7577916103251207814
+      Cay co them_24: 7765964643621145152
+      Cay co them_25: -5833268995565729489
+      Cay co them_26: -4084444928432631314
+      Cay co them_27: 106502029161009458
+      Cay co them_28: -6196834260239441568
+      Cay co them_29: 2111578829443349991
+      Cay co them_3: 7755800446663666996
+      Cay co them_30: 6311960389798086433
+      Cay co them_31: 3222046074701663028
+      Cay co them_32: -4359140749617315370
+      Cay co them_33: 5523389730018804468
+      Cay co them_34: 3822186569453475577
+      Cay co them_35: -8530774563013679811
+      Cay co them_36: -7115297834943311819
+      Cay co them_37: 6012481891696539516
+      Cay co them_38: 2191466156746422874
+      Cay co them_39: 7396309934665681998
+      Cay co them_4: 5421099555183289053
+      Cay co them_40: 5028894621823845357
+      Cay co them_41: -2342447074665307564
+      Cay co them_42: -8227594313015506065
+      Cay co them_43: -6531364626720981631
+      Cay co them_44: 7479922108795602474
+      Cay co them_45: -4881611318200379479
+      Cay co them_46: 1446175028860316681
+      Cay co them_47: 6856759461448667018
+      Cay co them_48: 4243413383710657464
+      Cay co them_49: -211321772453171693
+      Cay co them_5: -2379222889716932241
+      Cay co them_50: -1156992967277341577
+      Cay co them_51: -8513538206946283310
+      Cay co them_52: 2864526218500474074
+      Cay co them_53: -8484264142246358334
+      Cay co them_54: -9110101734618453684
+      Cay co them_6: -2273849365972529834
+      Cay co them_7: 2602698262011542378
+      Cay co them_8: -3647949769462770582
+      Cay co them_9: 3031341457814865459
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -33,7 +33,7 @@ public class PlatformRespawn : MonoBehaviour
 
         if (_rb != null)
         {
-            _rb.velocity = Vector2.zero;
+            _rb.linearVelocity = Vector2.zero;
             _rb.angularVelocity = 0f;
             _rb.bodyType = RigidbodyType2D.Kinematic;
         }
