@@ -1,31 +1,10 @@
 fileFormatVersion: 2
-guid: 4dc80587f3254884b87e97c6817adda8
+guid: 06fc30c966a369e41ae50d4931f7fc98
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5046276612289390142
-    second: Ignus_0
-  - first:
-      213: 2838740187321899477
-    second: Ignus_1
-  - first:
-      213: -8720602134108895210
-    second: Ignus_2
-  - first:
-      213: -8717906612921060616
-    second: Ignus_3
-  - first:
-      213: -8288893635759733356
-    second: Ignus_4
-  - first:
-      213: -5053581860131419
-    second: Ignus_5
-  - first:
-      213: -1402189565632894412
-    second: Ignus_6
-  - first:
-      213: 5240494984197771771
-    second: Ignus_7
+      213: 7869794050351710047
+    second: dirt_particle_sprite_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -134,89 +113,89 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Ignus_0
+      name: dirt_particle_sprite_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 64
-        height: 64
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 2c9112e482608f9b0800000000000000
-      internalID: -5046276612289390142
+      spriteID: 803538d76d07c6443b59a91e2f09ac78
+      internalID: 1895544931
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Ignus_1
+      name: dirt_particle_sprite_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ec8f6942ad339b4fab3f99f442f230c
+      internalID: -648317320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: dirt_particle_sprite_2
       rect:
         serializedVersion: 2
         x: 64
         y: 0
-        width: 64
-        height: 64
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 5d992faf82b356720800000000000000
-      internalID: 2838740187321899477
+      spriteID: 8975e737bed83d548bc18e59793d0e38
+      internalID: -133501484
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Ignus_2
+      name: dirt_particle_sprite_3
       rect:
         serializedVersion: 2
-        x: 128
+        x: 96
         y: 0
-        width: 64
-        height: 64
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 6180de010923af680800000000000000
-      internalID: -8720602134108895210
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Ignus_3
-      rect:
-        serializedVersion: 2
-        x: 192
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 8f2bfcfff16c30780800000000000000
-      internalID: -8717906612921060616
+      spriteID: 73d11ea80ef34bc4784aeb5ed81877e2
+      internalID: 373358341
       vertices: []
       indices: 
       edges: []
@@ -225,7 +204,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 4b2cdeebe7b651a4da2093ce14c63e23
+    spriteID: 486026b9d845c0b4f941ed4858fb12d5
     internalID: 0
     vertices: []
     indices: 
@@ -235,12 +214,12 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":4.0,"y":1.0},"gridSpriteSize":{"x":32.0,"y":32.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Ignus_0: -5046276612289390142
-      Ignus_1: 2838740187321899477
-      Ignus_2: -8720602134108895210
-      Ignus_3: -8717906612921060616
+      dirt_particle_sprite_0: 1895544931
+      dirt_particle_sprite_1: -648317320
+      dirt_particle_sprite_2: -133501484
+      dirt_particle_sprite_3: 373358341
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
