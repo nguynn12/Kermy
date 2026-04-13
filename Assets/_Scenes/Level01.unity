@@ -153,7 +153,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a93d9700ca45104299b45c4583b7b7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInputHandler
+  moveSpeed: 8
+  jumpForce: 6
+  groundCheck: {fileID: 1445497624}
+  groundCheckRadius: 0.2
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  dirtPrefab: {fileID: 2393149736500863839, guid: e0606ced046939042b51f21000a17cb6, type: 3}
+  spawnInterval: 0.1
   moveAction: {fileID: -4888207183231510413, guid: 0ddc894ca117a5c4f949fd2af92d91d2, type: 3}
+  jumpAction: {fileID: 0}
   interactAction: {fileID: -6603681182673743570, guid: 0ddc894ca117a5c4f949fd2af92d91d2, type: 3}
 --- !u!212 &388944836
 SpriteRenderer:
@@ -204,12 +214,12 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 8633881525917383573, guid: 0d2eb7eb931724b4a9e77f0f7fb9007f, type: 3}
+  m_Sprite: {fileID: -5104965268573752912, guid: 682c1a78199e2d94d9d25aaf379cb761, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.35, y: 0.35}
+  m_Size: {x: 2, y: 2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -269,7 +279,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 2, y: 2}
-    newSize: {x: 0.35, y: 0.35}
+    newSize: {x: 2, y: 2}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -289,7 +299,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   moveSpeed: 8
-  jumpForce: 12
+  jumpForce: 6
   groundCheck: {fileID: 1445497624}
   groundCheckRadius: 0.2
   groundLayer:
@@ -642,6 +652,7 @@ GameObject:
   - component: {fileID: 1456570396}
   - component: {fileID: 1456570395}
   - component: {fileID: 1456570398}
+  - component: {fileID: 1456570399}
   m_Layer: 0
   m_Name: Player_1
   m_TagString: Untagged
@@ -661,7 +672,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a93d9700ca45104299b45c4583b7b7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInputHandler
+  moveSpeed: 8
+  jumpForce: 6
+  groundCheck: {fileID: 927301127}
+  groundCheckRadius: 0.2
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  dirtPrefab: {fileID: 2393149736500863839, guid: e0606ced046939042b51f21000a17cb6, type: 3}
+  spawnInterval: 0.1
   moveAction: {fileID: 8981949448451372980, guid: 0ddc894ca117a5c4f949fd2af92d91d2, type: 3}
+  jumpAction: {fileID: 0}
   interactAction: {fileID: 6020996029149959373, guid: 0ddc894ca117a5c4f949fd2af92d91d2, type: 3}
 --- !u!212 &1456570393
 SpriteRenderer:
@@ -717,7 +738,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 2, y: 2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -731,7 +752,7 @@ Transform:
   m_GameObject: {fileID: 1456570390}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.68, y: 0.35, z: 0}
+  m_LocalPosition: {x: -7.68, y: 0.233, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -777,7 +798,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 2, y: 2}
-    newSize: {x: 1, y: 1}
+    newSize: {x: 2, y: 2}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -797,7 +818,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   moveSpeed: 8
-  jumpForce: 12
+  jumpForce: 6
   groundCheck: {fileID: 927301127}
   groundCheckRadius: 0.2
   groundLayer:
@@ -852,6 +873,24 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1456570399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1456570390}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b5ea4034d4801a438632316673f6605, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DualPlayerController
+  moveSpeed: 8
+  leftKey: 97
+  rightKey: 100
+  jumpKey: 119
+  rb: {fileID: 0}
+  isFacingRight: 1
 --- !u!1 &1678314423
 GameObject:
   m_ObjectHideFlags: 0
