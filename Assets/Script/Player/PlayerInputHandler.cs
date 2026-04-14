@@ -90,10 +90,7 @@ public class PlayerInputHandler : MonoBehaviour
             isGrounded = Mathf.Abs(rb.linearVelocity.y) < 0.01f;
         }
 
-        // --- 2. DI CHUYỂN ---
-        rb.linearVelocity = new Vector2(MoveInput.x * moveSpeed, rb.linearVelocity.y);
-
-        // --- 3. SPAWN HẠT KHI CHẠY ---
+        // --- 2. SPAWN HẠT KHI CHẠY ---
         if (Mathf.Abs(MoveInput.x) > 0.1f && isGrounded)
         {
             particleTimer -= Time.deltaTime;
@@ -108,21 +105,7 @@ public class PlayerInputHandler : MonoBehaviour
             particleTimer = 0f; 
         }
 
-        // --- 4. NHẢY ---
-        if (ConsumeJumpPressed() && isGrounded)
-        {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-        }
-
-        if (jumpAction == null && moveAction != null)
-        {
-            if (MoveInput.y > 0.5f && isGrounded)
-            {
-                rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-            }
-        }
-
-        // --- 5. LẬT MẶT KHI QUAY ĐẦU ---
+        // --- 3. LẬT MẶT KHI QUAY ĐẦU ---
         if (MoveInput.x > 0 && !isFacingRight)
         {
             Flip();
@@ -132,7 +115,7 @@ public class PlayerInputHandler : MonoBehaviour
             Flip();
         }
 
-        // --- 6. ANIMATION: CẬP NHẬT TRẠNG THÁI CHO ANIMATOR ---
+        // --- 4. ANIMATION: CẬP NHẬT TRẠNG THÁI CHO ANIMATOR ---
         if (anim != null)
         {
             // Báo cho Animator biết nhân vật có đang chạy không

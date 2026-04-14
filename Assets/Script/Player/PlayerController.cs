@@ -16,16 +16,20 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rb;
     private PlayerInputHandler inputHandler;
+    private PlayerSupportDetector supportDetector;
+    private PlayerRiderStick riderStick;
 
     private bool isGrounded;
     private bool _controlEnabled = true;
     private bool _jumpRequested;
-    private readonly Collider2D[] _groundHits = new Collider2D[1];
+    private readonly RaycastHit2D[] _groundRayHits = new RaycastHit2D[4];
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         inputHandler = GetComponent<PlayerInputHandler>();
+        supportDetector = GetComponent<PlayerSupportDetector>();
+        riderStick = GetComponent<PlayerRiderStick>();
     }
 
     private void Update()
@@ -57,7 +61,14 @@ public class PlayerController : MonoBehaviour
 
         // Horizontal movement.
         float moveX = inputHandler != null ? inputHandler.MoveInput.x : 0f;
-        float targetVelocityX = moveX * moveSpeed;
+        float baseVelocityX = 0f;
+        // Nếu mình đang cưỡi trên đầu ai đó, hãy lấy vận tốc của người đó làm gốc
+        if (riderStick != null && riderStick.ParentRigidbody != null)
+        {
+            baseVelocityX = riderStick.ParentRigidbody.linearVelocity.x;
+        }
+        
+        float targetVelocityX = (moveX * moveSpeed) + baseVelocityX;
         
         float forceX = (targetVelocityX - rb.linearVelocity.x) * rb.mass / Time.fixedDeltaTime;
         rb.AddForce(new Vector2(forceX, 0f));
@@ -66,7 +77,7 @@ public class PlayerController : MonoBehaviour
         if (_jumpRequested)
         {
             _jumpRequested = false;
-            if (isGrounded)
+            if (isGrounded && (supportDetector == null || !supportDetector.IsSupportingPlayer))
             {
                 Jump();
             }
@@ -75,6 +86,11 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
+        // Nếu có người đứng trên đầu thì KHÔNG cho nhảy!
+        if (supportDetector != null && supportDetector.IsSupportingPlayer)
+        {
+            return; 
+        }
         // Reset vertical velocity to keep jump height consistent.
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
@@ -115,8 +131,32 @@ public class PlayerController : MonoBehaviour
         }
 
         LayerMask mask = jumpSupportLayer.value != 0 ? jumpSupportLayer : groundLayer;
-        int count = Physics2D.OverlapCircleNonAlloc(groundCheck.position, groundCheckRadius, _groundHits, mask);
-        isGrounded = count > 0;
+        float rayDistance = Mathf.Max(0.01f, groundCheckRadius + 0.05f);
+
+        int hitCount = Physics2D.RaycastNonAlloc(groundCheck.position, Vector2.down, _groundRayHits, rayDistance, mask);
+        for (int i = 0; i < hitCount; i++)
+        {
+            RaycastHit2D hit = _groundRayHits[i];
+            if (hit.collider == null)
+            {
+                continue;
+            }
+
+            if (hit.rigidbody == rb)
+            {
+                continue;
+            }
+
+            if (hit.normal.y < 0.5f)
+            {
+                continue;
+            }
+
+            isGrounded = true;
+            return;
+        }
+
+        isGrounded = false;
     }
 
     // Vẽ vòng tròn đỏ để debug điểm chạm đất trong Scene

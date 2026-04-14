@@ -23,6 +23,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "3fa47740-0b22-4a03-b908-ce0f1d16f53f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -91,6 +100,17 @@
                     "action": "Action",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6e92df0a-deb4-4907-bf83-ed210f33d5b8",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Player1",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -111,6 +131,15 @@
                     "name": "Action",
                     "type": "Button",
                     "id": "dbec1627-22d2-4a18-81d9-42b058f20b10",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "2a6226a9-1900-448b-8ec3-917a53c47c38",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -181,6 +210,17 @@
                     "processors": "",
                     "groups": ";Player2",
                     "action": "Action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c1c1fed8-1f71-4e6b-870c-33bbae10d8da",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Player2",
+                    "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
