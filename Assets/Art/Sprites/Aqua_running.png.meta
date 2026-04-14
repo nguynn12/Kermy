@@ -1,28 +1,31 @@
 fileFormatVersion: 2
-guid: 4c450556a4648cd46b114c626e0479c5
+guid: af83edbed9a0af24d8357bf47a48db33
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5104965268573752912
-    second: Aqua (1)_0
+      213: -7690128013442038067
+    second: Aqua_running_0
   - first:
-      213: -2239777276738092708
-    second: Aqua (1)_1
+      213: 6084575838167205899
+    second: Aqua_running_1
   - first:
-      213: 2917956504453587879
-    second: Aqua (1)_2
+      213: 5050315343952157233
+    second: Aqua_running_2
   - first:
-      213: -4867321019509454976
-    second: Aqua (1)_3
+      213: 8123582726918475011
+    second: Aqua_running_3
   - first:
-      213: 9153777732037057197
-    second: Aqua (1)_4
+      213: 4774776629124809340
+    second: Aqua_running_4
   - first:
-      213: -6002620583166207022
-    second: Aqua (1)_5
+      213: 8005732949465031948
+    second: Aqua_running_5
   - first:
-      213: 7559209103315656944
-    second: Aqua (1)_6
+      213: 5045202813649393394
+    second: Aqua_running_6
+  - first:
+      213: -91054716874525104
+    second: Aqua_running_7
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -131,7 +134,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Aqua (1)_0
+      name: Aqua_running_0
       rect:
         serializedVersion: 2
         x: 0
@@ -146,14 +149,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0b174ffa2258729b0800000000000000
-      internalID: -5104965268573752912
+      spriteID: dc6c189d05d274590800000000000000
+      internalID: -7690128013442038067
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Aqua (1)_1
+      name: Aqua_running_1
       rect:
         serializedVersion: 2
         x: 64
@@ -168,14 +171,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c51c8040f66bae0e0800000000000000
-      internalID: -2239777276738092708
+      spriteID: b0881e2cc71c07450800000000000000
+      internalID: 6084575838167205899
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Aqua (1)_2
+      name: Aqua_running_2
       rect:
         serializedVersion: 2
         x: 128
@@ -190,14 +193,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7a32ff51bf9ae7820800000000000000
-      internalID: 2917956504453587879
+      spriteID: 13a19ff2c03561640800000000000000
+      internalID: 5050315343952157233
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Aqua (1)_3
+      name: Aqua_running_3
       rect:
         serializedVersion: 2
         x: 192
@@ -212,8 +215,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 087c858225dc37cb0800000000000000
-      internalID: -4867321019509454976
+      spriteID: 30d89751373ccb070800000000000000
+      internalID: 8123582726918475011
       vertices: []
       indices: 
       edges: []
@@ -222,7 +225,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 0d33cd4259fee1f46b388c5abbb48262
+    spriteID: ae00b4abdf2223e4fb3776a1ad1cbc05
     internalID: 0
     vertices: []
     indices: 
@@ -234,10 +237,10 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Aqua (1)_0: -5104965268573752912
-      Aqua (1)_1: -2239777276738092708
-      Aqua (1)_2: 2917956504453587879
-      Aqua (1)_3: -4867321019509454976
+      Aqua_running_0: -7690128013442038067
+      Aqua_running_1: 6084575838167205899
+      Aqua_running_2: 5050315343952157233
+      Aqua_running_3: 8123582726918475011
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
