@@ -1,28 +1,31 @@
 fileFormatVersion: 2
-guid: 4c450556a4648cd46b114c626e0479c5
+guid: c52e97e6497abbe4b9a2e7a443aa852c
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5104965268573752912
-    second: Aqua (1)_0
+      213: 5225508532377576847
+    second: Ignus_jumping_0
   - first:
-      213: -2239777276738092708
-    second: Aqua (1)_1
+      213: 218211758376444566
+    second: Ignus_jumping_1
   - first:
-      213: 2917956504453587879
-    second: Aqua (1)_2
+      213: 263763394363928732
+    second: Ignus_jumping_2
   - first:
-      213: -4867321019509454976
-    second: Aqua (1)_3
+      213: 7332598225837776452
+    second: Ignus_jumping_3
   - first:
-      213: 9153777732037057197
-    second: Aqua (1)_4
+      213: -40404329141937840
+    second: Ignus_jumping_4
   - first:
-      213: -6002620583166207022
-    second: Aqua (1)_5
+      213: -3711919681865681272
+    second: Ignus_jumping_5
   - first:
-      213: 7559209103315656944
-    second: Aqua (1)_6
+      213: 3297347092295336673
+    second: Ignus_jumping_6
+  - first:
+      213: -3659512590426563367
+    second: Ignus_jumping_7
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -131,7 +134,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Aqua (1)_0
+      name: Ignus_jumping_0
       rect:
         serializedVersion: 2
         x: 0
@@ -146,14 +149,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0b174ffa2258729b0800000000000000
-      internalID: -5104965268573752912
+      spriteID: f856323035cb48840800000000000000
+      internalID: 5225508532377576847
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Aqua (1)_1
+      name: Ignus_jumping_1
       rect:
         serializedVersion: 2
         x: 64
@@ -168,14 +171,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c51c8040f66bae0e0800000000000000
-      internalID: -2239777276738092708
+      spriteID: 69267d7207e370300800000000000000
+      internalID: 218211758376444566
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Aqua (1)_2
+      name: Ignus_jumping_2
       rect:
         serializedVersion: 2
         x: 128
@@ -190,14 +193,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7a32ff51bf9ae7820800000000000000
-      internalID: 2917956504453587879
+      spriteID: c9030d1e86319a300800000000000000
+      internalID: 263763394363928732
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Aqua (1)_3
+      name: Ignus_jumping_3
       rect:
         serializedVersion: 2
         x: 192
@@ -212,8 +215,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 087c858225dc37cb0800000000000000
-      internalID: -4867321019509454976
+      spriteID: 44e58b39c3f92c560800000000000000
+      internalID: 7332598225837776452
       vertices: []
       indices: 
       edges: []
@@ -222,7 +225,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 0d33cd4259fee1f46b388c5abbb48262
+    spriteID: 538bd5f61b3faf644890b6a3e7713a1a
     internalID: 0
     vertices: []
     indices: 
@@ -234,10 +237,10 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Aqua (1)_0: -5104965268573752912
-      Aqua (1)_1: -2239777276738092708
-      Aqua (1)_2: 2917956504453587879
-      Aqua (1)_3: -4867321019509454976
+      Ignus_jumping_0: 5225508532377576847
+      Ignus_jumping_1: 218211758376444566
+      Ignus_jumping_2: 263763394363928732
+      Ignus_jumping_3: 7332598225837776452
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

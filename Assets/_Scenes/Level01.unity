@@ -160,7 +160,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
-  dirtPrefab: {fileID: 2393149736500863839, guid: e0606ced046939042b51f21000a17cb6, type: 3}
+  dirtPrefab: {fileID: 1678476979080603019, guid: 835ac8bb0cfcf874781619acd5b6a441, type: 3}
   spawnInterval: 0.1
   moveAction: {fileID: -4888207183231510413, guid: 0ddc894ca117a5c4f949fd2af92d91d2, type: 3}
   jumpAction: {fileID: 0}
@@ -214,7 +214,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -5104965268573752912, guid: 682c1a78199e2d94d9d25aaf379cb761, type: 3}
+  m_Sprite: {fileID: -5104965268573752912, guid: 4c450556a4648cd46b114c626e0479c5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -679,7 +679,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
-  dirtPrefab: {fileID: 2393149736500863839, guid: e0606ced046939042b51f21000a17cb6, type: 3}
+  dirtPrefab: {fileID: 394951075732600425, guid: 66c792b4e4c8fc041ace267e3921b46b, type: 3}
   spawnInterval: 0.1
   moveAction: {fileID: 8981949448451372980, guid: 0ddc894ca117a5c4f949fd2af92d91d2, type: 3}
   jumpAction: {fileID: 0}
@@ -738,7 +738,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 2, y: 2}
+  m_Size: {x: 0.1, y: 0.14}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -798,7 +798,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 2, y: 2}
-    newSize: {x: 2, y: 2}
+    newSize: {x: 0.1, y: 0.14}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -885,12 +885,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b5ea4034d4801a438632316673f6605, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DualPlayerController
-  moveSpeed: 8
-  leftKey: 97
-  rightKey: 100
-  jumpKey: 119
-  rb: {fileID: 0}
-  isFacingRight: 1
 --- !u!1 &1678314423
 GameObject:
   m_ObjectHideFlags: 0
