@@ -150,7 +150,7 @@ MonoBehaviour:
   groundCheckRadius: 0.2
   groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   dirtPrefab: {fileID: 394951075732600425, guid: 66c792b4e4c8fc041ace267e3921b46b, type: 3}
   spawnInterval: 0.1
   moveAction: {fileID: 8981949448451372980, guid: 0ddc894ca117a5c4f949fd2af92d91d2, type: 3}
@@ -381,6 +381,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerRiderStick
   minUpNormal: 0.5
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  unstickGraceSeconds: 0.1
+  supportProbeHeight: 0.08
 --- !u!114 &-1849860906057710160
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -393,4 +398,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cc85c5c4513e1a4fb7bb3e60e5f9882, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSupportDetector
-  minDownNormal: 0.5
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  probeHeight: 0.08
+  probeWidthFactor: 0.5

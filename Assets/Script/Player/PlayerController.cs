@@ -101,7 +101,7 @@ public class PlayerController : MonoBehaviour
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, force);
     }
 
-    public void SetControlEnabled(bool enabled)
+    public void SetMovementEnabled(bool enabled)
     {
         if (_controlEnabled == enabled)
         {
@@ -109,15 +109,25 @@ public class PlayerController : MonoBehaviour
         }
 
         _controlEnabled = enabled;
-        if (inputHandler != null)
-        {
-            inputHandler.SetInputEnabled(enabled);
-        }
 
         if (!enabled)
         {
             _jumpRequested = false;
             rb.linearVelocity = Vector2.zero;
+        }
+    }
+
+    public void SetControlEnabled(bool enabled)
+    {
+        if (_controlEnabled == enabled)
+        {
+            return;
+        }
+
+        SetMovementEnabled(enabled);
+        if (inputHandler != null)
+        {
+            inputHandler.SetInputEnabled(enabled);
         }
     }
 
