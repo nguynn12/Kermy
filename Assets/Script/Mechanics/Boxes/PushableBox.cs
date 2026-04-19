@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic; // Đừng quên dòng này để dùng List
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PushableBox : MonoBehaviour
@@ -17,7 +18,8 @@ public class PushableBox : MonoBehaviour
     private Rigidbody2D _rb;
     private RigidbodyConstraints2D _baseConstraints;
 
-    private int _sidePushersCount;
+    // SỬA ĐỔI: Dùng List để biết chính xác AI đang chạm trực tiếp vào hộp
+    private List<PlayerController> _activePushers = new List<PlayerController>();
     private int _qualifiedElementPushersCount;
     private Vector2 _sumPushDirections;
 
@@ -32,8 +34,9 @@ public class PushableBox : MonoBehaviour
     private void FixedUpdate()
     {
         ApplyConstraintsForType();
-        // Reset biến đếm mỗi khung hình vật lý
-        _sidePushersCount = 0;
+        
+        // Reset dữ liệu mỗi khung hình vật lý
+        _activePushers.Clear();
         _qualifiedElementPushersCount = 0;
         _sumPushDirections = Vector2.zero;
     }
@@ -58,9 +61,51 @@ public class PushableBox : MonoBehaviour
 
     private bool ShouldAllowHeavyMovement()
     {
-        if (_sidePushersCount < 2) return false;
-        Vector2 combined = _sumPushDirections.normalized;
-        return Mathf.Abs(combined.x) >= heavyRequiredDirectionDot;
+        // TRƯỜNG HỢP 1: Cả 2 người cùng trực tiếp chạm mặt hộp
+        if (_activePushers.Count >= 2)
+        {
+            Vector2 combined = _sumPushDirections.normalized;
+            return Mathf.Abs(combined.x) >= heavyRequiredDirectionDot;
+        }
+
+        // TRƯỜNG HỢP 2: ĐẨY NỐI ĐUÔI (1 người chạm hộp, 1 người ủn mông phía sau)
+        if (_activePushers.Count == 1)
+        {
+            PlayerController frontPlayer = _activePushers[0];
+            
+            // Tìm ra hướng hộp đang bị đẩy (VD: đang đẩy sang Phải -> X = 1)
+            Vector2 pushDirection = new Vector2(Mathf.Sign(_sumPushDirections.x), 0f);
+            
+            // Hướng dò tìm sẽ là ngược lại về phía sau lưng (VD: sang Trái -> X = -1)
+            Vector2 lookBehindDirection = -pushDirection;
+
+            Collider2D col = frontPlayer.GetComponent<Collider2D>();
+            if (col != null)
+            {
+                // Quét một vùng hộp ngay sau lưng người đang đẩy
+                RaycastHit2D[] hits = Physics2D.BoxCastAll(
+                    col.bounds.center,
+                    col.bounds.size * 0.9f, // Thu nhỏ nhẹ để không quẹt trúng trần/sàn nhà
+                    0f,
+                    lookBehindDirection,
+                    1.2f // Khoảng cách quét: Đủ cho 1 nhân vật đứng sát ngay sau lưng
+                );
+
+                foreach (var hit in hits)
+                {
+                    PlayerController backPlayer = hit.collider.GetComponent<PlayerController>();
+                    
+                    // Nếu phát hiện có Player khác bám ngay sau lưng
+                    if (backPlayer != null && backPlayer != frontPlayer)
+                    {
+                        return true; // Mở khóa ngay lập tức!
+                    }
+                }
+            }
+        }
+
+        // Nếu không thỏa mãn cả 2 trường hợp -> Khóa cứng hộp
+        return false; 
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -78,15 +123,19 @@ public class PushableBox : MonoBehaviour
         // Chỉ tính là đang đẩy nếu tiếp xúc từ phương ngang (2 bên hông)
         if (Mathf.Abs(avgNormal.x) > 0.5f)
         {
-            _sidePushersCount++;
-            _sumPushDirections += new Vector2(-avgNormal.x, 0f).normalized;
-
-            if (boxType == BoxType.Ice || boxType == BoxType.Lava)
+            // Đưa người chơi vào danh sách nếu chưa có
+            if (!_activePushers.Contains(player))
             {
-                ElementalIdentity id = player.GetComponent<ElementalIdentity>();
-                if (id != null && id.Type == requiredElementForElementBox)
+                _activePushers.Add(player);
+                _sumPushDirections += new Vector2(-avgNormal.x, 0f).normalized;
+
+                if (boxType == BoxType.Ice || boxType == BoxType.Lava)
                 {
-                    _qualifiedElementPushersCount++;
+                    ElementalIdentity id = player.GetComponent<ElementalIdentity>();
+                    if (id != null && id.Type == requiredElementForElementBox)
+                    {
+                        _qualifiedElementPushersCount++;
+                    }
                 }
             }
         }
