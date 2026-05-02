@@ -19,6 +19,14 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float followSmoothTime = 0.15f;
     [SerializeField] private Vector2 followOffset;
 
+    // --- ZOOM SETTINGS ĐÃ ĐƯỢC CHUẨN HÓA ---
+    [Header("Zoom Settings (Pico Park Style)")]
+    [SerializeField] private float minZoom = 5f;        
+    [SerializeField] private float maxZoom = 12f;       
+    [SerializeField] private float maxDistance = 6f;    // Khoảng cách tối đa để zoom hết cỡ
+    [SerializeField] private float zoomSmoothTime = 5f; 
+    // ----------------------------------------
+
     [Header("Station Free-look")]
     [SerializeField] private InputActionReference commanderLookAction;
     [SerializeField] private float freeLookSpeed = 8f;
@@ -49,6 +57,18 @@ public class CameraController : MonoBehaviour
     private Vector3 _leftFollowVelocity;
     private RectTransform _dividerRect;
     private Canvas _dividerCanvas;
+
+    // THÊM HÀM START NÀY ĐỂ TRỊ BỆNH "ĐỨNG IM LÚC ĐẦU"
+    private void Start()
+    {
+        // Ép buộc Camera khởi động ở trạng thái đi theo 2 người
+        _state = CameraState.FollowCentroid;
+
+        if (leftCamera != null)
+        {
+            leftCamera.enabled = false;
+        }
+    }
 
     private void OnEnable()
     {
@@ -93,22 +113,28 @@ public class CameraController : MonoBehaviour
 
     private void TickFollowCentroid()
     {
-        if (player1 == null || player2 == null)
-        {
-            return;
-        }
+        if (player1 == null || player2 == null) return;
 
+        // 1. DI CHUYỂN
         Vector3 centroid = (player1.position + player2.position) * 0.5f;
         Vector3 target = new Vector3(centroid.x + followOffset.x, centroid.y + followOffset.y, transform.position.z);
         transform.position = Vector3.SmoothDamp(transform.position, target, ref _followVelocity, followSmoothTime);
+
+        // 2. ZOOM BẰNG TỶ LỆ PHẦN TRĂM
+        if (_rightCamera != null)
+        {
+            float distance = Vector2.Distance(player1.position, player2.position);
+            float zoomPercent = distance / maxDistance;
+            float targetZoom = Mathf.Lerp(minZoom, maxZoom, zoomPercent);
+            
+            targetZoom = Mathf.Clamp(targetZoom, minZoom, maxZoom);
+            _rightCamera.orthographicSize = Mathf.Lerp(_rightCamera.orthographicSize, targetZoom, Time.deltaTime * zoomSmoothTime);
+        }
     }
 
     private void TickStationFreeLook()
     {
-        if (!_lookEnabled || commanderLookAction == null || commanderLookAction.action == null)
-        {
-            return;
-        }
+        if (!_lookEnabled || commanderLookAction == null || commanderLookAction.action == null) return;
 
         Vector2 input = commanderLookAction.action.ReadValue<Vector2>();
         Vector3 delta = new Vector3(input.x, input.y, 0f) * (freeLookSpeed * Time.deltaTime);
@@ -117,10 +143,7 @@ public class CameraController : MonoBehaviour
 
     private void TickAsymmetricSplit()
     {
-        if (_rightCamera == null)
-        {
-            return;
-        }
+        if (_rightCamera == null) return;
 
         if (_splitCommanderInput != null)
         {
@@ -152,11 +175,7 @@ public class CameraController : MonoBehaviour
 
     public void ExitStationMode(CameraStation station)
     {
-        if (_activeStation != station)
-        {
-            return;
-        }
-
+        if (_activeStation != station) return;
         _activeStation = null;
         _state = CameraState.FollowCentroid;
     }
@@ -177,10 +196,7 @@ public class CameraController : MonoBehaviour
             }
         }
 
-        if (_rightCamera != null)
-        {
-            _rightCamera.rect = new Rect(leftViewportWidth, 0f, 1f - leftViewportWidth, 1f);
-        }
+        if (_rightCamera != null) _rightCamera.rect = new Rect(leftViewportWidth, 0f, 1f - leftViewportWidth, 1f);
 
         if (leftCamera != null)
         {
@@ -197,10 +213,7 @@ public class CameraController : MonoBehaviour
 
     public void ExitAsymmetricSplitMode(AsymmetricCameraPillar pillar)
     {
-        if (_activePillar != pillar)
-        {
-            return;
-        }
+        if (_activePillar != pillar) return;
 
         _activePillar = null;
         _splitCommander = null;
@@ -213,15 +226,9 @@ public class CameraController : MonoBehaviour
             _rightCamera.orthographicSize = _rightCameraDefaultOrthoSize;
         }
 
-        if (leftCamera != null)
-        {
-            leftCamera.enabled = false;
-        }
+        if (leftCamera != null) leftCamera.enabled = false;
 
-        if (_dividerRect != null)
-        {
-            _dividerRect.gameObject.SetActive(false);
-        }
+        if (_dividerRect != null) _dividerRect.gameObject.SetActive(false);
 
         _state = CameraState.FollowCentroid;
     }
@@ -256,10 +263,7 @@ public class CameraController : MonoBehaviour
 
     private void UpdateDividerRect()
     {
-        if (_dividerRect == null)
-        {
-            return;
-        }
+        if (_dividerRect == null) return;
 
         _dividerRect.gameObject.SetActive(true);
         _dividerRect.anchorMin = new Vector2(leftViewportWidth, 0f);
