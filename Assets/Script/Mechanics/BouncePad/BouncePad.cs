@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
-
+// This script should be attached to the Bounce Pad GameObject, which should have a Collider2D (set as trigger) and a Rigidbody2D (set to Kinematic).
 public class BouncePad : MonoBehaviour
 {
     [SerializeField] private float bounceForce = 14f;
