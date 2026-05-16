@@ -2,11 +2,15 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
+    private Vector3 spawnPosition;
+
+    private void Start()
+    {
+        spawnPosition = transform.position;
+    }
+
     public void Kill()
     {
-        if (LevelManager.Instance != null)
-        {
-            LevelManager.Instance.RestartLevel();
-        }
+        transform.position = spawnPosition;
     }
 }
