@@ -8,7 +8,7 @@ public class RopeBetweenPlayers : MonoBehaviour
     public Transform playerWater;
 
     [Header("Giới hạn dây")]
-    public float maxDistance = 3f;
+    public float maxDistance = 4.5f;
     public float pullForce = 25f;
     public float maxPullSpeed = 6f;
 
