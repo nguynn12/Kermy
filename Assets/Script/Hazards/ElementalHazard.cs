@@ -8,28 +8,48 @@ public class ElementalHazard : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        // 1. ƯU TIÊN KIỂM TRA NHÂN VẬT TRƯỚC
+        ElementalIdentity identity = other.GetComponent<ElementalIdentity>();
+        PlayerHealth health = other.GetComponent<PlayerHealth>();
+
+        if (identity != null && health != null)
+        {
+            // Kiểm tra: Nếu là bẫy Độc (Toxic) HOẶC nhân vật đi sai hệ nguyên tố (Ếch Nước vào Lava)
+            if (hazardType == ElementalType.Toxic || identity.Type != hazardType)
+            {
+                Debug.Log(other.name + " dính bẫy nguyên tố, xử lý dọn dẹp vật lý để tránh khựng!");
+
+                // XỬ LÝ TRIỆT TIÊU VẬT LÝ KHÔNG CHO KHỰNG:
+                Rigidbody2D rb = other.GetComponent<Rigidbody2D>();
+                if (rb != null)
+                {
+                    rb.linearVelocity = Vector2.zero; // Đưa vận tốc di chuyển về 0 ngay lập tức
+                    rb.angularVelocity = 0f;          // Tắt hoàn toàn vận tốc xoay
+                    rb.bodyType = RigidbodyType2D.Kinematic; // Chuyển tạm sang Kinematic để đóng băng vật lý
+                }
+
+                // Gọi hàm chết gốc của bạn để dịch chuyển nhân vật về Checkpoint
+                health.Kill();
+
+                // Trả lại trạng thái vật lý bình thường sau khi đã dịch chuyển xong
+                if (rb != null)
+                {
+                    rb.bodyType = RigidbodyType2D.Dynamic;
+                }
+                
+                return;
+            }
+            
+            // Đúng hệ (Ếch Lửa vào Lava, Ếch Nước vào Nước) -> Đi qua an toàn
+            return; 
+        }
+
+        // 2. NẾU KHÔNG PHẢI NHÂN VẬT THÌ MỚI XÉT ĐẾN KHỐI HỘP ĐẨY (BLOCK)
         BlockHazardInteraction blockInteraction = other.GetComponent<BlockHazardInteraction>();
         if (blockInteraction != null)
         {
             blockInteraction.OnTouchedHazard(this);
             return;
-        }
-
-        ElementalIdentity identity = other.GetComponent<ElementalIdentity>();
-        if (identity == null)
-        {
-            return;
-        }
-
-        if (identity.Type == hazardType)
-        {
-            return;
-        }
-
-        PlayerHealth health = other.GetComponent<PlayerHealth>();
-        if (health != null)
-        {
-            health.Kill();
         }
     }
 }
