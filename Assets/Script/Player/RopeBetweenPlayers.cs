@@ -60,6 +60,7 @@ public class RopeBetweenPlayers : MonoBehaviour
         Vector2 direction = waterPos - firePos;
         float distance = direction.magnitude;
 
+        // Nếu khoảng cách vẫn nằm trong giới hạn cho phép -> Không can thiệp vật lý
         if (distance <= maxDistance)
             return;
 
@@ -69,23 +70,43 @@ public class RopeBetweenPlayers : MonoBehaviour
         bool fireFalling = rbFire.linearVelocity.y < -0.2f;
         bool waterFalling = rbWater.linearVelocity.y < -0.2f;
 
-        // Nếu Water đang rơi, Fire làm neo -> kéo Water lại
+        // Trường hợp 1: Nếu Water đang rơi tự do, Fire đứng im làm neo -> kéo Water lại
         if (waterFalling && !fireFalling)
         {
             PullBodyToPoint(rbWater, firePos + normal * maxDistance, excess);
             return;
         }
 
-        // Nếu Fire đang rơi, Water làm neo -> kéo Fire lại
+        // Trường hợp 2: Nếu Fire đang rơi tự do, Water đứng im làm neo -> kéo Fire lại
         if (fireFalling && !waterFalling)
         {
             PullBodyToPoint(rbFire, waterPos - normal * maxDistance, excess);
             return;
         }
 
-        // Nếu cả 2 đều không rơi hoặc cả 2 đều rơi -> kéo nhẹ cả 2
-        Vector2 correction = normal * excess * 0.5f;
+        // =========================================================================
+        // 🌟 ĐOẠN FIX DỨT ĐIỂM LỖI NHẢY KÉO: 
+        // Nếu một trong hai đứa đang lao lên trời (Nhảy), đứa còn lại ĐANG ĐỨNG TRÊN ĐẤT 
+        // thì TUYỆT ĐỐI không được ép vị trí hay cộng vận tốc giật cục để tránh bị hất bay theo.
+        // =========================================================================
+        if (rbWater.linearVelocity.y > 0.5f && Mathf.Abs(rbFire.linearVelocity.y) < 0.1f)
+        {
+            // Con Nước đang nhảy lên, con Lửa đang đứng yên -> Sợi dây chỉ căng ra giữ con Nước lại không cho đi quá xa
+            rbWater.position = firePos + normal * maxDistance;
+            rbWater.linearVelocity = new Vector2(rbWater.linearVelocity.x, Mathf.Min(rbWater.linearVelocity.y, maxPullSpeed));
+            return;
+        }
 
+        if (rbFire.linearVelocity.y > 0.5f && Mathf.Abs(rbWater.linearVelocity.y) < 0.1f)
+        {
+            // Con Lửa đang nhảy lên, con Nước đang đứng yên -> Sợi dây chỉ căng ra giữ con Lửa lại
+            rbFire.position = waterPos - normal * maxDistance;
+            rbFire.linearVelocity = new Vector2(rbFire.linearVelocity.x, Mathf.Min(rbFire.linearVelocity.y, maxPullSpeed));
+            return;
+        }
+
+        // Nếu rơi vào các trường hợp đu dây thông thường khác (cả 2 cùng bay, cùng rơi...)
+        Vector2 correction = normal * excess * 0.5f;
         rbFire.position += correction;
         rbWater.position -= correction;
 

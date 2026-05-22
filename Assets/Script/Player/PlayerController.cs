@@ -28,6 +28,14 @@ public class PlayerController : MonoBehaviour
 
     private bool _controlEnabled = true;
     private bool _jumpRequested;
+    
+    // Biến trung gian hứng hướng di chuyển từ Update xuống FixedUpdate
+    private float _trackedMoveX;
+    private float _trackedMoveY;
+    
+    // Biến phụ trợ bảo lãnh trạng thái đứng trên đất khi chạm bẫy sập
+    private bool _isForcedGroundedByTrap;
+
     private readonly RaycastHit2D[] _groundRayHits = new RaycastHit2D[4];
 
     private void Awake()
@@ -43,11 +51,68 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         if (!_controlEnabled)
-            return;
-
-        if (inputHandler != null && inputHandler.ConsumeJumpPressed())
         {
-            _jumpRequested = true;
+            _trackedMoveX = 0f;
+            _trackedMoveY = 0f;
+            return;
+        }
+
+        string currentTag = gameObject.tag; // Lấy nhãn để phân chia chủ quyền
+
+        // Hướng di chuyển gốc từ Handler
+        if (inputHandler != null)
+        {
+            _trackedMoveX = inputHandler.MoveInput.x;
+            _trackedMoveY = inputHandler.MoveInput.y;
+
+            // Chấp nhận nút nhảy từ Handler phát ra
+            if (inputHandler.ConsumeJumpPressed())
+            {
+                _jumpRequested = true;
+            }
+            
+            // 🌟 CHỈ CHO PHÉP ẾCH NƯỚC (Player2) NHẢY BẰNG PHÍM MŨI TÊN LÊN
+            if (currentTag == "Player2" && Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                _jumpRequested = true;
+            }
+        }
+
+        // ====================================================================
+        // 🔥 XỬ LÝ TRÊN THANG: Phân quyền nút bấm theo đúng nhân vật
+        // ====================================================================
+        if (isOnLadder)
+        {
+            // Nếu là con Nước (Player2) thì mới cho leo thang bằng phím mũi tên
+            if (currentTag == "Player2")
+            {
+                if (Input.GetKey(KeyCode.UpArrow))
+                {
+                    _trackedMoveY = 1f;
+                }
+                else if (Input.GetKey(KeyCode.DownArrow))
+                {
+                    _trackedMoveY = -1f;
+                }
+            }
+            // Nếu là con Lửa (Player1) thì leo thang bằng phím W/S (đã nhận từ inputHandler ở trên)
+        }
+        else
+        {
+            // SỬA LỖI TRÔI: Khi ĐÃ RỜI THANG, nếu người chơi không bấm nút di chuyển dọc,
+            // bắt buộc phải đưa _trackedMoveY về lại 0 để trả lại trọng lực rơi bình thường.
+            if (inputHandler == null || inputHandler.MoveInput.y == 0f)
+            {
+                // Nếu là con Nước đang không bấm mũi tên dọc thì reset
+                if (currentTag == "Player2" && !Input.GetKey(KeyCode.UpArrow) && !Input.GetKey(KeyCode.DownArrow))
+                {
+                    _trackedMoveY = 0f;
+                }
+                else if (currentTag == "Player1")
+                {
+                    _trackedMoveY = 0f;
+                }
+            }
         }
     }
 
@@ -62,8 +127,8 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        float moveX = inputHandler != null ? inputHandler.MoveInput.x : 0f;
-        float moveY = inputHandler != null ? inputHandler.MoveInput.y : 0f;
+        float moveX = _trackedMoveX;
+        float moveY = _trackedMoveY;
 
         float baseVelocityX = 0f;
 
@@ -73,6 +138,13 @@ public class PlayerController : MonoBehaviour
         }
 
         float targetVelocityX = (moveX * moveSpeed) + baseVelocityX;
+        
+        // Khóa hẳn lực đẩy ngang khi đang bám thang để tránh bị trượt văng ra ngoài
+        if (isOnLadder)
+        {
+            targetVelocityX = 0f;
+        }
+
         float forceX = (targetVelocityX - rb.linearVelocity.x) * rb.mass / Time.fixedDeltaTime;
         rb.AddForce(new Vector2(forceX, 0f));
 
@@ -88,12 +160,13 @@ public class PlayerController : MonoBehaviour
 
         if (_jumpRequested)
         {
-            _jumpRequested = false;
-
-            if ((isGrounded || isOnLadder) && (supportDetector == null || !supportDetector.IsSupportingPlayer))
+            // Kiểm tra điều kiện nhảy: Chạm đất thông thường, đứng trên thang, hoặc được bẫy sập bảo lãnh
+            if ((isGrounded || _isForcedGroundedByTrap || isOnLadder) && (supportDetector == null || !supportDetector.IsSupportingPlayer))
             {
                 Jump();
             }
+            
+            _jumpRequested = false;
         }
     }
 
@@ -127,6 +200,8 @@ public class PlayerController : MonoBehaviour
         if (!enabled)
         {
             _jumpRequested = false;
+            _trackedMoveX = 0f;
+            _trackedMoveY = 0f;
             rb.linearVelocity = Vector2.zero;
         }
     }
@@ -202,4 +277,17 @@ public class PlayerController : MonoBehaviour
             Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
     }
+
+    // ====================================================================
+    // 🔥 CÁC HÀM PHỤ TRỢ ĐỂ KẾT NỐI VỚI TRAPPLATFORM KHÔNG BỊ NUỐT PHÍM
+    // ====================================================================
+
+    // Bẫy sập gọi hàm này để ép con ếch luôn nhảy được khi đứng lên bẫy
+    public void ForceGroundedFromTrap(bool grounded)
+    {
+        _isForcedGroundedByTrap = grounded;
+    }
+
+    // Bẫy sập check xem người chơi có đang bấm nút nhảy ở Update không
+    public bool IsJumpRequested => _jumpRequested;
 }

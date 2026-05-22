@@ -31,10 +31,11 @@ public class ElementalHazard : MonoBehaviour
                 // Gọi hàm chết gốc của bạn để dịch chuyển nhân vật về Checkpoint
                 health.Kill();
 
-                // Trả lại trạng thái vật lý bình thường sau khi đã dịch chuyển xong
+                // TRẢ LẠI TRẠNG THÁI VẬT LÝ SAU 1 NHỊP (Dùng Invoke để tránh bị hút ngược lại hố Lava)
                 if (rb != null)
                 {
-                    rb.bodyType = RigidbodyType2D.Dynamic;
+                    // Tạo một hàm nhỏ chạy ẩn sau 0.02 giây để đảm bảo ếch đã "tốc biến" về checkpoint an toàn rồi mới bật lại Dynamic
+                    StartCoroutine(ResetPhysicsCoroutine(rb));
                 }
                 
                 return;
@@ -50,6 +51,16 @@ public class ElementalHazard : MonoBehaviour
         {
             blockInteraction.OnTouchedHazard(this);
             return;
+        }
+    }
+
+    // Hàm Coroutine phụ trợ chạy ngầm để trả lại vật lý Dynamic mượt mà không lỗi vị trí
+    private System.Collections.IEnumerator ResetPhysicsCoroutine(Rigidbody2D rb)
+    {
+        yield return new WaitForFixedUpdate(); // Chờ Unity cập nhật xong vị trí mới ở checkpoint
+        if (rb != null)
+        {
+            rb.bodyType = RigidbodyType2D.Dynamic; // Trả lại tự do cho ếch di chuyển tiếp
         }
     }
 }
