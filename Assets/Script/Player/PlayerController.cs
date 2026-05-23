@@ -2,6 +2,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(PlayerInputHandler))]
+[RequireComponent(typeof(AudioSource))] // Bảo đảm Object bắt buộc phải có loa
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
@@ -17,6 +18,16 @@ public class PlayerController : MonoBehaviour
     public LayerMask groundLayer;
     public LayerMask jumpSupportLayer;
 
+    // ====================================================================
+    // 🔥 KHU VỰC AUDIO ĐÃ KẾT NỐI: Mạnh thả file tương ứng vào đây ngoài Unity nha
+    // ====================================================================
+    [Header("Audio Settings")]
+    public AudioSource audioSource; // Cái loa của con ếch
+    public AudioClip jumpSound;      // Thả file Jump2.wav vào đây
+    public AudioClip walkSound;      // Thả file Mutant.wav vào đây
+    public AudioClip collectSound;   // Thả file Pickup4.wav vào đây
+    public AudioClip deathSound;     // Ô MỚI: Thả file âm thanh lúc chết vào đây
+
     private Rigidbody2D rb;
     private PlayerInputHandler inputHandler;
     private PlayerSupportDetector supportDetector;
@@ -29,11 +40,9 @@ public class PlayerController : MonoBehaviour
     private bool _controlEnabled = true;
     private bool _jumpRequested;
     
-    // Biến trung gian hứng hướng di chuyển từ Update xuống FixedUpdate
     private float _trackedMoveX;
     private float _trackedMoveY;
     
-    // Biến phụ trợ bảo lãnh trạng thái đứng trên đất khi chạm bẫy sập
     private bool _isForcedGroundedByTrap;
 
     private readonly RaycastHit2D[] _groundRayHits = new RaycastHit2D[4];
@@ -44,13 +53,13 @@ public class PlayerController : MonoBehaviour
         inputHandler = GetComponent<PlayerInputHandler>();
         supportDetector = GetComponent<PlayerSupportDetector>();
         riderStick = GetComponent<PlayerRiderStick>();
+        
+        // Tự động tìm cái loa gắn trên con ếch
+        audioSource = GetComponent<AudioSource>();
 
         originalGravityScale = rb.gravityScale;
     }
 
-    // ====================================================================
-    // 🔥 ĐÃ SỬA KHU VỰC UPDATE: Bắt GetKey liên tục để chống nuốt phím leo thang
-    // ====================================================================
     private void Update()
     {
         if (!_controlEnabled)
@@ -60,70 +69,43 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        string currentTag = gameObject.tag; // Lấy nhãn để phân chia chủ quyền
+        string currentTag = gameObject.tag; 
 
-        // Hướng di chuyển gốc từ Handler
         if (inputHandler != null)
         {
             _trackedMoveX = inputHandler.MoveInput.x;
             _trackedMoveY = inputHandler.MoveInput.y;
 
-            // Chấp nhận nút nhảy từ Handler phát ra
             if (inputHandler.ConsumeJumpPressed())
             {
                 _jumpRequested = true;
             }
             
-            // 🌟 CHỈ CHO PHÉP ẾCH NƯỚC (Player2) NHẢY BẰNG PHÍM MŨI TÊN LÊN
             if (currentTag == "Player2" && Input.GetKeyDown(KeyCode.UpArrow))
             {
                 _jumpRequested = true;
             }
         }
 
-        // ====================================================================
-        // 🔥 XỬ LÝ TRÊN THANG: Ép dùng GetKey thời gian thực để leo siêu mượt
-        // ====================================================================
         if (isOnLadder)
         {
-            if (currentTag == "Player2") // Ếch Nước
+            if (currentTag == "Player2") 
             {
-                if (Input.GetKey(KeyCode.UpArrow))
-                {
-                    _trackedMoveY = 1f;
-                }
-                else if (Input.GetKey(KeyCode.DownArrow))
-                {
-                    _trackedMoveY = -1f;
-                }
-                else
-                {
-                    _trackedMoveY = 0f; // Thả tay ra thì đứng im trên thang chứ không trôi
-                }
+                if (Input.GetKey(KeyCode.UpArrow)) _trackedMoveY = 1f;
+                else if (Input.GetKey(KeyCode.DownArrow)) _trackedMoveY = -1f;
+                else _trackedMoveY = 0f;
             }
-            else if (currentTag == "Player1") // Ếch Lửa
+            else if (currentTag == "Player1") 
             {
-                if (Input.GetKey(KeyCode.W))
-                {
-                    _trackedMoveY = 1f;
-                }
-                else if (Input.GetKey(KeyCode.S))
-                {
-                    _trackedMoveY = -1f;
-                }
-                else
-                {
-                    _trackedMoveY = 0f; // Thả tay ra thì đứng im trên thang chứ không trôi
-                }
+                if (Input.GetKey(KeyCode.W)) _trackedMoveY = 1f;
+                else if (Input.GetKey(KeyCode.S)) _trackedMoveY = -1f;
+                else _trackedMoveY = 0f;
             }
         }
         else
         {
-            // SỬA LỖI TRÔI: Khi ĐÃ RỜI THANG, nếu người chơi không bấm nút di chuyển dọc,
-            // bắt buộc phải đưa _trackedMoveY về lại 0 để trả lại trọng lực rơi bình thường.
             if (inputHandler == null || inputHandler.MoveInput.y == 0f)
             {
-                // Nếu là con Nước đang không bấm mũi tên dọc thì reset
                 if (currentTag == "Player2" && !Input.GetKey(KeyCode.UpArrow) && !Input.GetKey(KeyCode.DownArrow))
                 {
                     _trackedMoveY = 0f;
@@ -134,11 +116,20 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+
+        // ====================================================================
+        // 🔊 XỬ LÝ TIẾNG CHẠY (MUTANT.WAV): Phát liên tục khi di chuyển trên đất
+        // ====================================================================
+        if (isGrounded && !isOnLadder && Mathf.Abs(_trackedMoveX) > 0.1f)
+        {
+            // Chỉ phát khi loa đang rảnh để bước chân không bị lặp đè dính cục chói tai
+            if (audioSource != null && walkSound != null && !audioSource.isPlaying)
+            {
+                audioSource.PlayOneShot(walkSound, 0.4f); // Chạy âm lượng 40% cho vừa tai
+            }
+        }
     }
 
-    // ====================================================================
-    // 🔥 ĐÃ SỬA KHU VỰC FIXEDUPDATE: Khóa cứng quán tính ngang khi leo thang
-    // ====================================================================
     private void FixedUpdate()
     {
         UpdateGrounded();
@@ -152,7 +143,6 @@ public class PlayerController : MonoBehaviour
 
         float moveX = _trackedMoveX;
         float moveY = _trackedMoveY;
-
         float baseVelocityX = 0f;
 
         if (riderStick != null && riderStick.ParentRigidbody != null)
@@ -162,26 +152,21 @@ public class PlayerController : MonoBehaviour
 
         float targetVelocityX = (moveX * moveSpeed) + baseVelocityX;
         
-        // --- ĐOẠN SỬA GIA CỐ VẬT LÝ THANG ---
         if (isOnLadder)
         {
             targetVelocityX = 0f;
             rb.gravityScale = 0f;
-            // Ép hẳn vận tốc ngang về 0 và leo lên mượt mà bằng Velocity dọc, dẹp bỏ lực AddForce phản chủ
             rb.linearVelocity = new Vector2(0f, moveY * climbSpeed); 
         }
         else
         {
             rb.gravityScale = originalGravityScale;
-            
-            // Chỉ tính toán và bơm lực AddForce di chuyển ngang khi ĐANG KHÔNG LEO THANG
             float forceX = (targetVelocityX - rb.linearVelocity.x) * rb.mass / Time.fixedDeltaTime;
             rb.AddForce(new Vector2(forceX, 0f));
         }
 
         if (_jumpRequested)
         {
-            // Kiểm tra điều kiện nhảy: Chạm đất thông thường, đứng trên thang, hoặc được bẫy sập bảo lãnh
             if ((isGrounded || _isForcedGroundedByTrap || isOnLadder) && (supportDetector == null || !supportDetector.IsSupportingPlayer))
             {
                 Jump();
@@ -204,6 +189,36 @@ public class PlayerController : MonoBehaviour
 
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+
+        // ====================================================================
+        // 🔊 XỬ LÝ TIẾNG NHẢY (JUMP2.WAV): Cất cánh là búng kêu ngay!
+        // ====================================================================
+        if (audioSource != null && jumpSound != null)
+        {
+            audioSource.PlayOneShot(jumpSound, 0.8f);
+        }
+    }
+
+    // ====================================================================
+    // 🔊 XỬ LÝ TIẾNG ĂN NGỌC (PICKUP4.WAV): Hàm mở sẵn cho script Ngọc gọi sang
+    // ====================================================================
+    public void PlayCollectSound()
+    {
+        if (audioSource != null && collectSound != null)
+        {
+            audioSource.PlayOneShot(collectSound, 0.7f);
+        }
+    }
+
+    // ====================================================================
+    // 🔊 XỬ LÝ TIẾNG CHẾT: Hàm mở sẵn để script Bẫy gai/Nước độc gọi sang khi ếch ngỏm
+    // ====================================================================
+    public void PlayDeathSound()
+    {
+        if (audioSource != null && deathSound != null)
+        {
+            audioSource.PlayOneShot(deathSound, 0.8f); // Phát tiếng chết âm lượng 80%
+        }
     }
 
     public void ApplyBounce(float force)
@@ -250,21 +265,12 @@ public class PlayerController : MonoBehaviour
 
         LayerMask mask = jumpSupportLayer.value != 0 ? jumpSupportLayer : groundLayer;
         float rayDistance = Mathf.Max(0.01f, groundCheckRadius + 0.05f);
-
         int hitCount = Physics2D.RaycastNonAlloc(groundCheck.position, Vector2.down, _groundRayHits, rayDistance, mask);
 
         for (int i = 0; i < hitCount; i++)
         {
             RaycastHit2D hit = _groundRayHits[i];
-
-            if (hit.collider == null)
-                continue;
-
-            if (hit.rigidbody == rb)
-                continue;
-
-            if (hit.normal.y < 0.5f)
-                continue;
+            if (hit.collider == null || hit.rigidbody == rb || hit.normal.y < 0.5f) continue;
 
             isGrounded = true;
             return;
@@ -275,10 +281,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Ladder"))
-        {
-            isOnLadder = true;
-        }
+        if (collision.CompareTag("Ladder")) isOnLadder = true;
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -299,16 +302,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // ====================================================================
-    // 🔥 CÁC HÀM PHỤ TRỢ ĐỂ KẾT NỐI VỚI TRAPPLATFORM KHÔNG BỊ NUỐT PHÍM
-    // ====================================================================
-
-    // Bẫy sập gọi hàm này để ép con ếch luôn nhảy được khi đứng lên bẫy
-    public void ForceGroundedFromTrap(bool grounded)
-    {
-        _isForcedGroundedByTrap = grounded;
-    }
-
-    // Bẫy sập check xem người chơi có đang bấm nút nhảy ở Update không
+    public void ForceGroundedFromTrap(bool grounded) => _isForcedGroundedByTrap = grounded;
     public bool IsJumpRequested => _jumpRequested;
 }

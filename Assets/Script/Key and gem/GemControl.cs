@@ -1,97 +1,67 @@
 using UnityEngine;
-using TMPro;
 
-public class GemControl : MonoBehaviour
+public class GemItem : MonoBehaviour
 {
-    public static GemControl Instance { get; private set; }
-
-    [Header("=== GIAO DIỆN GEM CHÍNH GIỮA CANVAS ===")]
-    public TextMeshProUGUI redGemText;   // Ô nhận Text màu Đỏ
-    public TextMeshProUGUI greenGemText; // Ô nhận Text màu Xanh Lá
-    public TextMeshProUGUI blueGemText;  // Ô nhận Text màu Xanh Dương
-
-    // Biến lưu trữ số lượng ĐÃ NHẶT được
-    private int _redCollected = 0;
-    private int _greenCollected = 0;
-    private int _blueCollected = 0;
-
-    // Biến tự động đếm TỔNG SỐ NGỌC CÓ TRÊN MAP theo từng màu
-    private int _redTotalInMap = 0;
-    private int _greenTotalInMap = 0;
-    private int _blueTotalInMap = 0;
-
-    // Thuộc tính tính tổng số ngọc để phục vụ hàm tính sao cuối màn
-    private int _totalGemsOnMap => (_redTotalInMap + _greenTotalInMap + _blueTotalInMap);
-    private int _totalCollectedGems => (_redCollected + _greenCollected + _blueCollected);
-
-    private void Awake()
-    {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-    }
-
-    private void Start()
-    {
-        // 🌟 TỰ ĐỘNG QUÉT VÀ PHÂN LOẠI MÀU NGỌC TRÊN MAP KHI VÀO GAME
-        GemItem[] allGems = FindObjectsByType<GemItem>(FindObjectsSortMode.None);
-        foreach (GemItem gem in allGems)
-        {
-            if (gem.gemColor == GemItem.GemColorType.Red) _redTotalInMap++;
-            else if (gem.gemColor == GemItem.GemColorType.Green) _greenTotalInMap++;
-            else if (gem.gemColor == GemItem.GemColorType.Blue) _blueTotalInMap++;
-        }
-
-        UpdateGemUI();
-    }
-
-    // ==========================================================
-    // 🌟 CÁC HÀM CỘNG ĐIỂM RIÊNG BIỆT (Được gọi từ GemItem)
-    // ==========================================================
+    // Tạo bảng chọn màu sắc trực quan ngoài Unity Inspector
+    public enum GemColorType { Red, Green, Blue }
     
-    public void AddRedGem()
+    [Header("Cấu hình viên Ngọc")]
+    public GemColorType gemColor; // Chọn màu cho viên ngọc này ngoài Inspector
+
+    // ====================================================================
+    // 🎵 CHỈ THÊM Ô NÀY ĐỂ KÉO FILE ÂM THANH PICKUP NGOÀI UNITY INSPECTOR
+    // ====================================================================
+    [Header("Âm thanh Nhặt Ngọc")]
+    [SerializeField] private AudioClip gemPickupSound; 
+
+    // ====================================================================
+    // 🔒 Ổ KHÓA 1: Giúp ếch chạm vào viên ngọc chỉ tính đúng 1 lần duy nhất
+    // ====================================================================
+    private bool isCollected = false; 
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        _redCollected++;
-        UpdateGemUI();
-    }
+        // Nếu viên ngọc này đã được ăn rồi thì chặn lại ngay không cho chạy tiếp
+        if (isCollected) return;
 
-    public void AddGreenGem()
-    {
-        _greenCollected++;
-        UpdateGemUI();
-    }
+        // Kiểm tra xem vật thể chạm vào có phải là Player không (Dựa vào Tag)
+        if (collision.CompareTag("Player 1") || collision.CompareTag("Player 2"))
+        {
+            // 🌟 ĐOẠN CODE PHÉP THUẬT: Gọi trực tiếp "Bộ não" GemControl đang chạy trên Map
+            if (GemControl.Instance != null)
+            {
+                // Sập ổ khóa lại ngay lập tức trước khi cộng điểm
+                isCollected = true; 
 
-    public void AddBlueGem()
-    {
-        _blueCollected++;
-        UpdateGemUI();
-    }
+                // Dựa vào màu của viên ngọc này để gọi hàm cộng điểm tương ứng (GIỮ NGUYÊN CODE CŨ CỦA MẠNH)
+                if (gemColor == GemColorType.Red)
+                {
+                    GemControl.Instance.AddRedGem();
+                }
+                else if (gemColor == GemColorType.Green)
+                {
+                    GemControl.Instance.AddGreenGem();
+                }
+                else if (gemColor == GemColorType.Blue)
+                {
+                    GemControl.Instance.AddBlueGem();
+                }
 
-    // ==========================================================
-    // 📺 HÀM CẬP NHẬT ĐỊNH DẠNG CHỮ SIÊU TRỰC QUAN
-    // ==========================================================
-    private void UpdateGemUI()
-    {
-        // Hiển thị rõ ràng chữ Lửa kèm tỉ lệ ngọc đỏ (Ví dụ: Lửa: 1/3)
-        if (redGemText != null) 
-            redGemText.text = $" {_redCollected}/{_redTotalInMap}";
+                // ====================================================================
+                // 🎵 PHÁT TIẾNG TING TING NGAY TẠI VỊ TRÍ VIÊN NGỌC (TRƯỚC KHI DESTROY)
+                // ====================================================================
+                if (gemPickupSound != null)
+                {
+                    AudioSource.PlayClipAtPoint(gemPickupSound, transform.position, 0.7f);
+                }
 
-        // Hiển thị rõ ràng chữ Ngọc kèm tỉ lệ ngọc xanh lá (Ví dụ: Ngọc: 0/2)
-        if (greenGemText != null) 
-            greenGemText.text = $" {_greenCollected}/{_greenTotalInMap}";
-
-        // Hiển thị rõ ràng chữ Nước kèm tỉ lệ ngọc xanh dương (Ví dụ: Nước: 2/4)
-        if (blueGemText != null) 
-            blueGemText.text = $" {_blueCollected}/{_blueTotalInMap}";
-    }
-
-    // ==========================================================
-    // ⭐ HÀM TÍNH TOÁN SỐ SAO ĐẠT ĐƯỢC KHI QUA MÀN
-    // ==========================================================
-    public int CalculateStarsResult()
-    {
-        if (_totalGemsOnMap == 0) return 3; 
-        if (_totalCollectedGems == _totalGemsOnMap) return 3; // Ăn sạch bách ngọc được 3 sao
-        else if (_totalCollectedGems >= _totalGemsOnMap / 2f) return 2; // Ăn được một nửa trở lên được 2 sao
-        else return 1; // Ăn ít quá được 1 sao
+                // Ăn xong thì cho viên ngọc biến mất khỏi bản đồ
+                Destroy(gameObject);
+            }
+            else
+            {
+                Debug.LogError("Mạnh ơi! Chưa có Object nào gắn script GemControl ngoài Hierarchy kìa!");
+            }
+        }
     }
 }

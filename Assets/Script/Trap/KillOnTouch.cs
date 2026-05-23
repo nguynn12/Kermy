@@ -11,6 +11,13 @@ public class KillOnTouch : MonoBehaviour
         {
             Debug.Log(other.name + " đã va chạm với bẫy và chết!");
 
+            // 🔊 KÍCH HOẠT TIẾNG CHẾT: Cho con ếch kêu lên một tiếng đau đớn trước khi dịch chuyển
+            PlayerController pControl = other.GetComponent<PlayerController>();
+            if (pControl != null)
+            {
+                pControl.PlayDeathSound();
+            }
+
             // DỌN DẸP VẬT LÝ: Triệt tiêu ngay vận tốc để con ếch không bị khựng đơ lơ lửng trên bẫy
             Rigidbody2D rb = other.GetComponent<Rigidbody2D>();
             if (rb != null)

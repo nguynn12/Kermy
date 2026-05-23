@@ -19,6 +19,13 @@ public class ElementalHazard : MonoBehaviour
             {
                 Debug.Log(other.name + " dính bẫy nguyên tố, xử lý dọn dẹp vật lý để tránh khựng!");
 
+                // 🔊 KÍCH HOẠT TIẾNG CHẾT: Tìm PlayerController trên con ếch chạm bẫy để phát tiếng gầm rú
+                PlayerController pControl = other.GetComponent<PlayerController>();
+                if (pControl != null)
+                {
+                    pControl.PlayDeathSound();
+                }
+
                 // XỬ LÝ TRIỆT TIÊU VẬT LÝ KHÔNG CHO KHỰNG:
                 Rigidbody2D rb = other.GetComponent<Rigidbody2D>();
                 if (rb != null)
