@@ -14,9 +14,6 @@ public class ExitPortal : MonoBehaviour
     [Header("Âm thanh Chiến Thắng")]
     [SerializeField] private AudioClip victorySound; 
 
-    // ====================================================================
-    // 🌟 KHAI BÁO BIẾN TOÀN CỤC: Để sửa lỗi CS0103 cho Mạnh nè!
-    // ====================================================================
     public static bool hasRedKey = false;
     public static bool hasBlueKey = false;
     
@@ -26,7 +23,6 @@ public class ExitPortal : MonoBehaviour
 
     private void Start()
     {
-        // Vào game reset sạch trạng thái về ban đầu
         hasRedKey = false;
         hasBlueKey = false;
         p1Win = false;
@@ -34,22 +30,19 @@ public class ExitPortal : MonoBehaviour
         hasPlayedVictorySound = false; 
     }
 
-    // Hàm nhận tín hiệu nhặt chìa khóa từ file KeyItem của bạn
     public void CollectKey(PlayerInventory.ElementType element)
     {
-        // Tùy vào hệ của chìa khóa nhặt được mà kích hoạt trạng thái tương ứng
-        if (element == PlayerInventory.ElementType.Fire) // Đổi chữ Fire nếu nhóm bạn đặt tên khác
+        if (element == PlayerInventory.ElementType.Fire) 
         {
             hasRedKey = true;
             Debug.Log("Cổng nhận tín hiệu: Đã lấy được Chìa Khóa Lửa!");
         }
-        else if (element == PlayerInventory.ElementType.Water) // Đổi chữ Water nếu nhóm bạn đặt tên khác
+        else if (element == PlayerInventory.ElementType.Water) 
         {
             hasBlueKey = true;
             Debug.Log("Cổng nhận tín hiệu: Đã lấy được Chìa Khóa Nước!");
         }
         
-        // Sau khi nhặt, tự động check thử xem 2 đứa đang đứng đợi sẵn ở cổng chưa
         CheckVictory();
     }
 
@@ -77,7 +70,6 @@ public class ExitPortal : MonoBehaviour
 
     private void CheckVictory()
     {
-        // ĐIỀU KIỆN THẮNG: Cả 2 đứng đúng cổng VÀ ĐÃ ĂN ĐỦ 2 CHÌA KHÓA
         if (p1Win && p2Win)
         {
             if (hasRedKey && hasBlueKey)
@@ -90,7 +82,22 @@ public class ExitPortal : MonoBehaviour
                     AudioSource.PlayClipAtPoint(victorySound, transform.position, 0.9f);
                 }
 
-                Invoke("LoadNextScene", 0.5f);
+                // ====================================================================
+                // 🌟 SỬA TẠI ĐÂY: Gọi bảng kết quả 5 Sao lên màn hình
+                // ====================================================================
+                if (GemControl.Instance != null && VictoryManager.Instance != null)
+                {
+                    int collected = GemControl.Instance.GetTotalCollectedGems();
+                    int total = GemControl.Instance.GetTotalGemsOnMap();
+                    
+                    // Kích hoạt bảng hiển thị sao công thức mới
+                    VictoryManager.Instance.ShowVictoryScreen(collected, total);
+                }
+                else
+                {
+                    // Nếu chưa setup UI VictoryManager thì tự chuyển màn sau 0.5 giây như cũ
+                    Invoke("LoadNextScene", 0.5f);
+                }
             }
             else
             {

@@ -7,6 +7,7 @@ TagManager:
   - Ladder
   - Player 1
   - Player 2
+  - TrapSap
   layers:
   - Default
   - TransparentFX

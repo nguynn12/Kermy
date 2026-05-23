@@ -11,6 +11,24 @@ public class KillOnTouch : MonoBehaviour
         {
             Debug.Log(other.name + " đã va chạm với bẫy và chết!");
 
+            // ====================================================================
+            // 🔊 GỌI KHO NHẠC TỔNG: Tự lấy Tag của bẫy này gửi qua cho Manager phát nhạc
+            // ====================================================================
+            AudioSource loaCuaEch = other.GetComponent<AudioSource>();
+            if (loaCuaEch == null) 
+            {
+                loaCuaEch = other.gameObject.AddComponent<AudioSource>();
+                loaCuaEch.playOnAwake = false;
+                loaCuaEch.spatialBlend = 0f;
+            }
+
+            if (TrapSoundManager.Instance != null)
+            {
+                // Truyền Tag của chính vùng va chạm này và cái loa của ếch qua cho Manager xử lý
+                TrapSoundManager.Instance.PlayTrapSound(gameObject.tag, loaCuaEch);
+            }
+            // ====================================================================
+
             // 🔊 KÍCH HOẠT TIẾNG CHẾT: Cho con ếch kêu lên một tiếng đau đớn trước khi dịch chuyển
             PlayerController pControl = other.GetComponent<PlayerController>();
             if (pControl != null)

@@ -1,67 +1,101 @@
 using UnityEngine;
+using TMPro;
 
-public class GemItem : MonoBehaviour
+public class GemControl : MonoBehaviour
 {
-    // Tạo bảng chọn màu sắc trực quan ngoài Unity Inspector
-    public enum GemColorType { Red, Green, Blue }
-    
-    [Header("Cấu hình viên Ngọc")]
-    public GemColorType gemColor; // Chọn màu cho viên ngọc này ngoài Inspector
+    public static GemControl Instance { get; private set; }
 
-    // ====================================================================
-    // 🎵 CHỈ THÊM Ô NÀY ĐỂ KÉO FILE ÂM THANH PICKUP NGOÀI UNITY INSPECTOR
-    // ====================================================================
-    [Header("Âm thanh Nhặt Ngọc")]
-    [SerializeField] private AudioClip gemPickupSound; 
+    [Header("=== GIAO DIỆN GEM CHÍNH GIỮA CANVAS ===")]
+    public TextMeshProUGUI redGemText;
+    public TextMeshProUGUI greenGemText;
+    public TextMeshProUGUI blueGemText;
 
-    // ====================================================================
-    // 🔒 Ổ KHÓA 1: Giúp ếch chạm vào viên ngọc chỉ tính đúng 1 lần duy nhất
-    // ====================================================================
-    private bool isCollected = false; 
+    private int _redCollected = 0;
+    private int _greenCollected = 0;
+    private int _blueCollected = 0;
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private int _redTotalInMap = 0;
+    private int _greenTotalInMap = 0;
+    private int _blueTotalInMap = 0;
+
+    private int _totalGemsOnMap => (_redTotalInMap + _greenTotalInMap + _blueTotalInMap);
+    private int _totalCollectedGems => (_redCollected + _greenCollected + _blueCollected);
+
+    private void Awake()
     {
-        // Nếu viên ngọc này đã được ăn rồi thì chặn lại ngay không cho chạy tiếp
-        if (isCollected) return;
-
-        // Kiểm tra xem vật thể chạm vào có phải là Player không (Dựa vào Tag)
-        if (collision.CompareTag("Player 1") || collision.CompareTag("Player 2"))
+        if (Instance == null) Instance = this;
+        else
         {
-            // 🌟 ĐOẠN CODE PHÉP THUẬT: Gọi trực tiếp "Bộ não" GemControl đang chạy trên Map
-            if (GemControl.Instance != null)
-            {
-                // Sập ổ khóa lại ngay lập tức trước khi cộng điểm
-                isCollected = true; 
-
-                // Dựa vào màu của viên ngọc này để gọi hàm cộng điểm tương ứng (GIỮ NGUYÊN CODE CŨ CỦA MẠNH)
-                if (gemColor == GemColorType.Red)
-                {
-                    GemControl.Instance.AddRedGem();
-                }
-                else if (gemColor == GemColorType.Green)
-                {
-                    GemControl.Instance.AddGreenGem();
-                }
-                else if (gemColor == GemColorType.Blue)
-                {
-                    GemControl.Instance.AddBlueGem();
-                }
-
-                // ====================================================================
-                // 🎵 PHÁT TIẾNG TING TING NGAY TẠI VỊ TRÍ VIÊN NGỌC (TRƯỚC KHI DESTROY)
-                // ====================================================================
-                if (gemPickupSound != null)
-                {
-                    AudioSource.PlayClipAtPoint(gemPickupSound, transform.position, 0.7f);
-                }
-
-                // Ăn xong thì cho viên ngọc biến mất khỏi bản đồ
-                Destroy(gameObject);
-            }
-            else
-            {
-                Debug.LogError("Mạnh ơi! Chưa có Object nào gắn script GemControl ngoài Hierarchy kìa!");
-            }
+            Destroy(gameObject);
+            return;
         }
+    }
+
+    private void Start()
+    {
+        if (Instance != this) return;
+
+        _redTotalInMap = 0;
+        _greenTotalInMap = 0;
+        _blueTotalInMap = 0;
+
+        GemItem[] allGems = FindObjectsByType<GemItem>(FindObjectsSortMode.None);
+        foreach (GemItem gem in allGems)
+        {
+            if (gem.gemColor == GemItem.GemColorType.Red) _redTotalInMap++;
+            else if (gem.gemColor == GemItem.GemColorType.Green) _greenTotalInMap++;
+            else if (gem.gemColor == GemItem.GemColorType.Blue) _blueTotalInMap++;
+        }
+
+        UpdateGemUI();
+    }
+
+    public void AddRedGem()
+    {
+        _redCollected++;
+        UpdateGemUI();
+    }
+
+    public void AddGreenGem()
+    {
+        _greenCollected++;
+        UpdateGemUI();
+    }
+
+    public void AddBlueGem()
+    {
+        _blueCollected++;
+        UpdateGemUI();
+    }
+
+    private void UpdateGemUI()
+    {
+        if (redGemText != null) 
+            redGemText.text = $" {_redCollected}/{_redTotalInMap}";
+        if (greenGemText != null) 
+            greenGemText.text = $" {_greenCollected}/{_greenTotalInMap}";
+        if (blueGemText != null) 
+            blueGemText.text = $" {_blueCollected}/{_blueTotalInMap}";
+    }
+
+    public int CalculateStarsResult()
+    {
+        if (_totalGemsOnMap == 0) return 3;
+        if (_totalCollectedGems == _totalGemsOnMap) return 3;
+        else if (_totalCollectedGems >= _totalGemsOnMap / 2f) return 2;
+        else return 1;
+    }
+
+    // ====================================================================
+    // 🛠️ CHÈN THÊM: 2 hàm lấy điểm công khai để phục vụ bảng kết quả 5 sao
+    // ====================================================================
+    public int GetTotalCollectedGems()
+    {
+        return _totalCollectedGems;
+    }
+
+    public int GetTotalGemsOnMap()
+    {
+        return _totalGemsOnMap;
     }
 }
