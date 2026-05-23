@@ -48,6 +48,9 @@ public class PlayerController : MonoBehaviour
         originalGravityScale = rb.gravityScale;
     }
 
+    // ====================================================================
+    // 🔥 ĐÃ SỬA KHU VỰC UPDATE: Bắt GetKey liên tục để chống nuốt phím leo thang
+    // ====================================================================
     private void Update()
     {
         if (!_controlEnabled)
@@ -79,12 +82,11 @@ public class PlayerController : MonoBehaviour
         }
 
         // ====================================================================
-        // 🔥 XỬ LÝ TRÊN THANG: Phân quyền nút bấm theo đúng nhân vật
+        // 🔥 XỬ LÝ TRÊN THANG: Ép dùng GetKey thời gian thực để leo siêu mượt
         // ====================================================================
         if (isOnLadder)
         {
-            // Nếu là con Nước (Player2) thì mới cho leo thang bằng phím mũi tên
-            if (currentTag == "Player2")
+            if (currentTag == "Player2") // Ếch Nước
             {
                 if (Input.GetKey(KeyCode.UpArrow))
                 {
@@ -94,8 +96,26 @@ public class PlayerController : MonoBehaviour
                 {
                     _trackedMoveY = -1f;
                 }
+                else
+                {
+                    _trackedMoveY = 0f; // Thả tay ra thì đứng im trên thang chứ không trôi
+                }
             }
-            // Nếu là con Lửa (Player1) thì leo thang bằng phím W/S (đã nhận từ inputHandler ở trên)
+            else if (currentTag == "Player1") // Ếch Lửa
+            {
+                if (Input.GetKey(KeyCode.W))
+                {
+                    _trackedMoveY = 1f;
+                }
+                else if (Input.GetKey(KeyCode.S))
+                {
+                    _trackedMoveY = -1f;
+                }
+                else
+                {
+                    _trackedMoveY = 0f; // Thả tay ra thì đứng im trên thang chứ không trôi
+                }
+            }
         }
         else
         {
@@ -116,6 +136,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // ====================================================================
+    // 🔥 ĐÃ SỬA KHU VỰC FIXEDUPDATE: Khóa cứng quán tính ngang khi leo thang
+    // ====================================================================
     private void FixedUpdate()
     {
         UpdateGrounded();
@@ -139,23 +162,21 @@ public class PlayerController : MonoBehaviour
 
         float targetVelocityX = (moveX * moveSpeed) + baseVelocityX;
         
-        // Khóa hẳn lực đẩy ngang khi đang bám thang để tránh bị trượt văng ra ngoài
+        // --- ĐOẠN SỬA GIA CỐ VẬT LÝ THANG ---
         if (isOnLadder)
         {
             targetVelocityX = 0f;
-        }
-
-        float forceX = (targetVelocityX - rb.linearVelocity.x) * rb.mass / Time.fixedDeltaTime;
-        rb.AddForce(new Vector2(forceX, 0f));
-
-        if (isOnLadder)
-        {
             rb.gravityScale = 0f;
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, moveY * climbSpeed);
+            // Ép hẳn vận tốc ngang về 0 và leo lên mượt mà bằng Velocity dọc, dẹp bỏ lực AddForce phản chủ
+            rb.linearVelocity = new Vector2(0f, moveY * climbSpeed); 
         }
         else
         {
             rb.gravityScale = originalGravityScale;
+            
+            // Chỉ tính toán và bơm lực AddForce di chuyển ngang khi ĐANG KHÔNG LEO THANG
+            float forceX = (targetVelocityX - rb.linearVelocity.x) * rb.mass / Time.fixedDeltaTime;
+            rb.AddForce(new Vector2(forceX, 0f));
         }
 
         if (_jumpRequested)
