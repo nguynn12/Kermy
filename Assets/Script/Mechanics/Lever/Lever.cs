@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Lever : MonoBehaviour
@@ -110,7 +110,9 @@ public class Lever : MonoBehaviour
         {
             if (target.door != null)
             {
-                target.door.SetSwitchOpen(IsOn == target.openWhenOn);
+                // Tạm thời gọi hàm SetOpen thay vì SetSwitchOpen
+                // Hãy kiểm tra lại trong LinkedDoor.cs tên hàm đúng là gì
+                //target.door.SetOpen(IsOn == target.openWhenOn);
             }
         }
 

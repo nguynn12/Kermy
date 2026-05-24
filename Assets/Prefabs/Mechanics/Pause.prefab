@@ -530,7 +530,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7725043932204378560}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 9005381394347204682}
+        m_TargetAssemblyTypeName: PauseManager, Assembly-CSharp
+        m_MethodName: ReturnToMainMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!95 &6456574345266131
 Animator:
   serializedVersion: 7
@@ -752,12 +764,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 205b662d1d6ea8f419811b082dc842c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PauseManager
+  pauseKey: 27
   pauseMenuRoot: {fileID: 6937457051143387813}
-  gameplayPauseButton: {fileID: 2089737840869496306}
-  soundButtonImage: {fileID: 0}
-  soundOnSprite: {fileID: 0}
-  soundOffSprite: {fileID: 0}
-  pauseAnimator: {fileID: 0}
+  mainMenuSceneName: MainMenu
 --- !u!1 &5686140380297717103
 GameObject:
   m_ObjectHideFlags: 0
@@ -1023,7 +1032,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 585161914030467003, guid: 638a6b4b1cbc64149a580bcd545c279f, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 585161914030467003, guid: 638a6b4b1cbc64149a580bcd545c279f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ReturnToMainMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 585161914030467003, guid: 638a6b4b1cbc64149a580bcd545c279f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PauseManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 585161914030467003, guid: 638a6b4b1cbc64149a580bcd545c279f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 1920223898642325513, guid: 638a6b4b1cbc64149a580bcd545c279f, type: 3}
       propertyPath: m_AnchorMax.y
