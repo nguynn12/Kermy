@@ -332,6 +332,7 @@ GameObject:
   - component: {fileID: 811248401}
   - component: {fileID: 811248402}
   - component: {fileID: 811248403}
+  - component: {fileID: 811248404}
   m_Layer: 0
   m_Name: Player2_Aqua
   m_TagString: Player
@@ -531,6 +532,33 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.53125, y: 1.21875}
   m_EdgeRadius: 0
+--- !u!50 &811248404
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 811248396}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
 --- !u!1 &952922736
 GameObject:
   m_ObjectHideFlags: 0
@@ -546,6 +574,7 @@ GameObject:
   - component: {fileID: 952922741}
   - component: {fileID: 952922742}
   - component: {fileID: 952922743}
+  - component: {fileID: 952922744}
   m_Layer: 0
   m_Name: Player1_Ignus
   m_TagString: Player
@@ -745,6 +774,33 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.53125, y: 1.21875}
   m_EdgeRadius: 0
+--- !u!50 &952922744
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 952922736}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
 --- !u!1 &1618594132
 GameObject:
   m_ObjectHideFlags: 0
@@ -844,8 +900,8 @@ Transform:
   m_GameObject: {fileID: 1618594132}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.0097, y: 0.0178, z: 0}
-  m_LocalScale: {x: 4.024798, y: 1.5666803, z: 1}
+  m_LocalPosition: {x: -0.0097, y: -5.2586, z: 0}
+  m_LocalScale: {x: 4.024798, y: 3.2156115, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -894,9 +950,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a148f2f8c95aae04b87c268dc850f16e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
-  enemyPrefabs:
-  - {fileID: 6665388990525034894, guid: 0d1c52b605827684ba4d3971f363bec7, type: 3}
-  spawnDelay: 2
+  batPrefab: {fileID: 6665388990525034894, guid: 0d1c52b605827684ba4d3971f363bec7, type: 3}
+  waterDragonPrefab: {fileID: 0}
+  fireDragonPrefab: {fileID: 0}
+  wave1Duration: 10
+  wave1SpawnRate: 0.5
+  wave2Iterations: 10
+  timeBetweenArcs: 2.5
   minY: -4
   maxY: 4
 --- !u!1 &1915092817
@@ -1029,8 +1089,8 @@ Transform:
   m_GameObject: {fileID: 2096987204}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 25.6, y: 0.0178, z: 0}
-  m_LocalScale: {x: 4.024798, y: 1.5666803, z: 1}
+  m_LocalPosition: {x: 25.6, y: -5.2586, z: 0}
+  m_LocalScale: {x: 4.024798, y: 3.2156115, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
