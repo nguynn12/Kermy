@@ -5,7 +5,10 @@ TagManager:
   serializedVersion: 3
   tags:
   - Ladder
+<<<<<<< HEAD
   - Background
+=======
+>>>>>>> origin/level2
   layers:
   - Default
   - TransparentFX
@@ -40,9 +43,12 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+<<<<<<< HEAD
   - name: Background
     uniqueID: 3786698995
     locked: 0
+=======
+>>>>>>> origin/level2
   - name: Default
     uniqueID: 0
     locked: 0
