@@ -1,0 +1,608 @@
+fileFormatVersion: 2
+guid: 496a429e0a0696140b4f50656096438f
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 5658431545870162446
+    second: Saw Trap - Level 3_0
+  - first:
+      213: 578723141786493769
+    second: Saw Trap - Level 3_1
+  - first:
+      213: -5308119806141847964
+    second: Saw Trap - Level 3_2
+  - first:
+      213: -2346269177063455160
+    second: Saw Trap - Level 3_3
+  - first:
+      213: 1298798927745360159
+    second: Saw Trap - Level 3_4
+  - first:
+      213: 7400664097707740937
+    second: Saw Trap - Level 3_5
+  - first:
+      213: -7881203520946098865
+    second: Saw Trap - Level 3_6
+  - first:
+      213: 2179680367501816938
+    second: Saw Trap - Level 3_7
+  - first:
+      213: 7809488008350438597
+    second: Saw Trap - Level 3_8
+  - first:
+      213: 6916103621380856472
+    second: Saw Trap - Level 3_9
+  - first:
+      213: -5695852752689741252
+    second: Saw Trap - Level 3_10
+  - first:
+      213: -5800219216385550060
+    second: Saw Trap - Level 3_11
+  - first:
+      213: -2875014131839046961
+    second: Saw Trap - Level 3_12
+  - first:
+      213: -3911061206967631816
+    second: Saw Trap - Level 3_13
+  - first:
+      213: -7009729725429739743
+    second: Saw Trap - Level 3_14
+  - first:
+      213: -8566345986855597371
+    second: Saw Trap - Level 3_15
+  - first:
+      213: 6752654138754497515
+    second: Saw Trap - Level 3_16
+  - first:
+      213: 680761232808187399
+    second: Saw Trap - Level 3_17
+  - first:
+      213: -7100670009290022960
+    second: Saw Trap - Level 3_18
+  - first:
+      213: -8583790379949078335
+    second: Saw Trap - Level 3_19
+  - first:
+      213: -237148261332072397
+    second: Saw Trap - Level 3_20
+  - first:
+      213: -8996772433471674345
+    second: Saw Trap - Level 3_21
+  - first:
+      213: 1485212145483858244
+    second: Saw Trap - Level 3_22
+  - first:
+      213: 8184806141999475952
+    second: Saw Trap - Level 3_23
+  - first:
+      213: -5246873828955543499
+    second: Saw Trap - Level 3_24
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Saw Trap - Level 3_0
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 0
+        width: 71
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0a9475e289c68e40800000000000000
+      internalID: 5658431545870162446
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Saw Trap - Level 3_1
+      rect:
+        serializedVersion: 2
+        x: 97
+        y: 0
+        width: 65
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9436b7991a9080800800000000000000
+      internalID: 578723141786493769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Saw Trap - Level 3_2
+      rect:
+        serializedVersion: 2
+        x: 189
+        y: 2
+        width: 67
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46623b1f825c556b0800000000000000
+      internalID: -5308119806141847964
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Saw Trap - Level 3_3
+      rect:
+        serializedVersion: 2
+        x: 301
+        y: 1
+        width: 52
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8464fa15d90607fd0800000000000000
+      internalID: -2346269177063455160
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Saw Trap - Level 3_4
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 0
+        width: 42
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f11abe25eb2460210800000000000000
+      internalID: 1298798927745360159
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Saw Trap - Level 3_5
+      rect:
+        serializedVersion: 2
+        x: 510
+        y: 1
+        width: 35
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90f4bd559c074b660800000000000000
+      internalID: 7400664097707740937
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Saw Trap - Level 3_6
+      rect:
+        serializedVersion: 2
+        x: 607
+        y: 1
+        width: 46
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4d2373772750a290800000000000000
+      internalID: -7881203520946098865
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Saw Trap - Level 3_7
+      rect:
+        serializedVersion: 2
+        x: 706
+        y: 0
+        width: 50
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a64b6dceeb7cf3e10800000000000000
+      internalID: 2179680367501816938
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Saw Trap - Level 3_8
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 0
+        width: 58
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c4966797ffd06c60800000000000000
+      internalID: 7809488008350438597
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Saw Trap - Level 3_9
+      rect:
+        serializedVersion: 2
+        x: 893
+        y: 0
+        width: 60
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89ad23eb99feaff50800000000000000
+      internalID: 6916103621380856472
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Saw Trap - Level 3_10
+      rect:
+        serializedVersion: 2
+        x: 992
+        y: 0
+        width: 58
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c324ffe691444f0b0800000000000000
+      internalID: -5695852752689741252
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Saw Trap - Level 3_11
+      rect:
+        serializedVersion: 2
+        x: 1085
+        y: 0
+        width: 59
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 419d1f38a5b718fa0800000000000000
+      internalID: -5800219216385550060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Saw Trap - Level 3_12
+      rect:
+        serializedVersion: 2
+        x: 1183
+        y: 0
+        width: 54
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fca618b21e5e918d0800000000000000
+      internalID: -2875014131839046961
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Saw Trap - Level 3_13
+      rect:
+        serializedVersion: 2
+        x: 1282
+        y: 0
+        width: 53
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f2aa141e8626af64c822294be8f4235f
+      internalID: -3911061206967631816
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Saw Trap - Level 3_14
+      rect:
+        serializedVersion: 2
+        x: 1375
+        y: 0
+        width: 52
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4281126fb396d004ca4f35e6c6614850
+      internalID: -7009729725429739743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Saw Trap - Level 3_15
+      rect:
+        serializedVersion: 2
+        x: 1461
+        y: 0
+        width: 71
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 292718b56ba3d0547895fb7557a685dd
+      internalID: -8566345986855597371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Saw Trap - Level 3_16
+      rect:
+        serializedVersion: 2
+        x: 1548
+        y: 0
+        width: 85
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 93d6500384b310e46b4b22c72609320e
+      internalID: 6752654138754497515
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Saw Trap - Level 3_17
+      rect:
+        serializedVersion: 2
+        x: 1640
+        y: 0
+        width: 88
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 999b79550ad4aef4a8f9e1b9a5d57dd6
+      internalID: 810517365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 83f8e5949af75674da8f68f379b79400
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":100.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      Saw Trap - Level 3_0: 5658431545870162446
+      Saw Trap - Level 3_1: 578723141786493769
+      Saw Trap - Level 3_10: -5695852752689741252
+      Saw Trap - Level 3_11: -5800219216385550060
+      Saw Trap - Level 3_12: -2875014131839046961
+      Saw Trap - Level 3_13: -3911061206967631816
+      Saw Trap - Level 3_14: -7009729725429739743
+      Saw Trap - Level 3_15: -8566345986855597371
+      Saw Trap - Level 3_16: 6752654138754497515
+      Saw Trap - Level 3_17: 810517365
+      Saw Trap - Level 3_2: -5308119806141847964
+      Saw Trap - Level 3_3: -2346269177063455160
+      Saw Trap - Level 3_4: 1298798927745360159
+      Saw Trap - Level 3_5: 7400664097707740937
+      Saw Trap - Level 3_6: -7881203520946098865
+      Saw Trap - Level 3_7: 2179680367501816938
+      Saw Trap - Level 3_8: 7809488008350438597
+      Saw Trap - Level 3_9: 6916103621380856472
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
