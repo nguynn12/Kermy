@@ -17,6 +17,10 @@ public class PlayerController : MonoBehaviour
     public LayerMask groundLayer;
     public LayerMask jumpSupportLayer;
 
+    [Header("Slope Handling")]
+    [SerializeField] private float maxGroundedUpwardVelocity = 2f;
+    [SerializeField] private float jumpVelocityClampDelay = 0.12f;
+
     private Rigidbody2D rb;
     private PlayerInputHandler inputHandler;
     private PlayerSupportDetector supportDetector;
@@ -25,6 +29,7 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     private bool isOnLadder;
     private float originalGravityScale;
+    private float _ignoreGroundClampUntil;
 
     private bool _controlEnabled = true;
     private bool _jumpRequested;
@@ -73,8 +78,7 @@ public class PlayerController : MonoBehaviour
         }
 
         float targetVelocityX = (moveX * moveSpeed) + baseVelocityX;
-        float forceX = (targetVelocityX - rb.linearVelocity.x) * rb.mass / Time.fixedDeltaTime;
-        rb.AddForce(new Vector2(forceX, 0f));
+        rb.linearVelocity = new Vector2(targetVelocityX, rb.linearVelocity.y);
 
         if (isOnLadder)
         {
@@ -109,11 +113,13 @@ public class PlayerController : MonoBehaviour
         }
 
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+        _ignoreGroundClampUntil = Time.time + jumpVelocityClampDelay;
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
     }
 
     public void ApplyBounce(float force)
     {
+        _ignoreGroundClampUntil = Time.time + jumpVelocityClampDelay;
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, force);
     }
 
@@ -191,6 +197,30 @@ public class PlayerController : MonoBehaviour
         {
             isOnLadder = false;
             rb.gravityScale = originalGravityScale;
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (Time.time < _ignoreGroundClampUntil || isOnLadder)
+        {
+            return;
+        }
+
+        for (int i = 0; i < collision.contactCount; i++)
+        {
+            ContactPoint2D contact = collision.GetContact(i);
+            if (contact.normal.y < 0.5f)
+            {
+                continue;
+            }
+
+            if (rb.linearVelocity.y > maxGroundedUpwardVelocity)
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, maxGroundedUpwardVelocity);
+            }
+
+            return;
         }
     }
 
