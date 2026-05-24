@@ -62,6 +62,7 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void OnEnable()
     {
+        ApplySavedBindingOverrides(moveAction);
         BindAndEnable(moveAction, OnMove);
         BindAndEnable(jumpAction, OnJump);
         BindAndEnable(interactAction, OnInteract);
@@ -258,5 +259,15 @@ public class PlayerInputHandler : MonoBehaviour
     private static void DisableIfNotNull(InputActionReference actionRef)
     {
         if (actionRef != null && actionRef.action != null) actionRef.action.Disable();
+    }
+
+    private static void ApplySavedBindingOverrides(InputActionReference actionRef)
+    {
+        if (actionRef == null || actionRef.action == null || actionRef.action.actionMap == null)
+        {
+            return;
+        }
+
+        KeybindingManager.ApplySavedOverrides(actionRef.action.actionMap.asset);
     }
 }

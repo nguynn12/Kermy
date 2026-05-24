@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class BlockHazardInteraction : MonoBehaviour
 {
@@ -22,6 +23,20 @@ public class BlockHazardInteraction : MonoBehaviour
 
         if (!ShouldConvertToObsidian(hazard.HazardType, pushableBox.Type))
         {
+            return;
+        }
+
+        if (hazard.GetComponent<Tilemap>() != null)
+        {
+            if (TryConvertHazardTilemap(hazard))
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                Debug.LogWarning($"Could not convert hazard tilemap '{hazard.name}'. Check HazardTilemapConverter setup.", hazard);
+            }
+
             return;
         }
 
@@ -79,5 +94,21 @@ public class BlockHazardInteraction : MonoBehaviour
         {
             sr.color = Color.black; // Tạm thời đổi sang màu đen để nhận biết
         }
+    }
+
+    private bool TryConvertHazardTilemap(ElementalHazard hazard)
+    {
+        HazardTilemapConverter converter = hazard.GetComponent<HazardTilemapConverter>();
+        if (converter == null)
+        {
+            return false;
+        }
+
+        Collider2D blockCollider = GetComponent<Collider2D>();
+        Bounds conversionBounds = blockCollider != null
+            ? blockCollider.bounds
+            : new Bounds(transform.position, Vector3.one);
+
+        return converter.TryConvertPool(conversionBounds, transform.position);
     }
 }
