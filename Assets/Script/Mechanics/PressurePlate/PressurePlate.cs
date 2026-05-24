@@ -8,27 +8,9 @@ public class PressurePlate : MonoBehaviour
 
     [SerializeField] private UnityEvent<bool> pressedStateChanged;
 
-    [Header("Visuals")]
-    [SerializeField] private SpriteRenderer spriteRenderer;
-    [SerializeField] private Sprite releasedSprite;
-    [SerializeField] private Sprite pressedSprite;
-
     public bool IsPressed { get; private set; }
 
     private int _pressingCount;
-
-    private void Awake()
-    {
-        if (spriteRenderer == null)
-        {
-            spriteRenderer = GetComponent<SpriteRenderer>();
-        }
-
-        if (releasedSprite == null && spriteRenderer != null)
-        {
-            releasedSprite = spriteRenderer.sprite;
-        }
-    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -65,23 +47,8 @@ public class PressurePlate : MonoBehaviour
         }
 
         IsPressed = pressed;
-        UpdateSprite();
         PressedStateChanged?.Invoke(IsPressed);
         pressedStateChanged?.Invoke(IsPressed);
-    }
-
-    private void UpdateSprite()
-    {
-        if (spriteRenderer == null)
-        {
-            return;
-        }
-
-        Sprite targetSprite = IsPressed ? pressedSprite : releasedSprite;
-        if (targetSprite != null)
-        {
-            spriteRenderer.sprite = targetSprite;
-        }
     }
 
     private static bool IsValidPresser(Collider2D other)

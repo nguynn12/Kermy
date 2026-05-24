@@ -23,14 +23,9 @@ public class CameraController : MonoBehaviour
     [Header("Zoom Settings (Pico Park Style)")]
     [SerializeField] private float minZoom = 5f;        
     [SerializeField] private float maxZoom = 12f;       
-    [SerializeField] private float framingPadding = 1f;
+    [SerializeField] private float maxDistance = 6f;    // Khoảng cách tối đa để zoom hết cỡ
     [SerializeField] private float zoomSmoothTime = 5f; 
     // ----------------------------------------
-
-    [Header("Camera Bounds")]
-    [SerializeField] private bool useCameraBounds;
-    [SerializeField] private Vector2 cameraBoundsMin;
-    [SerializeField] private Vector2 cameraBoundsMax;
 
     [Header("Station Free-look")]
     [SerializeField] private InputActionReference commanderLookAction;
@@ -123,22 +118,18 @@ public class CameraController : MonoBehaviour
         // 1. DI CHUYỂN
         Vector3 centroid = (player1.position + player2.position) * 0.5f;
         Vector3 target = new Vector3(centroid.x + followOffset.x, centroid.y + followOffset.y, transform.position.z);
-        // 2. ZOOM CHI KHI CAN THEM KHUNG HINH DE CHUA CA HAI NHAN VAT
+        transform.position = Vector3.SmoothDamp(transform.position, target, ref _followVelocity, followSmoothTime);
+
+        // 2. ZOOM BẰNG TỶ LỆ PHẦN TRĂM
         if (_rightCamera != null)
         {
-            Vector2 playerDelta = player1.position - player2.position;
-            float aspect = Mathf.Max(_rightCamera.aspect, 0.01f);
-            float requiredZoomByWidth = Mathf.Abs(playerDelta.x) * 0.5f / aspect + framingPadding;
-            float requiredZoomByHeight = Mathf.Abs(playerDelta.y) * 0.5f + framingPadding;
-            float targetZoom = Mathf.Max(minZoom, requiredZoomByWidth, requiredZoomByHeight);
+            float distance = Vector2.Distance(player1.position, player2.position);
+            float zoomPercent = distance / maxDistance;
+            float targetZoom = Mathf.Lerp(minZoom, maxZoom, zoomPercent);
             
             targetZoom = Mathf.Clamp(targetZoom, minZoom, maxZoom);
             _rightCamera.orthographicSize = Mathf.Lerp(_rightCamera.orthographicSize, targetZoom, Time.deltaTime * zoomSmoothTime);
         }
-
-        target = ClampCameraPosition(target);
-        transform.position = Vector3.SmoothDamp(transform.position, target, ref _followVelocity, followSmoothTime);
-        transform.position = ClampCameraPosition(transform.position);
     }
 
     private void TickStationFreeLook()
@@ -147,7 +138,7 @@ public class CameraController : MonoBehaviour
 
         Vector2 input = commanderLookAction.action.ReadValue<Vector2>();
         Vector3 delta = new Vector3(input.x, input.y, 0f) * (freeLookSpeed * Time.deltaTime);
-        transform.position = ClampCameraPosition(transform.position + delta);
+        transform.position += delta; 
     }
 
     private void TickAsymmetricSplit()
@@ -278,30 +269,5 @@ public class CameraController : MonoBehaviour
         _dividerRect.anchorMin = new Vector2(leftViewportWidth, 0f);
         _dividerRect.anchorMax = new Vector2(leftViewportWidth, 1f);
         _dividerRect.sizeDelta = new Vector2(dividerWidthPixels, 0f);
-    }
-
-    private Vector3 ClampCameraPosition(Vector3 position)
-    {
-        if (!useCameraBounds || _rightCamera == null) return position;
-
-        float halfHeight = _rightCamera.orthographicSize;
-        float halfWidth = halfHeight * Mathf.Max(_rightCamera.aspect, 0.01f);
-
-        float minX = cameraBoundsMin.x + halfWidth;
-        float maxX = cameraBoundsMax.x - halfWidth;
-        float minY = cameraBoundsMin.y + halfHeight;
-        float maxY = cameraBoundsMax.y - halfHeight;
-
-        if (minX <= maxX)
-        {
-            position.x = Mathf.Clamp(position.x, minX, maxX);
-        }
-
-        if (minY <= maxY)
-        {
-            position.y = Mathf.Clamp(position.y, minY, maxY);
-        }
-
-        return position;
     }
 }

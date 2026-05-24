@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
@@ -34,11 +34,17 @@ public class MenuSceneBootstrap : MonoBehaviour
 
         if (mainMenu != null)
         {
-            mainMenu.Configure(gameplaySceneName, optionsPanel);
+            // Tạm tắt hàm Configure vì MainMenu của level2 không có hàm này
+            // mainMenu.Configure(gameplaySceneName, optionsPanel);
+
             AddButtonListener("Play Button", mainMenu.PlayGame);
-            AddButtonListener("Options Button", mainMenu.ShowOptions);
+
+            // Đã tắt 2 hàm gọi Options gây lỗi
+            // AddButtonListener("Options Button", mainMenu.ShowOptions);
+
             AddButtonListener("Quit Button", mainMenu.QuitGame);
-            AddButtonListener("Options Back Button", mainMenu.HideOptions);
+
+            // AddButtonListener("Options Back Button", mainMenu.HideOptions);
         }
 
         AddButtonListener("Controls Button", ShowControlsPanel);

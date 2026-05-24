@@ -5,10 +5,9 @@ TagManager:
   serializedVersion: 3
   tags:
   - Ladder
-<<<<<<< HEAD
-  - Background
-=======
->>>>>>> origin/level2
+  - Player 1
+  - Player 2
+  - TrapSap
   layers:
   - Default
   - TransparentFX
@@ -18,7 +17,7 @@ TagManager:
   - UI
   - Ground
   - Player
-  - Ladder
+  - 
   - 
   - 
   - 
@@ -43,14 +42,11 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-<<<<<<< HEAD
-  - name: Background
-    uniqueID: 3786698995
-    locked: 0
-=======
->>>>>>> origin/level2
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Player
+    uniqueID: 3000650525
     locked: 0
   m_RenderingLayers:
   - Default

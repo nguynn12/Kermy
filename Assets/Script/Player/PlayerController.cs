@@ -2,6 +2,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(PlayerInputHandler))]
+[RequireComponent(typeof(AudioSource))] // Bảo đảm Object bắt buộc phải có loa
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
@@ -17,9 +18,15 @@ public class PlayerController : MonoBehaviour
     public LayerMask groundLayer;
     public LayerMask jumpSupportLayer;
 
-    [Header("Slope Handling")]
-    [SerializeField] private float maxGroundedUpwardVelocity = 2f;
-    [SerializeField] private float jumpVelocityClampDelay = 0.12f;
+    // ====================================================================
+    // 🔥 KHU VỰC AUDIO ĐÃ KẾT NỐI: Mạnh thả file tương ứng vào đây ngoài Unity nha
+    // ====================================================================
+    [Header("Audio Settings")]
+    public AudioSource audioSource; // Cái loa của con ếch
+    public AudioClip jumpSound;      // Thả file Jump2.wav vào đây
+    public AudioClip walkSound;      // Thả file Mutant.wav vào đây
+    public AudioClip collectSound;   // Thả file Pickup4.wav vào đây
+    public AudioClip deathSound;     // Ô MỚI: Thả file âm thanh lúc chết vào đây
 
     private Rigidbody2D rb;
     private PlayerInputHandler inputHandler;
@@ -29,10 +36,15 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     private bool isOnLadder;
     private float originalGravityScale;
-    private float _ignoreGroundClampUntil;
 
     private bool _controlEnabled = true;
     private bool _jumpRequested;
+    
+    private float _trackedMoveX;
+    private float _trackedMoveY;
+    
+    private bool _isForcedGroundedByTrap;
+
     private readonly RaycastHit2D[] _groundRayHits = new RaycastHit2D[4];
 
     private void Awake()
@@ -41,6 +53,9 @@ public class PlayerController : MonoBehaviour
         inputHandler = GetComponent<PlayerInputHandler>();
         supportDetector = GetComponent<PlayerSupportDetector>();
         riderStick = GetComponent<PlayerRiderStick>();
+        
+        // Tự động tìm cái loa gắn trên con ếch
+        audioSource = GetComponent<AudioSource>();
 
         originalGravityScale = rb.gravityScale;
     }
@@ -48,11 +63,70 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         if (!_controlEnabled)
-            return;
-
-        if (inputHandler != null && inputHandler.ConsumeJumpPressed())
         {
-            _jumpRequested = true;
+            _trackedMoveX = 0f;
+            _trackedMoveY = 0f;
+            return;
+        }
+
+        string currentTag = gameObject.tag; 
+
+        if (inputHandler != null)
+        {
+            _trackedMoveX = inputHandler.MoveInput.x;
+            _trackedMoveY = inputHandler.MoveInput.y;
+
+            if (inputHandler.ConsumeJumpPressed())
+            {
+                _jumpRequested = true;
+            }
+            
+            if (currentTag == "Player2" && Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                _jumpRequested = true;
+            }
+        }
+
+        if (isOnLadder)
+        {
+            if (currentTag == "Player2") 
+            {
+                if (Input.GetKey(KeyCode.UpArrow)) _trackedMoveY = 1f;
+                else if (Input.GetKey(KeyCode.DownArrow)) _trackedMoveY = -1f;
+                else _trackedMoveY = 0f;
+            }
+            else if (currentTag == "Player1") 
+            {
+                if (Input.GetKey(KeyCode.W)) _trackedMoveY = 1f;
+                else if (Input.GetKey(KeyCode.S)) _trackedMoveY = -1f;
+                else _trackedMoveY = 0f;
+            }
+        }
+        else
+        {
+            if (inputHandler == null || inputHandler.MoveInput.y == 0f)
+            {
+                if (currentTag == "Player2" && !Input.GetKey(KeyCode.UpArrow) && !Input.GetKey(KeyCode.DownArrow))
+                {
+                    _trackedMoveY = 0f;
+                }
+                else if (currentTag == "Player1")
+                {
+                    _trackedMoveY = 0f;
+                }
+            }
+        }
+
+        // ====================================================================
+        // 🔊 XỬ LÝ TIẾNG CHẠY (MUTANT.WAV): Phát liên tục khi di chuyển trên đất
+        // ====================================================================
+        if (isGrounded && !isOnLadder && Mathf.Abs(_trackedMoveX) > 0.1f)
+        {
+            // Chỉ phát khi loa đang rảnh để bước chân không bị lặp đè dính cục chói tai
+            if (audioSource != null && walkSound != null && !audioSource.isPlaying)
+            {
+                audioSource.PlayOneShot(walkSound, 0.4f); // Chạy âm lượng 40% cho vừa tai
+            }
         }
     }
 
@@ -67,9 +141,8 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        float moveX = inputHandler != null ? inputHandler.MoveInput.x : 0f;
-        float moveY = inputHandler != null ? inputHandler.MoveInput.y : 0f;
-
+        float moveX = _trackedMoveX;
+        float moveY = _trackedMoveY;
         float baseVelocityX = 0f;
 
         if (riderStick != null && riderStick.ParentRigidbody != null)
@@ -78,26 +151,28 @@ public class PlayerController : MonoBehaviour
         }
 
         float targetVelocityX = (moveX * moveSpeed) + baseVelocityX;
-        rb.linearVelocity = new Vector2(targetVelocityX, rb.linearVelocity.y);
-
+        
         if (isOnLadder)
         {
+            targetVelocityX = 0f;
             rb.gravityScale = 0f;
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, moveY * climbSpeed);
+            rb.linearVelocity = new Vector2(0f, moveY * climbSpeed); 
         }
         else
         {
             rb.gravityScale = originalGravityScale;
+            float forceX = (targetVelocityX - rb.linearVelocity.x) * rb.mass / Time.fixedDeltaTime;
+            rb.AddForce(new Vector2(forceX, 0f));
         }
 
         if (_jumpRequested)
         {
-            _jumpRequested = false;
-
-            if ((isGrounded || isOnLadder) && (supportDetector == null || !supportDetector.IsSupportingPlayer))
+            if ((isGrounded || _isForcedGroundedByTrap || isOnLadder) && (supportDetector == null || !supportDetector.IsSupportingPlayer))
             {
                 Jump();
             }
+            
+            _jumpRequested = false;
         }
     }
 
@@ -113,13 +188,41 @@ public class PlayerController : MonoBehaviour
         }
 
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
-        _ignoreGroundClampUntil = Time.time + jumpVelocityClampDelay;
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+
+        // ====================================================================
+        // 🔊 XỬ LÝ TIẾNG NHẢY (JUMP2.WAV): Cất cánh là búng kêu ngay!
+        // ====================================================================
+        if (audioSource != null && jumpSound != null)
+        {
+            audioSource.PlayOneShot(jumpSound, 0.8f);
+        }
+    }
+
+    // ====================================================================
+    // 🔊 XỬ LÝ TIẾNG ĂN NGỌC (PICKUP4.WAV): Hàm mở sẵn cho script Ngọc gọi sang
+    // ====================================================================
+    public void PlayCollectSound()
+    {
+        if (audioSource != null && collectSound != null)
+        {
+            audioSource.PlayOneShot(collectSound, 0.7f);
+        }
+    }
+
+    // ====================================================================
+    // 🔊 XỬ LÝ TIẾNG CHẾT: Hàm mở sẵn để script Bẫy gai/Nước độc gọi sang khi ếch ngỏm
+    // ====================================================================
+    public void PlayDeathSound()
+    {
+        if (audioSource != null && deathSound != null)
+        {
+            audioSource.PlayOneShot(deathSound, 0.8f); // Phát tiếng chết âm lượng 80%
+        }
     }
 
     public void ApplyBounce(float force)
     {
-        _ignoreGroundClampUntil = Time.time + jumpVelocityClampDelay;
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, force);
     }
 
@@ -133,6 +236,8 @@ public class PlayerController : MonoBehaviour
         if (!enabled)
         {
             _jumpRequested = false;
+            _trackedMoveX = 0f;
+            _trackedMoveY = 0f;
             rb.linearVelocity = Vector2.zero;
         }
     }
@@ -160,21 +265,12 @@ public class PlayerController : MonoBehaviour
 
         LayerMask mask = jumpSupportLayer.value != 0 ? jumpSupportLayer : groundLayer;
         float rayDistance = Mathf.Max(0.01f, groundCheckRadius + 0.05f);
-
         int hitCount = Physics2D.RaycastNonAlloc(groundCheck.position, Vector2.down, _groundRayHits, rayDistance, mask);
 
         for (int i = 0; i < hitCount; i++)
         {
             RaycastHit2D hit = _groundRayHits[i];
-
-            if (hit.collider == null)
-                continue;
-
-            if (hit.rigidbody == rb)
-                continue;
-
-            if (hit.normal.y < 0.5f)
-                continue;
+            if (hit.collider == null || hit.rigidbody == rb || hit.normal.y < 0.5f) continue;
 
             isGrounded = true;
             return;
@@ -185,10 +281,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Ladder"))
-        {
-            isOnLadder = true;
-        }
+        if (collision.CompareTag("Ladder")) isOnLadder = true;
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -200,30 +293,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        if (Time.time < _ignoreGroundClampUntil || isOnLadder)
-        {
-            return;
-        }
-
-        for (int i = 0; i < collision.contactCount; i++)
-        {
-            ContactPoint2D contact = collision.GetContact(i);
-            if (contact.normal.y < 0.5f)
-            {
-                continue;
-            }
-
-            if (rb.linearVelocity.y > maxGroundedUpwardVelocity)
-            {
-                rb.linearVelocity = new Vector2(rb.linearVelocity.x, maxGroundedUpwardVelocity);
-            }
-
-            return;
-        }
-    }
-
     private void OnDrawGizmosSelected()
     {
         if (groundCheck != null)
@@ -232,4 +301,7 @@ public class PlayerController : MonoBehaviour
             Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
     }
+
+    public void ForceGroundedFromTrap(bool grounded) => _isForcedGroundedByTrap = grounded;
+    public bool IsJumpRequested => _jumpRequested;
 }
