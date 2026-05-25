@@ -14,7 +14,7 @@ public class DayNightTransformer : MonoBehaviour
 
     [Header("--- VẬT THỂ ẨN/HIỆN THEO NGÀY ĐÊM ---")]
     [Tooltip("Kéo GameObject BlockNight ở Hierarchy vào đây")]
-    public GameObject blockNight; // Thêm biến này để chứa khối BlockNight
+    public GameObject blockNight;
 
     [Header("--- THIẾT LẬP BAN NGÀY ---")]
     public Color dayColor = new Color(0.95f, 0.95f, 0.85f);
@@ -33,10 +33,8 @@ public class DayNightTransformer : MonoBehaviour
     public TextMeshProUGUI interactText;
 
     [Header("--- PHÍM BẤM THEO NHÂN VẬT ---")]
-    public string character1Name = "Ignus";
-    public KeyCode character1Key = KeyCode.E;
-    public string character2Name = "Aqua";
-    public KeyCode character2Key = KeyCode.Alpha0;
+    public KeyCode character1Key = KeyCode.E;      // Dành cho Player 1 (Ignus)
+    public KeyCode character2Key = KeyCode.Alpha0; // Dành cho Player 2 (Aqua)
 
     private bool isDay = true;
     private GameObject currentOccupant;
@@ -51,16 +49,22 @@ public class DayNightTransformer : MonoBehaviour
 
     void Update()
     {
-        // Chỉ cho tương tác nếu có người chiếm quyền và ấn đúng phím
         if (currentOccupant != null && Input.GetKeyDown(currentActiveKey))
         {
             InteractWithLever();
         }
     }
 
+    // Tách riêng hàm kiểm tra Tag để code gọn và dễ đọc hơn
+    private bool IsPlayer(Collider2D collision)
+    {
+        return collision.CompareTag("Player 1") || collision.CompareTag("Player 2");
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        // ĐÃ SỬA: Chấp nhận cả Player 1 và Player 2
+        if (IsPlayer(collision))
         {
             // 1. XỬ LÝ ĐỔI NGÀY ĐÊM VÀ HIỂN THỊ NÚT UI
             if (!playersInArea.Contains(collision.gameObject))
@@ -80,7 +84,8 @@ public class DayNightTransformer : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        // ĐÃ SỬA: Chấp nhận cả Player 1 và Player 2
+        if (IsPlayer(collision))
         {
             // 1. XỬ LÝ ĐỔI NGÀY ĐÊM VÀ ẨN NÚT UI
             playersInArea.Remove(collision.gameObject);
@@ -110,15 +115,14 @@ public class DayNightTransformer : MonoBehaviour
     {
         currentOccupant = targetCharacter;
 
-        // Xác định phím dựa trên tên nhân vật
-        if (targetCharacter.name == character1Name)
+        // ĐÃ SỬA: Xác định phím bấm trực tiếp qua Tag thay vì Tên
+        if (targetCharacter.CompareTag("Player 1"))
             currentActiveKey = character1Key;
-        else if (targetCharacter.name == character2Name)
+        else if (targetCharacter.CompareTag("Player 2"))
             currentActiveKey = character2Key;
         else
             currentActiveKey = KeyCode.E; // fallback
 
-        // Cập nhật trạng thái hiển thị UI (Vị trí giữ nguyên trên màn hình)
         if (interactUI != null)
         {
             interactUI.SetActive(true);
@@ -161,7 +165,6 @@ public class DayNightTransformer : MonoBehaviour
             mainLight.intensity = dayIntensity;
         }
 
-        // TẮT KHỐI BLOCK KHI TRỜI SÁNG
         if (blockNight != null)
         {
             blockNight.SetActive(false);
@@ -181,7 +184,6 @@ public class DayNightTransformer : MonoBehaviour
             mainLight.falloffIntensity = nightFalloffStrength;
         }
 
-        // BẬT KHỐI BLOCK KHI TRỜI TỐI
         if (blockNight != null)
         {
             blockNight.SetActive(true);
