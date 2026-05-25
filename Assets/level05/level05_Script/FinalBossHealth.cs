@@ -1,43 +1,56 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FinalBossHealth : MonoBehaviour
 {
-    [Header("Health Settings")]
     public float maxHealth = 200f;
     public float currentHealth;
+    private Slider healthSlider;
 
-    private FinalBossAI bossAI;
-
-    void Start()
+    void Awake()
     {
         currentHealth = maxHealth;
-        bossAI = GetComponent<FinalBossAI>();
+
+        // Code tìm thanh máu ẩn (như bạn đã làm thành công ở các bước trước)
+        Canvas mainCanvas = FindObjectOfType<Canvas>();
+        if (mainCanvas != null)
+        {
+            Transform sliderTransform = mainCanvas.transform.Find("BossHealthBar");
+            if (sliderTransform != null)
+            {
+                healthSlider = sliderTransform.GetComponent<Slider>();
+                healthSlider.gameObject.SetActive(true);
+                healthSlider.maxValue = maxHealth;
+                healthSlider.value = currentHealth;
+            }
+        }
+    }
+
+    // --- THÊM PHẦN NÀY ĐỂ NHẬN SÁT THƯƠNG ---
+    // (Bên trong file FinalBossHealth.cs, dưới hàm Start)
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // Kiểm tra xem có phải đạn của người chơi bắn trúng không
+        if (collision.CompareTag("PlayerBullet"))
+        {
+            TakeDamage(10f); // Trừ 10 máu Boss
+            Destroy(collision.gameObject); // Hủy viên đạn của Ếch
+        }
     }
 
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
-        Debug.Log("FINAL BOSS HP: " + currentHealth);
-
-        // Kiểm tra mốc đổi Phase
-        if (currentHealth <= 150f && currentHealth > 100f)
-        {
-            bossAI.ChangePhase(2); // Phase kết hợp cầu năng lượng
-        }
-        else if (currentHealth <= 100f && currentHealth > 0)
-        {
-            bossAI.ChangePhase(3); // Phase Ultimate (Sẽ làm sau)
-        }
-        else if (currentHealth <= 0)
-        {
-            Die();
-        }
+        if (healthSlider != null) healthSlider.value = currentHealth; // Tụt thanh máu UI
+        if (currentHealth <= 0) Die();
     }
+
+   
 
     void Die()
     {
-        Debug.Log("FINAL BOSS DEFEATED!");
-        Destroy(gameObject);
-        // Sau này có thể thêm hiệu ứng nổ hoặc chuyển sang màn hình Win Game
+        Debug.Log("BOSS CUỐI ĐÃ BỊ HẠ GỤC!");
+        if (healthSlider != null) healthSlider.gameObject.SetActive(false); // Giấu thanh máu đi
+        Destroy(gameObject); // Xóa Boss (Sau này sẽ thêm hoạt ảnh nổ tung hoành tráng)
     }
 }

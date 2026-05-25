@@ -1,19 +1,10 @@
 fileFormatVersion: 2
-guid: b9e9623c8c34f3546a43469271cca8c4
+guid: ebf0f5a71a35d8247a6388f9cb7a7a58
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1725550212694124404
-    second: Hold_Beam_0
-  - first:
-      213: -893764513900916455
-    second: Hold_Beam_1
-  - first:
-      213: -3520030536491105375
-    second: Hold_Beam_2
-  - first:
-      213: 5768822943774890603
-    second: Hold_Beam_3
+      213: 8004227304767808182
+    second: Kermy_Shield_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -55,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -109,89 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Hold_Beam_0
+      name: Kermy_Shield_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 33
-        width: 116
-        height: 64
-      alignment: 5
-      pivot: {x: 1, y: 0.5}
+        x: 22
+        y: 10
+        width: 14
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c885442593d9d08e0800000000000000
-      internalID: -1725550212694124404
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Hold_Beam_1
-      rect:
-        serializedVersion: 2
-        x: 128
-        y: 33
-        width: 116
-        height: 64
-      alignment: 5
-      pivot: {x: 1, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 9111614f8e5b893f0800000000000000
-      internalID: -893764513900916455
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Hold_Beam_2
-      rect:
-        serializedVersion: 2
-        x: 256
-        y: 33
-        width: 116
-        height: 64
-      alignment: 5
-      pivot: {x: 1, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 1a38be180e6562fc0800000000000000
-      internalID: -3520030536491105375
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Hold_Beam_3
-      rect:
-        serializedVersion: 2
-        x: 384
-        y: 33
-        width: 116
-        height: 64
-      alignment: 5
-      pivot: {x: 1, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: b6a53df17e9fe0050800000000000000
-      internalID: 5768822943774890603
+      spriteID: 6b2ea22535ab41f60800000000000000
+      internalID: 8004227304767808182
       vertices: []
       indices: 
       edges: []
@@ -200,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 4536ff530373c5544bfcbd78f708f520
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -208,14 +133,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries:
-      - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":1.0,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":5,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+      entries: []
     nameFileIdTable:
-      Hold_Beam_0: -1725550212694124404
-      Hold_Beam_1: -893764513900916455
-      Hold_Beam_2: -3520030536491105375
-      Hold_Beam_3: 5768822943774890603
+      Kermy_Shield_0: 8004227304767808182
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
