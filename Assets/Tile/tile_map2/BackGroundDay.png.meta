@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: e5b041740ae3d274cbc58245befa17d7
+guid: 3a1d31211bd57a044b3830aff1c56cfb
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 20956099503987423
-    second: anh_background_0
+      213: -3796512534298779343
+    second: BackGroundDay_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: anh_background_0
+      name: BackGroundDay_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1024
-        height: 572
+        width: 969
+        height: 504
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: fda10d226737a4000800000000000000
-      internalID: 20956099503987423
+      spriteID: 131adcff6f3105bc0800000000000000
+      internalID: -3796512534298779343
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      anh_background_0: 20956099503987423
+      BackGroundDay_0: -3796512534298779343
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
