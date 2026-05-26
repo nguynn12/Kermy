@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class Lever : MonoBehaviour
@@ -30,6 +31,7 @@ public class Lever : MonoBehaviour
     [SerializeField] private List<LaserTarget> lasers = new List<LaserTarget>();
 
     public bool IsOn { get; private set; }
+    public event Action<bool> StateChanged;
 
     private readonly List<PlayerInputHandler> _playersInRange = new List<PlayerInputHandler>();
 
@@ -59,6 +61,11 @@ public class Lever : MonoBehaviour
         SetState(startOn);
     }
 
+    private void Start()
+    {
+        SetState(startOn);
+    }
+
     private void Update()
     {
         for (int i = _playersInRange.Count - 1; i >= 0; i--)
@@ -85,9 +92,15 @@ public class Lever : MonoBehaviour
 
     public void SetState(bool on)
     {
+        bool changed = IsOn != on;
         IsOn = on;
         UpdateSprite();
         ApplyTargets();
+
+        if (changed)
+        {
+            StateChanged?.Invoke(IsOn);
+        }
     }
 
     private void UpdateSprite()
@@ -118,7 +131,7 @@ public class Lever : MonoBehaviour
         {
             if (target.laser != null)
             {
-                target.laser.SetState(IsOn == target.onWhenLeverOn);
+                target.laser.SetSwitchOn(IsOn == target.onWhenLeverOn);
             }
         }
     }
@@ -128,6 +141,7 @@ public class Lever : MonoBehaviour
         PlayerInputHandler input = other.GetComponentInParent<PlayerInputHandler>();
         if (input != null && !_playersInRange.Contains(input))
         {
+            input.ClearActionPressed();
             _playersInRange.Add(input);
         }
     }

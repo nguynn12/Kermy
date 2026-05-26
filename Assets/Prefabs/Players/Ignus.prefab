@@ -145,7 +145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a93d9700ca45104299b45c4583b7b7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInputHandler
-  moveSpeed: 8
+  moveSpeed: 6
   jumpForce: 6
   groundCheck: {fileID: 0}
   groundCheckRadius: 0.2
@@ -173,7 +173,7 @@ Rigidbody2D:
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 2bcd09af0ef2eb840a267c62e92af32c, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -198,6 +198,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   moveSpeed: 8
   jumpForce: 6
+  climbSpeed: 4
   groundCheck: {fileID: 8478068995259334347}
   groundCheckRadius: 0.2
   groundLayer:
@@ -206,6 +207,9 @@ MonoBehaviour:
   jumpSupportLayer:
     serializedVersion: 2
     m_Bits: 192
+  maxGroundedUpwardVelocity: 0.75
+  jumpVelocityClampDelay: 0.22
+  groundContactHeightTolerance: 0.15
 --- !u!60 &1485233924985880715
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -213,7 +217,7 @@ PolygonCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4495936828767854032}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 6200000, guid: 2bcd09af0ef2eb840a267c62e92af32c, type: 2}
@@ -324,7 +328,7 @@ MonoBehaviour:
   minUpNormal: 0.5
   playerLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   unstickGraceSeconds: 0.1
   supportProbeHeight: 0.08
 --- !u!114 &-1849860906057710160
@@ -341,7 +345,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSupportDetector
   playerLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   probeHeight: 0.08
   probeWidthFactor: 0.5
 --- !u!61 &3171167820866620738
@@ -354,7 +358,7 @@ BoxCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 2bcd09af0ef2eb840a267c62e92af32c, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -378,7 +382,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.00005722046, y: -0.4607967}
+  m_Offset: {x: 0, y: 0.04}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -388,5 +392,5 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.5628338, y: 0.024091214}
-  m_EdgeRadius: 0
+  m_Size: {x: 0.58, y: 0.78}
+  m_EdgeRadius: 0.08

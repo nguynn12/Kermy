@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 3980378112367792003}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.75, z: 0}
+  m_LocalPosition: {x: 0, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -145,7 +145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a93d9700ca45104299b45c4583b7b7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInputHandler
-  moveSpeed: 8
+  moveSpeed: 6
   jumpForce: 6
   groundCheck: {fileID: 0}
   groundCheckRadius: 0.2
@@ -173,7 +173,7 @@ Rigidbody2D:
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 2bcd09af0ef2eb840a267c62e92af32c, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -198,6 +198,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   moveSpeed: 8
   jumpForce: 6
+  climbSpeed: 4
   groundCheck: {fileID: 3085397500069782269}
   groundCheckRadius: 0.2
   groundLayer:
@@ -206,6 +207,9 @@ MonoBehaviour:
   jumpSupportLayer:
     serializedVersion: 2
     m_Bits: 192
+  maxGroundedUpwardVelocity: 0.75
+  jumpVelocityClampDelay: 0.22
+  groundContactHeightTolerance: 0.15
 --- !u!95 &1984757030637519572
 Animator:
   serializedVersion: 7
@@ -235,7 +239,7 @@ PolygonCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5360892434850824677}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 6200000, guid: 2bcd09af0ef2eb840a267c62e92af32c, type: 2}
@@ -324,7 +328,7 @@ MonoBehaviour:
   minUpNormal: 0.5
   playerLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   unstickGraceSeconds: 0.1
   supportProbeHeight: 0.08
 --- !u!114 &-1735463527334782808
@@ -341,7 +345,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSupportDetector
   playerLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   probeHeight: 0.08
   probeWidthFactor: 0.5
 --- !u!61 &-2218086499700070558
@@ -354,7 +358,7 @@ BoxCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 2bcd09af0ef2eb840a267c62e92af32c, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -378,7 +382,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.00005722046, y: -0.4607967}
+  m_Offset: {x: 0, y: 0.04}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -388,5 +392,5 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.5628338, y: 0.024091214}
-  m_EdgeRadius: 0
+  m_Size: {x: 0.58, y: 0.78}
+  m_EdgeRadius: 0.08

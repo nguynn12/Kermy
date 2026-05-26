@@ -11,6 +11,9 @@ TextureImporter:
   - first:
       213: -1470946536411257380
     second: Block_2
+  - first:
+      213: 8508771087518894038
+    second: Block_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -110,9 +113,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 2
         width: 332
-        height: 349
+        height: 350
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -132,9 +135,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 385
-        y: 1
+        y: 4
         width: 332
-        height: 349
+        height: 350
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,9 +157,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 779
-        y: 2
-        width: 339
-        height: 348
+        y: 5
+        width: 340
+        height: 349
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -167,6 +170,28 @@ TextureImporter:
       bones: []
       spriteID: cd5ad952be5269be0800000000000000
       internalID: -1470946536411257380
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Block_3
+      rect:
+        serializedVersion: 2
+        x: 1151
+        y: 0
+        width: 335
+        height: 358
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d78da2093a351670800000000000000
+      internalID: 8508771087518894038
       vertices: []
       indices: 
       edges: []
@@ -188,6 +213,7 @@ TextureImporter:
       Block_0: 2537882373423050008
       Block_1: 2189487477073400709
       Block_2: -1470946536411257380
+      Block_3: 8508771087518894038
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -4,6 +4,13 @@ using System.Linq;
 
 public class LinkedDoor : MonoBehaviour
 {
+    [System.Serializable]
+    private class LeverControl
+    {
+        public Lever lever;
+        public bool openWhenLeverOn = true;
+    }
+
     private enum PlateActivationMode
     {
         AnyPressed,
@@ -15,6 +22,9 @@ public class LinkedDoor : MonoBehaviour
     [SerializeField] private List<PressurePlate> additionalPlates = new List<PressurePlate>();
     [SerializeField] private PlateActivationMode activationMode = PlateActivationMode.AllPressed;
     [SerializeField] private bool allowSwitchControl = true;
+
+    [Header("Lever Controls")]
+    [SerializeField] private List<LeverControl> levers = new List<LeverControl>();
 
     [Header("Movement")]
     [SerializeField] private Transform targetTransform;
@@ -59,6 +69,11 @@ public class LinkedDoor : MonoBehaviour
             linkedPlate.PressedStateChanged += OnPlateStateChanged;
         }
 
+        foreach (Lever linkedLever in GetLinkedLevers())
+        {
+            linkedLever.StateChanged += OnLeverStateChanged;
+        }
+
         RefreshOpenState();
     }
 
@@ -67,6 +82,11 @@ public class LinkedDoor : MonoBehaviour
         foreach (PressurePlate linkedPlate in GetLinkedPlates())
         {
             linkedPlate.PressedStateChanged -= OnPlateStateChanged;
+        }
+
+        foreach (Lever linkedLever in GetLinkedLevers())
+        {
+            linkedLever.StateChanged -= OnLeverStateChanged;
         }
     }
 
@@ -81,6 +101,11 @@ public class LinkedDoor : MonoBehaviour
         RefreshOpenState();
     }
 
+    private void OnLeverStateChanged(bool on)
+    {
+        RefreshOpenState();
+    }
+
     private void RefreshOpenState()
     {
         List<PressurePlate> linkedPlates = GetLinkedPlates();
@@ -91,6 +116,15 @@ public class LinkedDoor : MonoBehaviour
             shouldOpen = activationMode == PlateActivationMode.AllPressed
                 ? linkedPlates.All(linkedPlate => linkedPlate.IsPressed)
                 : linkedPlates.Any(linkedPlate => linkedPlate.IsPressed);
+        }
+
+        foreach (LeverControl leverControl in levers)
+        {
+            if (leverControl.lever != null && leverControl.lever.IsOn == leverControl.openWhenLeverOn)
+            {
+                shouldOpen = true;
+                break;
+            }
         }
 
         if (allowSwitchControl && _switchOpen)
@@ -146,5 +180,20 @@ public class LinkedDoor : MonoBehaviour
         }
 
         return linkedPlates;
+    }
+
+    private List<Lever> GetLinkedLevers()
+    {
+        List<Lever> linkedLevers = new List<Lever>();
+
+        foreach (LeverControl leverControl in levers)
+        {
+            if (leverControl != null && leverControl.lever != null && !linkedLevers.Contains(leverControl.lever))
+            {
+                linkedLevers.Add(leverControl.lever);
+            }
+        }
+
+        return linkedLevers;
     }
 }

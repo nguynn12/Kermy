@@ -21,14 +21,16 @@ public class CameraController : MonoBehaviour
 
     // --- ZOOM SETTINGS ĐÃ ĐƯỢC CHUẨN HÓA ---
     [Header("Zoom Settings (Pico Park Style)")]
-    [SerializeField] private float minZoom = 5f;        
-    [SerializeField] private float maxZoom = 12f;       
-    [SerializeField] private float framingPadding = 1f;
+    [SerializeField] private float minZoom = 6.5f;        
+    [SerializeField] private float maxZoom = 14f;       
+    [SerializeField] private float framingPadding = 2f;
     [SerializeField] private float zoomSmoothTime = 5f; 
     // ----------------------------------------
 
     [Header("Camera Bounds")]
     [SerializeField] private bool useCameraBounds;
+    [SerializeField] private Transform cameraBoundsMinTransform;
+    [SerializeField] private Transform cameraBoundsMaxTransform;
     [SerializeField] private Vector2 cameraBoundsMin;
     [SerializeField] private Vector2 cameraBoundsMax;
 
@@ -158,7 +160,7 @@ public class CameraController : MonoBehaviour
         {
             Vector2 input = _splitCommanderInput.MoveInput;
             Vector3 delta = new Vector3(input.x, input.y, 0f) * (freeLookSpeed * Time.deltaTime);
-            transform.position += delta;
+            transform.position = ClampCameraPosition(transform.position + delta);
         }
 
         if (leftCamera != null && _splitCommander != null)
@@ -168,11 +170,11 @@ public class CameraController : MonoBehaviour
                 _splitCommander.position.y + leftFollowOffset.y,
                 leftCamera.transform.position.z);
 
-            leftCamera.transform.position = Vector3.SmoothDamp(
+            leftCamera.transform.position = ClampCameraPosition(Vector3.SmoothDamp(
                 leftCamera.transform.position,
                 desired,
                 ref _leftFollowVelocity,
-                leftFollowSmoothTime);
+                leftFollowSmoothTime));
         }
     }
 
@@ -287,21 +289,52 @@ public class CameraController : MonoBehaviour
         float halfHeight = _rightCamera.orthographicSize;
         float halfWidth = halfHeight * Mathf.Max(_rightCamera.aspect, 0.01f);
 
-        float minX = cameraBoundsMin.x + halfWidth;
-        float maxX = cameraBoundsMax.x - halfWidth;
-        float minY = cameraBoundsMin.y + halfHeight;
-        float maxY = cameraBoundsMax.y - halfHeight;
+        Vector2 boundsMin = GetCameraBoundsMin();
+        Vector2 boundsMax = GetCameraBoundsMax();
+
+        float minX = boundsMin.x + halfWidth;
+        float maxX = boundsMax.x - halfWidth;
+        float minY = boundsMin.y + halfHeight;
+        float maxY = boundsMax.y - halfHeight;
 
         if (minX <= maxX)
         {
             position.x = Mathf.Clamp(position.x, minX, maxX);
+        }
+        else
+        {
+            position.x = (boundsMin.x + boundsMax.x) * 0.5f;
         }
 
         if (minY <= maxY)
         {
             position.y = Mathf.Clamp(position.y, minY, maxY);
         }
+        else
+        {
+            position.y = (boundsMin.y + boundsMax.y) * 0.5f;
+        }
 
         return position;
+    }
+
+    private Vector2 GetCameraBoundsMin()
+    {
+        if (cameraBoundsMinTransform != null)
+        {
+            return cameraBoundsMinTransform.position;
+        }
+
+        return cameraBoundsMin;
+    }
+
+    private Vector2 GetCameraBoundsMax()
+    {
+        if (cameraBoundsMaxTransform != null)
+        {
+            return cameraBoundsMaxTransform.position;
+        }
+
+        return cameraBoundsMax;
     }
 }
