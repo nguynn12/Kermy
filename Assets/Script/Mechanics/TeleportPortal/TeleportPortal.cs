@@ -1,74 +1,97 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-// Gắn script này vào CẢ 3 cổng
-// Mỗi cổng chỉ cần trỏ "destination" sang cổng kia là xong
 public class TeleportPortal : MonoBehaviour
 {
     [Header("Cổng đích — kéo cổng tiếp theo vào đây")]
     [SerializeField] private Transform destination;
-    // Cổng A: kéo Cổng B vào đây
-    // Cổng B: kéo Cổng C vào đây
-    // Cổng C: kéo Cổng A vào đây
+    // Cổng A → kéo Cổng B vào
+    // Cổng B → kéo Cổng C vào
+    // Cổng C → kéo Cổng A vào
 
     [Header("Thời gian miễn dịch sau khi teleport (giây)")]
     [SerializeField] private float cooldown = 1f;
-    // Tránh bị teleport liên tục khi vừa xuất hiện tại cổng đích
 
-    [Header("Màu cổng (để phân biệt A B C)")]
-    [SerializeField] private Color portalColor = Color.magenta;
+    // ── Biến nội bộ ───────────────────────────────────────────
+    private Animator _animator;
+    // Animator để chạy animation có sẵn trên sprite
 
-    private SpriteRenderer _sprite;
+    private static readonly int FlashTrigger = Animator.StringToHash("Flash");
+    // Tên trigger animation khi có người đi qua
+    // Nếu Animator không có trigger "Flash" thì không sao — code vẫn chạy bình thường
 
     private void Awake()
     {
-        _sprite = GetComponent<SpriteRenderer>();
-        if (_sprite != null)
-            _sprite.color = portalColor;
-        // Đổi màu theo cổng — A tím, B xanh, C cam
+        _animator = GetComponent<Animator>();
+        // Lấy Animator nếu có — không bắt buộc
+        // Nếu bạn setup Animator Controller cho portal thì nó sẽ tự chạy
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Chỉ teleport nhân vật, không teleport box hay vật thể khác
+        // Chỉ teleport nhân vật
         if (other.GetComponent<PlayerController>() == null) return;
 
-        // Kiểm tra nhân vật có đang trong cooldown không
+        // Kiểm tra cooldown
         var status = other.GetComponent<TeleportStatus>();
         if (status != null && status.IsImmune) return;
-        // Nếu vừa teleport xong → bỏ qua, không teleport tiếp
 
-        // Thực hiện teleport
+        // ① Teleport nhân vật đến cổng đích
         other.transform.position = destination.position;
-        // Dịch chuyển nhân vật đến đúng vị trí cổng đích
-        // Đơn giản vậy thôi — chỉ 1 dòng!
+        AudioManager.Instance?.PlayTeleport();
 
-        // Bắt đầu đếm cooldown trên nhân vật vừa teleport
+        // ② Báo camera split
+        var camHandler = FindAnyObjectByType<TeleportCameraHandler>();
+        if (camHandler != null)
+            camHandler.OnPlayerTeleported();
+
+        // ③ Bắt đầu cooldown
         if (status == null)
             status = other.gameObject.AddComponent<TeleportStatus>();
-        // Nếu chưa có TeleportStatus thì tự thêm vào
-
         status.StartCooldown(cooldown);
 
-        // Hiệu ứng nhỏ: rung nhẹ camera (tùy chọn)
-        StartCoroutine(FlashPortal());
+        // ④ Kích hoạt hiệu ứng flash trên sprite
+        StartCoroutine(FlashEffect());
     }
 
-    private IEnumerator FlashPortal()
+    private IEnumerator FlashEffect()
     {
-        // Làm cổng sáng lên 1 chút khi có người đi qua
-        if (_sprite == null) yield break;
+        // Phát trigger animation nếu có Animator
+        if (_animator != null)
+            _animator.SetTrigger(FlashTrigger);
 
-        Color original = _sprite.color;
-        _sprite.color = Color.white;
-        // Đổi sang trắng ngay lập tức
+        // Hiệu ứng scale phồng lên xẹp xuống khi có người đi qua
+        // Trông giống cổng "hút" nhân vật vào
+        Vector3 originalScale = transform.localScale;
+        Vector3 bigScale = originalScale * 1.2f;
+        // Phóng to 20%
 
-        yield return new WaitForSeconds(0.1f);
-        // Chờ 0.1 giây
-        // IEnumerator + yield return = cách làm animation đơn giản trong Unity
-        // Không cần Update, không cần timer biến ngoài
+        float elapsed = 0f;
+        float halfDuration = 0.08f;
 
-        _sprite.color = original;
-        // Trả lại màu gốc
+        // Phóng to
+        while (elapsed < halfDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / halfDuration;
+            transform.localScale = Vector3.Lerp(originalScale, bigScale, t);
+            yield return null;
+            // yield return null = chờ đến frame tiếp theo
+        }
+
+        elapsed = 0f;
+
+        // Thu nhỏ về lại
+        while (elapsed < halfDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / halfDuration;
+            transform.localScale = Vector3.Lerp(bigScale, originalScale, t);
+            yield return null;
+        }
+
+        // Đảm bảo về đúng scale gốc
+        transform.localScale = originalScale;
+
     }
 }

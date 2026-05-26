@@ -1,95 +1,74 @@
-using UnityEngine;
+﻿using UnityEngine;
 
+// Singleton — tồn tại xuyên suốt các scene
+// Gắn vào 1 GameObject tên "AudioManager" ở scene đầu tiên
 public class AudioManager : MonoBehaviour
 {
-    public static AudioManager Instance { get; private set; }
+    public static AudioManager Instance;
+    // Static = truy cập từ bất kỳ script nào bằng AudioManager.Instance
 
-    [Header("Sources")]
+    [Header("Nhạc nền")]
     [SerializeField] private AudioSource bgmSource;
-    [SerializeField] private AudioSource sfxSource;
+    // AudioSource riêng cho nhạc nền — loop liên tục
 
-    [Header("Volume")]
-    [Range(0f, 1f)]
-    [SerializeField] private float bgmVolume = 1f;
-    [Range(0f, 1f)]
-    [SerializeField] private float sfxVolume = 1f;
+    [Header("Âm thanh hiệu ứng")]
+    [SerializeField] private AudioSource sfxSource;
+    // AudioSource riêng cho SFX — phát 1 lần
+
+    [Header("Danh sách âm thanh")]
+    [SerializeField] private AudioClip bgmLevel1;
+    [SerializeField] private AudioClip sfxTeleport;
+    [SerializeField] private AudioClip sfxDoorOpen;
+    [SerializeField] private AudioClip sfxKeyPickup;
+    [SerializeField] private AudioClip sfxPlayerDie;
+    [SerializeField] private AudioClip sfxLadderClimb;
 
     private void Awake()
     {
-        if (Instance != null && Instance != this)
+        // Singleton pattern
+        if (Instance == null)
         {
-            Destroy(gameObject);
-            return;
-        }
-
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-
-        ApplyVolumes();
-    }
-
-    public void PlayBGM(AudioClip clip, bool loop = true)
-    {
-        if (bgmSource == null)
-        {
-            return;
-        }
-
-        bgmSource.clip = clip;
-        bgmSource.loop = loop;
-        bgmSource.volume = bgmVolume;
-
-        if (clip != null)
-        {
-            bgmSource.Play();
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+            // Không bị xóa khi chuyển scene
         }
         else
         {
-            bgmSource.Stop();
-        }
-    }
-
-    public void StopBGM()
-    {
-        if (bgmSource != null)
-        {
-            bgmSource.Stop();
-        }
-    }
-
-    public void PlaySFX(AudioClip clip)
-    {
-        if (sfxSource == null || clip == null)
-        {
+            Destroy(gameObject);
+            // Nếu đã có rồi → xóa cái mới
             return;
         }
+    }
 
-        sfxSource.volume = sfxVolume;
+    private void Start()
+    {
+        PlayBGM(bgmLevel1);
+    }
+
+    // ── Phát nhạc nền ─────────────────────────────────────────
+    public void PlayBGM(AudioClip clip)
+    {
+        if (clip == null || bgmSource == null) return;
+        if (bgmSource.clip == clip) return;
+        // Không restart nếu đang phát bài đó rồi
+
+        bgmSource.clip = clip;
+        bgmSource.loop = true;
+        bgmSource.Play();
+    }
+
+    // ── Phát SFX ──────────────────────────────────────────────
+    public void PlaySFX(AudioClip clip)
+    {
+        if (clip == null || sfxSource == null) return;
         sfxSource.PlayOneShot(clip);
     }
 
-    public void SetBGMVolume(float volume01)
-    {
-        bgmVolume = Mathf.Clamp01(volume01);
-        ApplyVolumes();
-    }
-
-    public void SetSFXVolume(float volume01)
-    {
-        sfxVolume = Mathf.Clamp01(volume01);
-        ApplyVolumes();
-    }
-
-    private void ApplyVolumes()
-    {
-        if (bgmSource != null)
-        {
-            bgmSource.volume = bgmVolume;
-        }
-
-        if (sfxSource != null)
-        {
-            sfxSource.volume = sfxVolume;
-        }
-    }
+    // ── Các hàm gọi nhanh ─────────────────────────────────────
+    public void PlayTeleport() => PlaySFX(sfxTeleport);
+    public void PlayDoorOpen() => PlaySFX(sfxDoorOpen);
+    public void PlayKeyPickup() => PlaySFX(sfxKeyPickup);
+    public void PlayPlayerDie() => PlaySFX(sfxPlayerDie);
+    public void PlayLadder() => PlaySFX(sfxLadderClimb);
+    // => là cách viết ngắn thay vì { PlaySFX(sfx...); }
 }

@@ -1,71 +1,60 @@
 ﻿using UnityEngine;
 
 // Gắn vào Ignus VÀ Aqua
-// Script này xử lý việc leo thang phía nhân vật
 public class LadderClimber : MonoBehaviour
 {
-    // ── Biến nội bộ ───────────────────────────────────────────
     private bool _onLadder = false;
-    // true = đang đứng trong vùng thang
-
-    private float _climbSpeed = 4f;
-    // Tốc độ leo, nhận từ Ladder script
-
+    private float _climbSpeed = 5f;
     private Rigidbody2D _rb;
-    private PlayerInputHandler _input;
-    // PlayerInputHandler = script đọc input có sẵn trong project
 
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
-        _input = GetComponent<PlayerInputHandler>();
     }
 
     private void Update()
     {
         if (!_onLadder) return;
-        // Không trong thang → không làm gì
 
-        // Đọc input nhảy (Jump button)
-        // Kiểm tra tên action trong PlayerInputHandler của nhóm bạn
-        bool jumpPressed = _input != null && IsJumpPressed();
+        // Đọc input theo Player — Player1: W/S, Player2: ↑/↓
+        float vertical = 0f;
 
-        if (jumpPressed)
+        // Thử đọc từ PlayerInputHandler nếu có
+        var input = GetComponent<PlayerInputHandler>();
+        if (input != null)
         {
-            // Nhấn nhảy trong thang → bay lên
-            _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, _climbSpeed * 2f);
-            // Nhân 2 để cảm giác "đẩy" lên mạnh hơn leo từ từ
+            vertical = input.MoveInput.y;
+            // MoveInput.y = -1 (xuống), 0 (đứng), 1 (lên)
+        }
+
+        if (Mathf.Abs(vertical) > 0.1f)
+        {
+            _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, vertical * _climbSpeed);
+            AudioManager.Instance?.PlayLadder();
+        }
+        else
+        {
+            // Không bấm → đứng yên trên thang (không rơi)
+            _rb.linearVelocity = new Vector2(
+                _rb.linearVelocity.x,
+                0f
+            );
         }
     }
 
-    private bool IsJumpPressed()
-    {
-        // Thử đọc input từ PlayerInputHandler
-        // Nếu không dùng được thì dùng Input.GetKeyDown thay thế
-        return Input.GetKeyDown(KeyCode.Space)   // Player 1
-            || Input.GetKeyDown(KeyCode.UpArrow); // Player 2
-        // Bạn chỉnh lại phím cho đúng với game của nhóm
-    }
-
-    // ── Gọi từ Ladder script ──────────────────────────────────
     public void EnterLadder(float speed)
     {
         _onLadder = true;
         _climbSpeed = speed;
-
-        // Tắt gravity khi trên thang
-        // Nếu không tắt, nhân vật sẽ rơi xuống ngay
         _rb.gravityScale = 0f;
-
-        // Dừng velocity hiện tại
+        // Tắt gravity → không rơi khi trên thang
         _rb.linearVelocity = Vector2.zero;
     }
 
     public void ExitLadder()
     {
         _onLadder = false;
-
-        // Bật lại gravity bình thường
         _rb.gravityScale = 1f;
+        // Bật lại gravity bình thường
     }
 }
