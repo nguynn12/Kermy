@@ -69,7 +69,7 @@ public class MiniBossHealth : MonoBehaviour
         }
     }
 
-    void Die()
+    void Die()  
     {
         Debug.Log(gameObject.name + " đã bị tiêu diệt!");
         

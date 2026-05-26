@@ -2,9 +2,14 @@ using UnityEngine;
 
 public class MiniBossAI : MonoBehaviour
 {
+    [Header("Hiệu ứng Xuất hiện")]
+    public float flyInSpeed = 5f; // Tốc độ rồng lao từ ngoài vào
+    private Vector3 combatPosition; // Điểm đứng chiến đấu gốc
+    private bool hasReachedCombatPosition = false; // Khóa: Chưa bay đến nơi thì chưa được bắn
+
     [Header("Cài đặt Di chuyển")]
     public float moveSpeed = 2f;
-    public float moveDistance = 1.5f; // Tầm bay lên xuống lanh quanh mốc
+    public float moveDistance = 1.5f; 
 
     [Header("Cài đặt Tấn công")]
     public GameObject dragonBulletPrefab;
@@ -12,10 +17,14 @@ public class MiniBossAI : MonoBehaviour
     public float fireRate = 3f;     
 
     [Header("Cơ chế Đổi Vị Trí (Synergy Swap)")]
-    public int shotsBeforeSwap = 3;   // Số lần khạc đạn trước khi đổi chỗ
-    public float swapSpeed = 8f;      // Tốc độ bay lướt qua nhau (Nên để nhanh cho ngầu)
+    public int shotsBeforeSwap = 3;  
+    public float swapSpeed = 8f;      
 
-    private float baseY;              // Vị trí mốc hiện tại (trên hoặc dưới)
+    [Header("Âm Thanh Rồng")]
+    public AudioClip elementShootSound; // Ô chứa file tiếng bắn nguyên tố
+    private AudioSource audioSource;    // Biến kết nối tới cái loa
+
+    private float baseY;              
     private bool isMovingUp = true;
     private float nextFireTime;
     private Animator anim;
@@ -27,23 +36,52 @@ public class MiniBossAI : MonoBehaviour
 
     void Start()
     {
-        // Ghi nhớ vị trí mốc ban đầu khi Spawner gọi ra (vd: 2.5 hoặc -2.5)
-        baseY = transform.position.y; 
+        // 1. Tự động kết nối loa
+        audioSource = GetComponent<AudioSource>();
+
+        // 2. Ghi nhớ vị trí mốc ban đầu khi Spawner gọi ra (Đây là đích đến của chúng)
+        combatPosition = transform.position; 
+        baseY = combatPosition.y; 
+        
+        // 3. Ép rồng văng ra tuốt lề bên phải màn hình (Tọa độ X = 15)
+        transform.position = new Vector3(15f, combatPosition.y, combatPosition.z);
+
         anim = GetComponent<Animator>();
-        nextFireTime = Time.time + fireRate;
     }
 
     void Update()
     {
-        // Nếu đang trong trạng thái đổi vị trí, ưu tiên chạy lệnh đổi chỗ
-        if (isSwapping)
+        // --- GIAI ĐOẠN 1: BAY TỪ NGOÀI VÀO (CHÀO SÂN) ---
+        if (!hasReachedCombatPosition)
         {
-            PerformSwap();
+            FlyInRoutine();
         }
+        // --- GIAI ĐOẠN 2: CHIẾN ĐẤU (CODE CŨ CỦA BẠN) ---
         else
         {
-            MoveUpDown();
-            HandleShooting();
+            if (isSwapping)
+            {
+                PerformSwap();
+            }
+            else
+            {
+                MoveUpDown();
+                HandleShooting();
+            }
+        }
+    }
+
+    // Hàm xử lý việc bay từ ngoài vào
+    void FlyInRoutine()
+    {
+        transform.position = Vector3.MoveTowards(transform.position, combatPosition, flyInSpeed * Time.deltaTime);
+
+        // Khi đã cách đích dưới 0.1 unit -> Chốt vị trí và cho phép chiến đấu
+        if (Vector3.Distance(transform.position, combatPosition) < 0.1f)
+        {
+            transform.position = combatPosition; 
+            hasReachedCombatPosition = true;
+            nextFireTime = Time.time + 1f; // Nghỉ 1 giây ngầu lòi rồi mới bắt đầu khạc đạn
         }
     }
 
@@ -54,10 +92,8 @@ public class MiniBossAI : MonoBehaviour
             Shoot();
             nextFireTime = Time.time + fireRate; 
             
-            // Tăng biến đếm số lần bắn
             currentShotCount++;
             
-            // Đủ 3 lần bắn thì kích hoạt cơ chế đổi chỗ
             if (currentShotCount >= shotsBeforeSwap)
             {
                 StartSwapping();
@@ -73,11 +109,16 @@ public class MiniBossAI : MonoBehaviour
         {
             Instantiate(dragonBulletPrefab, firePoint.position, Quaternion.identity);
         }
+
+        // KÍCH HOẠT ÂM THANH BẮN NGUYÊN TỐ
+        if (elementShootSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(elementShootSound); 
+        }
     }
 
     void MoveUpDown()
     {
-        // Di chuyển lên xuống mượt mà quanh trục mốc hiện tại (baseY)
         if (isMovingUp)
         {
             transform.Translate(Vector3.up * moveSpeed * Time.deltaTime);
@@ -93,28 +134,24 @@ public class MiniBossAI : MonoBehaviour
     void StartSwapping()
     {
         isSwapping = true;
-        currentShotCount = 0; // Reset bộ đếm đạn
+        currentShotCount = 0; 
         
-        // Đảo ngược vị trí Y (Ví dụ: Từ mốc trên 2.5 đổi xuống mốc dưới -2.5)
         targetSwapY = -baseY; 
         
-        // Tính toán thời gian bay qua nhau để tạm dừng khạc đạn trong lúc bay
         float timeToSwap = Mathf.Abs(targetSwapY - transform.position.y) / swapSpeed;
-        nextFireTime = Time.time + timeToSwap + (fireRate / 2f); // Nghỉ một nhịp sau khi đổi chỗ xong mới bắn tiếp
+        nextFireTime = Time.time + timeToSwap + (fireRate / 2f); 
     }
 
     void PerformSwap()
     {
-        // Bay lao thẳng về vị trí đối diện (tạo ra hình chữ X đan qua nhau ở giữa màn hình)
         Vector3 targetPos = new Vector3(transform.position.x, targetSwapY, transform.position.z);
         transform.position = Vector3.MoveTowards(transform.position, targetPos, swapSpeed * Time.deltaTime);
 
-        // Chốt vị trí khi đã tới đích
         if (Vector3.Distance(transform.position, targetPos) < 0.01f)
         {
             transform.position = targetPos; 
-            baseY = targetSwapY;            // Cập nhật mốc mới
-            isSwapping = false;             // Trở lại trạng thái bình thường (bắn + di chuyển)
+            baseY = targetSwapY;            
+            isSwapping = false;             
         }
     }
 }

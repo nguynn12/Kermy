@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 3659044808499734907}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.41, y: -0.78, z: 0}
+  m_LocalPosition: {x: -2.24, y: -0.8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -188,6 +188,7 @@ GameObject:
   - component: {fileID: 265935948228509463}
   - component: {fileID: 3361000178693137401}
   - component: {fileID: -3307735921863442317}
+  - component: {fileID: -7356582836080254056}
   m_Layer: 0
   m_Name: FinalBoss_Aethelgard
   m_TagString: Enemy
@@ -341,7 +342,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
@@ -359,6 +360,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FinalBossHealth
   maxHealth: 200
   currentHealth: 0
+  deathRoarSound: {fileID: 8300000, guid: cf670af6f1f3e1346aaa4bc636f15da7, type: 3}
+  fadeDuration: 3
+  bgmSource: {fileID: 0}
+  victoryMusic: {fileID: 8300000, guid: 614cc775a80d5e24389d502893574ecc, type: 3}
 --- !u!95 &3361000178693137401
 Animator:
   serializedVersion: 7
@@ -393,6 +398,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44b55bb9f165fe049b35cfd2705e206b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FinalBossAI
+  purpleMissileSound: {fileID: 8300000, guid: 2dc0b60409ee22c43a01c2ee07922bde, type: 3}
+  energyBallSound: {fileID: 8300000, guid: 15487ec5171df6249a05ff78f53a043d, type: 3}
+  laserChargeSound: {fileID: 8300000, guid: b8e51d352dd580f4ba02a46de5762a1c, type: 3}
+  laserFireSound: {fileID: 8300000, guid: ee1ae356fa29cba4a8a84e2463547bca, type: 3}
+  smoothTime: 0.5
   moveSpeed: 3
   targetPosition: {x: 10, y: 0, z: 0}
   hoverSpeed: 2
@@ -407,6 +417,103 @@ MonoBehaviour:
   warningLaser: {fileID: 3619296125198879968}
   phase1FireRate: 2
   phase2FireRate: 1
+--- !u!82 &-7356582836080254056
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5762284040952049591}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: ed9d614e37d64ea43b7779943cad9c0b, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &6828439317291349149
 GameObject:
   m_ObjectHideFlags: 0
@@ -432,7 +539,7 @@ Transform:
   m_GameObject: {fileID: 6828439317291349149}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.39, y: -0.21, z: 0}
+  m_LocalPosition: {x: -2.24, y: -0.02, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

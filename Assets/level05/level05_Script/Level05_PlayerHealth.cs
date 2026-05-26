@@ -3,6 +3,10 @@ using UnityEngine.SceneManagement;
 
 public class Level05_PlayerHealth : MonoBehaviour 
 {
+    [Header("Death Sound")]
+    public AudioClip deathSound; 
+    private AudioSource audioSource; 
+
     private SpriteRenderer spriteRenderer;
     private int hitCount = 0;          
     private float recoveryTimer = 0f;  
@@ -14,6 +18,7 @@ public class Level05_PlayerHealth : MonoBehaviour
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        audioSource = GetComponent<AudioSource>(); // Tìm loa đã gắn trên nhân vật
     }
 
     void Update()
@@ -49,9 +54,24 @@ public class Level05_PlayerHealth : MonoBehaviour
             isResetting = true; 
             Debug.Log(gameObject.name + " dính đạn lần 2! Chuẩn bị reset màn chơi...");
             
-            // SỬ DỤNG INVOKE ĐỂ TRÌ HOÃN LỆNH RESET 0.1 GIÂY
-            // Giúp Unity có đủ thời gian thoát khỏi luồng tính toán va chạm vật lý
-            Invoke("RestartLevel", 0.1f);
+            // 1. Phát tiếng âm thanh khi chết
+            if (deathSound != null && audioSource != null)
+            {
+                audioSource.PlayOneShot(deathSound);
+            }
+
+            // 2. Ẩn hình ảnh con ếch đi tạo cảm giác "bốc hơi"
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.enabled = false;
+            }
+
+            // 3. Tắt Collider để không bị vướng vào các đạn khác đang bay tới
+            Collider2D col = GetComponent<Collider2D>();
+            if (col != null) col.enabled = false;
+
+            // 4. Kéo dài thời gian trì hoãn lên 1.5 giây để tiếng chết kịp phát hết trước khi tải lại Scene
+            Invoke("RestartLevel", 0.4f);
         }
     }
 

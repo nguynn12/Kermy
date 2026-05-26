@@ -3,6 +3,14 @@
 
     public class EnemySpawner : MonoBehaviour
     {
+        [Header("Cinematic Sound")]
+        public AudioClip earthquakeSound; // Chứa file tiếng động đất/rung màn hình 
+        public AudioClip bossRoarSound;   // Tiếng Boss gầm thét
+        
+        [Header("Nhạc Nền (BGM)")]
+        public AudioSource bgmSource; // Chứa cái BGM_Manager ngoài màn hình
+        public AudioClip bossBGM;     // File nhạc kịch tính lúc đánh Boss
+
         [Header("Prefabs")]
         public GameObject batPrefab;
         public GameObject waterDragonPrefab; // Chuẩn bị cho Wave 3
@@ -62,7 +70,7 @@
         {
             SpawnArcFormation();
             yield return new WaitForSeconds(timeBetweenArcs);
-        }
+        } 
 
         // Nghỉ 4 giây trước khi Boss xuất hiện
         yield return new WaitForSeconds(4f);     
@@ -125,24 +133,33 @@
             if (fireDragonPrefab != null) Instantiate(fireDragonPrefab, fireBossPos, Quaternion.identity);
         }
        // KỊCH BẢN: RUNG MÀN HÌNH -> HỢP NHẤT -> RA BOSS
-    IEnumerator MergeDragonsAndSpawnBoss()
+IEnumerator MergeDragonsAndSpawnBoss()
     {
-        // 1. Rung màn hình trước khi hợp nhất
+        // --- 0. TẮT NHẠC CŨ TẠO SỰ IM LẶNG ĐÁNG SỢ ---
+        if (bgmSource != null)
+        {
+            bgmSource.Stop();
+        }
+        // --- 1. GIAI ĐOẠN ĐỘNG ĐẤT ---
+        if (earthquakeSound != null)
+        {
+            AudioSource.PlayClipAtPoint(earthquakeSound, Camera.main.transform.position, 1f);
+        }
+        
         StartCoroutine(ShakeCamera(1.5f, 0.3f));
         yield return new WaitForSeconds(1.5f);
 
         float bossPosX = transform.position.x - 5f;
         Vector3 centerPos = new Vector3(bossPosX, 0f, 0f);
 
-        // 2. Tạo 2 rồng dummy (như bước trước đã làm)
+        // --- 2. GIAI ĐOẠN TRIỆU HỒI RỒNG DUMMY ---
         GameObject dWater = Instantiate(waterDragonPrefab, new Vector3(bossPosX, 3f, 0f), Quaternion.identity);
         GameObject dFire = Instantiate(fireDragonPrefab, new Vector3(bossPosX, -3f, 0f), Quaternion.identity);
         
-        // (Xóa script AI/Máu của dummy ở đây...)
         Destroy(dWater.GetComponent<MiniBossHealth>()); 
         Destroy(dFire.GetComponent<MiniBossHealth>());
 
-        // 3. Hút vào nhau
+        // --- 3. GIAI ĐOẠN HÚT VÀO NHAU TẠO CHỚP SÁNG ---
         while (dWater != null && Vector3.Distance(dWater.transform.position, centerPos) > 0.1f)
         {
             dWater.transform.position = Vector3.MoveTowards(dWater.transform.position, centerPos, 4f * Time.deltaTime);
@@ -150,23 +167,61 @@
             yield return null;
         }
 
-        Destroy(dWater); Destroy(dFire);
+        Destroy(dWater); 
+        Destroy(dFire);
+     
+        // --- 4. GIAI ĐOẠN BOSS XUẤT HIỆN & ĐỨNG GẦM 5 GIÂY ---
+        GameObject activeBoss = null;
+        FinalBossAI bossAI = null;
 
-        // 4. FLASH trắng màn hình (nếu muốn) và hiện Boss
         if (finalBossPrefab != null)
         {
-            Instantiate(finalBossPrefab, centerPos, Quaternion.identity);
-        }
-        // 4. Gọi Boss
-        if (finalBossPrefab != null)
-        {
-            Instantiate(finalBossPrefab, centerPos, Quaternion.identity);
+            // Sinh ra Boss thật và lưu nó vào một biến
+            activeBoss = Instantiate(finalBossPrefab, centerPos, Quaternion.identity);
+            
+
+            Collider2D bossCol = activeBoss.GetComponent<Collider2D>();
+            if (bossCol != null) bossCol.enabled = false;
+
+            // Tìm cái bộ não AI của con Boss vừa đẻ ra và TẠM TẮT NÓ ĐI
+            bossAI = activeBoss.GetComponent<FinalBossAI>();
+            if (bossAI != null)
+            {
+                bossAI.enabled = false; 
+            }
         }
 
-        // 5. THẢ KHIÊN CỨU TRỢ GIỮA MÀN HÌNH
+        yield return new WaitForSeconds(0.2f); // Nghỉ 0.2s cho ánh sáng tan bớt
+
+       // ĐỔI NHẠC: Bật nhạc nền Boss kịch tính lên!
+        if (bgmSource != null && bossBGM != null)
+        {
+            bgmSource.clip = bossBGM; // Tráo file nhạc
+            bgmSource.volume = 1f;
+            bgmSource.Play();         // Phát nhạc mới
+        }
+       
+
+        // Phát tiếng gầm với âm lượng lớn nhất
+        if (bossRoarSound != null)
+        {
+            AudioSource.PlayClipAtPoint(bossRoarSound, Camera.main.transform.position, 1f);
+            Debug.Log("BOSS ĐANG GẦM THÉT TRONG 2 GIÂY!!!");
+        }
+
+        // CHỜ ĐÚNG 2 GIÂY (Để Boss đứng im biểu diễn)
+        yield return new WaitForSeconds(2f);
+
+        // HẾT 2 GIÂY: Bật bộ não AI lên lại để nó bắt đầu lùi về vị trí và xả đạn
+        if (bossAI != null)
+        {
+            bossAI.enabled = true;
+            Debug.Log("BOSS BẮT ĐẦU CHIẾN ĐẤU!");
+        }
+
+        // --- 5. GIAI ĐOẠN THẢ KHIÊN CỨU TRỢ ---
         if (shieldItemPrefab != null)
         {
-            // Vector3.zero là tọa độ (0,0,0) - ngay chính giữa màn hình
             Instantiate(shieldItemPrefab, Vector3.zero, Quaternion.identity); 
             Debug.Log("KHIÊN CỨU TRỢ ĐÃ XUẤT HIỆN!");
         }
