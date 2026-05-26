@@ -6,6 +6,11 @@ TagManager:
   tags:
   - Ladder
   - Background
+  - Player1
+  - Player2
+  - Player 1
+  - Player 2
+  - TrapSap
   layers:
   - Default
   - TransparentFX
@@ -45,6 +50,9 @@ TagManager:
     locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Player
+    uniqueID: 3000650525
     locked: 0
   m_RenderingLayers:
   - Default

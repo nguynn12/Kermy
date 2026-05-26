@@ -98,7 +98,13 @@ public class PlayerInputHandler : MonoBehaviour
             isGrounded = Mathf.Abs(rb.linearVelocity.y) < 0.01f;
         }
 
-        // --- 2. SPAWN HẠT KHI CHẠY ---
+        // --- 2. LỰC DI CHUYỂN VẬT LÝ VÀ CHẠY ---
+        if (rb != null)
+        {
+            rb.linearVelocity = new Vector2(MoveInput.x * moveSpeed, rb.linearVelocity.y);
+        }
+
+        // --- 3. SPAWN HẠT KHI CHẠY ---
         if (Mathf.Abs(MoveInput.x) > 0.1f && isGrounded)
         {
             particleTimer -= Time.deltaTime;
@@ -113,7 +119,7 @@ public class PlayerInputHandler : MonoBehaviour
             particleTimer = 0f; 
         }
 
-        // --- 3. LẬT MẶT KHI QUAY ĐẦU ---
+        // --- 4. LẬT MẶT KHI QUAY ĐẦU ---
         if (MoveInput.x > 0 && !isFacingRight)
         {
             Flip();
@@ -123,15 +129,11 @@ public class PlayerInputHandler : MonoBehaviour
             Flip();
         }
 
-        // --- 4. ANIMATION: CẬP NHẬT TRẠNG THÁI CHO ANIMATOR ---
+        // --- 5. ANIMATION: CẬP NHẬT TRẠNG THÁI CHO ANIMATOR ---
         if (anim != null)
         {
-            // Báo cho Animator biết nhân vật có đang chạy không
             bool isMoving = Mathf.Abs(MoveInput.x) > 0.1f;
             anim.SetBool("isRunning", isMoving);
-            
-            // ---> DÒNG CODE MỚI CHÈN VÀO Ở ĐÂY <---
-            // Báo cho Animator biết nhân vật có đang chạm đất không (để chuyển hoạt ảnh Nhảy)
             anim.SetBool("isGrounded", isGrounded);
         }
     }
@@ -174,7 +176,7 @@ public class PlayerInputHandler : MonoBehaviour
     }
 
     // ==========================================
-    // CÁC HÀM XỬ LÝ INPUT (GIỮ NGUYÊN)
+    // CÁC HÀM XỬ LÝ INPUT (ĐÃ ĐƯỢC FIX LỖI TRÙNG PHÍM)
     // ==========================================
 
     public void SetInputEnabled(bool enabled)
@@ -230,13 +232,59 @@ public class PlayerInputHandler : MonoBehaviour
     private void OnMove(InputAction.CallbackContext ctx)
     {
         if (!_inputEnabled) { MoveInput = Vector2.zero; return; }
-        MoveInput = ctx.ReadValue<Vector2>();
+        
+        Vector2 rawInput = ctx.ReadValue<Vector2>();
+        string currentTag = gameObject.tag;
+
+        // ❌ CHẶN TRÙNG DI CHUYỂN: Con Lửa (Player1) chỉ nhận phím chữ, KHÔNG nhận phím mũi tên
+        if (currentTag == "Player1" && (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)))
+        {
+            MoveInput = Vector2.zero;
+            return;
+        }
+
+        // ❌ CHẶN TRÙNG DI CHUYỂN: Con Nước (Player2) chỉ nhận phím mũi tên, KHÔNG nhận phím A/D
+        if (currentTag == "Player2" && (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)))
+        {
+            MoveInput = Vector2.zero;
+            return;
+        }
+
+        MoveInput = rawInput;
     }
 
-    private void OnJump(InputAction.CallbackContext ctx)
+   private void OnJump(InputAction.CallbackContext ctx)
     {
         if (!_inputEnabled) return;
-        if (ctx.performed) _jumpPressedThisFrame = true;
+        
+        if (ctx.performed)
+        {
+            string currentTag = gameObject.tag;
+
+            // 🌟 ĐOẠN KIỂM TRA CHUẨN CỦA INPUT SYSTEM:
+            // Lấy tên của nút bấm thực tế vừa được nhấn từ bàn phím
+            string activeKeyName = ctx.control.name; // Nó sẽ trả về chữ "w" hoặc "upArrow"
+
+            // 1. Nếu đây là con Lửa (Player1) nhưng nút vừa bấm lại là Mũi tên lên (upArrow) -> CHẶN
+            if (currentTag == "Player1" && activeKeyName.ToLower().Contains("arrow"))
+            {
+                return; 
+            }
+
+            // 2. Nếu đây là con Nước (Player2) nhưng nút vừa bấm lại là phím W -> CHẶN
+            if (currentTag == "Player2" && activeKeyName.ToLower() == "w")
+            {
+                return; 
+            }
+
+            // ---- NẾU ĐÚNG CHỦ QUYỀN THÌ MỚI CHO NHẢY ----
+            _jumpPressedThisFrame = true;
+
+            if (isGrounded && rb != null)
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            }
+        }
     }
 
     private void OnInteract(InputAction.CallbackContext ctx)

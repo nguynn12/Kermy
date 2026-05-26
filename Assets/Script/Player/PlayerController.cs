@@ -2,6 +2,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(PlayerInputHandler))]
+[RequireComponent(typeof(AudioSource))]
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
@@ -24,6 +25,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float groundedGraceTime = 0.08f;
     [SerializeField] private float minGroundNormalY = 0.5f;
 
+    [Header("Audio Settings")]
+    public AudioSource audioSource;
+    public AudioClip jumpSound;
+    public AudioClip walkSound;
+    public AudioClip collectSound;
+    public AudioClip deathSound;
+
     private Rigidbody2D rb;
     private PlayerInputHandler inputHandler;
     private PlayerSupportDetector supportDetector;
@@ -38,9 +46,14 @@ public class PlayerController : MonoBehaviour
 
     private bool _controlEnabled = true;
     private bool _jumpRequested;
+    private float _trackedMoveX;
+    private float _trackedMoveY;
+    private bool _isForcedGroundedByTrap;
+
     private readonly RaycastHit2D[] _groundRayHits = new RaycastHit2D[4];
 
     public bool IsGrounded => isGrounded;
+    public bool IsJumpRequested => _jumpRequested;
 
     private float EffectiveMoveSpeed => inputHandler != null && inputHandler.moveSpeed > 0f ? inputHandler.moveSpeed : moveSpeed;
     private float EffectiveJumpForce => inputHandler != null && inputHandler.jumpForce > 0f ? inputHandler.jumpForce : jumpForce;
@@ -52,6 +65,7 @@ public class PlayerController : MonoBehaviour
         supportDetector = GetComponent<PlayerSupportDetector>();
         riderStick = GetComponent<PlayerRiderStick>();
         bodyCollider = FindBodyCollider();
+        audioSource = GetComponent<AudioSource>();
 
         originalGravityScale = rb.gravityScale;
     }
@@ -59,11 +73,69 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         if (!_controlEnabled)
-            return;
-
-        if (inputHandler != null && inputHandler.ConsumeJumpPressed())
         {
-            _jumpRequested = true;
+            _trackedMoveX = 0f;
+            _trackedMoveY = 0f;
+            return;
+        }
+
+        string currentTag = gameObject.tag.Replace(" ", string.Empty);
+
+        if (inputHandler != null)
+        {
+            _trackedMoveX = inputHandler.MoveInput.x;
+            _trackedMoveY = inputHandler.MoveInput.y;
+
+            if (inputHandler.ConsumeJumpPressed())
+            {
+                _jumpRequested = true;
+            }
+
+            if (currentTag == "Player2" && Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                _jumpRequested = true;
+            }
+        }
+
+        if (isOnLadder)
+        {
+            if (currentTag == "Player2")
+            {
+                if (Input.GetKey(KeyCode.UpArrow))
+                    _trackedMoveY = 1f;
+                else if (Input.GetKey(KeyCode.DownArrow))
+                    _trackedMoveY = -1f;
+                else
+                    _trackedMoveY = 0f;
+            }
+            else if (currentTag == "Player1")
+            {
+                if (Input.GetKey(KeyCode.W))
+                    _trackedMoveY = 1f;
+                else if (Input.GetKey(KeyCode.S))
+                    _trackedMoveY = -1f;
+                else
+                    _trackedMoveY = 0f;
+            }
+        }
+        else if (inputHandler == null || inputHandler.MoveInput.y == 0f)
+        {
+            if (currentTag == "Player2" && !Input.GetKey(KeyCode.UpArrow) && !Input.GetKey(KeyCode.DownArrow))
+            {
+                _trackedMoveY = 0f;
+            }
+            else if (currentTag == "Player1")
+            {
+                _trackedMoveY = 0f;
+            }
+        }
+
+        if (isGrounded && !isOnLadder && Mathf.Abs(_trackedMoveX) > 0.1f)
+        {
+            if (audioSource != null && walkSound != null && !audioSource.isPlaying)
+            {
+                audioSource.PlayOneShot(walkSound, 0.4f);
+            }
         }
     }
 
@@ -78,32 +150,39 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        float moveX = inputHandler != null ? inputHandler.MoveInput.x : 0f;
-        float moveY = inputHandler != null ? inputHandler.MoveInput.y : 0f;
+        float moveX = _trackedMoveX;
+        float moveY = _trackedMoveY;
+        float baseVelocityX = 0f;
 
-        float targetVelocityX = moveX * EffectiveMoveSpeed;
-        rb.linearVelocity = new Vector2(targetVelocityX, rb.linearVelocity.y);
+        if (riderStick != null && riderStick.ParentRigidbody != null)
+        {
+            baseVelocityX = riderStick.ParentRigidbody.linearVelocity.x;
+        }
+
+        float targetVelocityX = (moveX * EffectiveMoveSpeed) + baseVelocityX;
 
         if (isOnLadder)
         {
             rb.gravityScale = 0f;
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, moveY * climbSpeed);
+            rb.linearVelocity = new Vector2(0f, moveY * climbSpeed);
         }
         else
         {
             rb.gravityScale = originalGravityScale;
+            float forceX = (targetVelocityX - rb.linearVelocity.x) * rb.mass / Time.fixedDeltaTime;
+            rb.AddForce(new Vector2(forceX, 0f));
         }
 
         ClampAccidentalSlopeLaunch();
 
         if (_jumpRequested)
         {
-            _jumpRequested = false;
-
-            if ((isGrounded || isOnLadder) && !IsSupportingAnotherPlayer())
+            if ((isGrounded || _isForcedGroundedByTrap || isOnLadder) && !IsSupportingAnotherPlayer())
             {
                 Jump();
             }
+
+            _jumpRequested = false;
         }
     }
 
@@ -121,6 +200,27 @@ public class PlayerController : MonoBehaviour
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
         _ignoreGroundClampUntil = Time.time + jumpVelocityClampDelay;
         rb.AddForce(Vector2.up * EffectiveJumpForce, ForceMode2D.Impulse);
+
+        if (audioSource != null && jumpSound != null)
+        {
+            audioSource.PlayOneShot(jumpSound, 0.8f);
+        }
+    }
+
+    public void PlayCollectSound()
+    {
+        if (audioSource != null && collectSound != null)
+        {
+            audioSource.PlayOneShot(collectSound, 0.7f);
+        }
+    }
+
+    public void PlayDeathSound()
+    {
+        if (audioSource != null && deathSound != null)
+        {
+            audioSource.PlayOneShot(deathSound, 0.8f);
+        }
     }
 
     public void ApplyBounce(float force)
@@ -134,9 +234,9 @@ public class PlayerController : MonoBehaviour
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, force);
     }
 
-    private bool IsSupportingAnotherPlayer()
+    public void ForceGroundedFromTrap(bool grounded)
     {
-        return supportDetector != null && supportDetector.CheckSupportingNow();
+        _isForcedGroundedByTrap = grounded;
     }
 
     public void SetMovementEnabled(bool enabled)
@@ -149,6 +249,8 @@ public class PlayerController : MonoBehaviour
         if (!enabled)
         {
             _jumpRequested = false;
+            _trackedMoveX = 0f;
+            _trackedMoveY = 0f;
             rb.linearVelocity = Vector2.zero;
         }
     }
@@ -164,6 +266,11 @@ public class PlayerController : MonoBehaviour
         {
             inputHandler.SetInputEnabled(enabled);
         }
+    }
+
+    private bool IsSupportingAnotherPlayer()
+    {
+        return supportDetector != null && supportDetector.CheckSupportingNow();
     }
 
     private void UpdateGrounded()
@@ -189,7 +296,6 @@ public class PlayerController : MonoBehaviour
         }
 
         float rayDistance = Mathf.Max(0.01f, groundCheckRadius + 0.05f);
-
         int hitCount = Physics2D.RaycastNonAlloc(groundCheck.position, Vector2.down, _groundRayHits, rayDistance, mask);
 
         for (int i = 0; i < hitCount; i++)
@@ -232,7 +338,7 @@ public class PlayerController : MonoBehaviour
         Bounds bounds = bodyCollider.bounds;
         Vector2 castOrigin = new Vector2(bounds.center.x, bounds.min.y + 0.04f);
         Vector2 castSize = new Vector2(bounds.size.x * 0.82f, 0.08f);
-        float castDistance = Mathf.Max(0.06f, groundCheckRadius + 0.08f);
+        float castDistance = Mathf.Max(0.06f, groundCheckRadius + groundContactHeightTolerance);
 
         int hitCount = Physics2D.BoxCastNonAlloc(castOrigin, castSize, 0f, Vector2.down, _groundRayHits, castDistance, mask);
         for (int i = 0; i < hitCount; i++)
