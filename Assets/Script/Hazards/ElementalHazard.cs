@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ElementalHazard : MonoBehaviour
 {
@@ -44,12 +44,12 @@ public class ElementalHazard : MonoBehaviour
                     // Tạo một hàm nhỏ chạy ẩn sau 0.02 giây để đảm bảo ếch đã "tốc biến" về checkpoint an toàn rồi mới bật lại Dynamic
                     StartCoroutine(ResetPhysicsCoroutine(rb));
                 }
-                
+
                 return;
             }
-            
+
             // Đúng hệ (Ếch Lửa vào Lava, Ếch Nước vào Nước) -> Đi qua an toàn
-            return; 
+            return;
         }
 
         // 2. NẾU KHÔNG PHẢI NHÂN VẬT THÌ MỚI XÉT ĐẾN KHỐI HỘP ĐẨY (BLOCK)

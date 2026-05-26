@@ -1,8 +1,14 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ExitDoor : MonoBehaviour
 {
+    [Header("Keys")]
     [SerializeField] private int requiredKeys = 1;
+
+    [Header("Colliders")]
     [SerializeField] private Collider2D solidDoorCollider;
     [SerializeField] private Collider2D exitZoneTrigger;
 
@@ -10,20 +16,34 @@ public class ExitDoor : MonoBehaviour
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Sprite closedSprite;
     [SerializeField] private Sprite openSprite;
+    [SerializeField] private Sprite spriteClosed;
+    [SerializeField] private Sprite spriteOpen;
 
     [Header("Transition")]
     [SerializeField] private int requiredPlayersInZone = 2;
+    [SerializeField] private string nextSceneName;
+    [SerializeField] private float loadDelay = 1f;
+
+    [Header("Element Gate")]
+    [SerializeField] private bool requireMatchingElement;
+    [SerializeField] private ElementalType requiredElement;
+
+    [Header("Audio")]
+    [SerializeField] private AudioClip soundOpen;
+    [SerializeField] private AudioClip soundEnter;
 
     public bool IsOpen { get; private set; }
 
-    private int _playersInZone;
+    private AudioSource _audioSource;
+    private bool _isUnlocked;
     private bool _transitionTriggered;
-    private readonly System.Collections.Generic.HashSet<PlayerController> _enteredPlayers = new System.Collections.Generic.HashSet<PlayerController>();
+    private readonly HashSet<PlayerController> _enteredPlayers = new HashSet<PlayerController>();
 
     private void Reset()
     {
         solidDoorCollider = GetComponent<Collider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     private void Awake()
@@ -40,9 +60,19 @@ public class ExitDoor : MonoBehaviour
             spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
-        if (closedSprite == null && spriteRenderer != null)
+        if (_audioSource == null)
         {
-            closedSprite = spriteRenderer.sprite;
+            _audioSource = GetComponent<AudioSource>();
+        }
+
+        if (closedSprite == null)
+        {
+            closedSprite = spriteClosed != null ? spriteClosed : spriteRenderer != null ? spriteRenderer.sprite : null;
+        }
+
+        if (openSprite == null)
+        {
+            openSprite = spriteOpen;
         }
 
         SetOpen(false);
@@ -50,16 +80,25 @@ public class ExitDoor : MonoBehaviour
 
     private void Update()
     {
-        if (!IsOpen && GetCollectedKeys() >= requiredKeys)
+        if (!_isUnlocked && GetCollectedKeys() >= requiredKeys)
         {
-            SetOpen(true);
+            Unlock();
         }
 
-        if (!_transitionTriggered && IsOpen && _playersInZone >= requiredPlayersInZone && LevelManager.Instance != null)
+        TryLoadNextLevel();
+    }
+
+    public void Unlock()
+    {
+        if (_isUnlocked)
         {
-            _transitionTriggered = true;
-            LevelManager.Instance.LoadNextLevel();
+            return;
         }
+
+        _isUnlocked = true;
+        SetOpen(true);
+        PlaySound(soundOpen);
+        TryLoadNextLevel();
     }
 
     public void SetOpen(bool open)
@@ -86,6 +125,77 @@ public class ExitDoor : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!IsOpen)
+        {
+            return;
+        }
+
+        PlayerController player = other.GetComponent<PlayerController>();
+        if (player == null || _enteredPlayers.Contains(player) || !CanPlayerEnter(other))
+        {
+            return;
+        }
+
+        _enteredPlayers.Add(player);
+        HideEnteredPlayer(player);
+        PlaySound(soundEnter);
+        TryLoadNextLevel();
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        PlayerController player = other.GetComponent<PlayerController>();
+        if (player == null || !_enteredPlayers.Contains(player))
+        {
+            return;
+        }
+
+        _enteredPlayers.Remove(player);
+    }
+
+    private bool CanPlayerEnter(Collider2D other)
+    {
+        if (!requireMatchingElement && requiredPlayersInZone > 1)
+        {
+            return true;
+        }
+
+        ElementalIdentity identity = other.GetComponent<ElementalIdentity>();
+        return identity == null || identity.Type == requiredElement;
+    }
+
+    private void TryLoadNextLevel()
+    {
+        if (_transitionTriggered || !IsOpen || _enteredPlayers.Count < Mathf.Max(1, requiredPlayersInZone))
+        {
+            return;
+        }
+
+        _transitionTriggered = true;
+        StartCoroutine(LoadNextLevelAfterDelay());
+    }
+
+    private IEnumerator LoadNextLevelAfterDelay()
+    {
+        if (loadDelay > 0f)
+        {
+            yield return new WaitForSeconds(loadDelay);
+        }
+
+        if (!string.IsNullOrEmpty(nextSceneName))
+        {
+            SceneManager.LoadScene(nextSceneName);
+            yield break;
+        }
+
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.LoadNextLevel();
+        }
+    }
+
     private static int GetCollectedKeys()
     {
         return LevelManager.Instance != null
@@ -106,50 +216,6 @@ public class ExitDoor : MonoBehaviour
         }
 
         new GameObject("LevelManager").AddComponent<LevelManager>();
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (!IsOpen)
-        {
-            return;
-        }
-
-        PlayerController player = other.GetComponent<PlayerController>();
-        if (player == null || _enteredPlayers.Contains(player))
-        {
-            return;
-        }
-
-        _enteredPlayers.Add(player);
-        _playersInZone++;
-        HideEnteredPlayer(player);
-
-        if (!_transitionTriggered && _playersInZone >= requiredPlayersInZone && LevelManager.Instance != null)
-        {
-            _transitionTriggered = true;
-            LevelManager.Instance.LoadNextLevel();
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (!IsOpen)
-        {
-            return;
-        }
-
-        PlayerController player = other.GetComponent<PlayerController>();
-        if (player == null || _enteredPlayers.Contains(player))
-        {
-            return;
-        }
-
-        _playersInZone--;
-        if (_playersInZone < 0)
-        {
-            _playersInZone = 0;
-        }
     }
 
     private static void HideEnteredPlayer(PlayerController player)
@@ -176,6 +242,14 @@ public class ExitDoor : MonoBehaviour
         {
             playerBody.linearVelocity = Vector2.zero;
             playerBody.simulated = false;
+        }
+    }
+
+    private void PlaySound(AudioClip clip)
+    {
+        if (_audioSource != null && clip != null)
+        {
+            _audioSource.PlayOneShot(clip);
         }
     }
 }
