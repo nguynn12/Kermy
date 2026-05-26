@@ -38,15 +38,18 @@ public class MainMenuManager : MonoBehaviour
             return;
         }
 
-        // Kiểm tra scene có trong Build Settings không
-        if (!IsSceneInBuildSettings(sceneName))
+        string sceneToLoad = IsSceneInBuildSettings(sceneName)
+            ? sceneName
+            : FindFirstLevelSceneInBuildSettings();
+
+        if (string.IsNullOrEmpty(sceneToLoad))
         {
-            Debug.LogError($"Scene '{sceneName}' chưa được thêm vào Build Settings. Vào File → Build Settings → Add Open Scenes.");
+            Debug.LogError("Chưa có scene Level nào trong Build Settings.");
             return;
         }
 
-        Debug.Log($"Đang load scene: {sceneName}");
-        SceneManager.LoadScene(sceneName);
+        Debug.Log($"Đang load scene: {sceneToLoad}");
+        SceneManager.LoadScene(sceneToLoad);
     }
 
     // Kiểm tra scene có tồn tại trong Build Settings
@@ -60,6 +63,44 @@ public class MainMenuManager : MonoBehaviour
                 return true;
         }
         return false;
+    }
+
+    private string FindFirstLevelSceneInBuildSettings()
+    {
+        string bestScene = null;
+        int bestLevel = int.MaxValue;
+
+        for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
+        {
+            string scenePath = SceneUtility.GetScenePathByBuildIndex(i);
+            string name = System.IO.Path.GetFileNameWithoutExtension(scenePath);
+
+            if (!TryParseLevelNumber(name, out int levelNumber))
+            {
+                continue;
+            }
+
+            if (levelNumber < bestLevel)
+            {
+                bestLevel = levelNumber;
+                bestScene = name;
+            }
+        }
+
+        return bestScene;
+    }
+
+    private bool TryParseLevelNumber(string levelSceneName, out int levelNumber)
+    {
+        levelNumber = 0;
+
+        if (string.IsNullOrEmpty(levelSceneName) || !levelSceneName.StartsWith("Level", System.StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        string digits = levelSceneName.Substring("Level".Length);
+        return int.TryParse(digits, out levelNumber);
     }
 
     public void OpenAbout()

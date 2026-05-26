@@ -43,6 +43,7 @@ public class PlayerInputHandler : MonoBehaviour
     private PlayerController playerController;
     private bool isFacingRight = true;
     private bool isGrounded;
+    private bool _usingKeyboardMoveFallback;
 
     private void Start()
     {
@@ -83,6 +84,8 @@ public class PlayerInputHandler : MonoBehaviour
     private void Update()
     {
         if (!_inputEnabled) return;
+
+        ApplyKeyboardMoveFallback();
 
         // --- 1. KIỂM TRA CHẠM ĐẤT ---
         if (playerController != null)
@@ -234,7 +237,7 @@ public class PlayerInputHandler : MonoBehaviour
         if (!_inputEnabled) { MoveInput = Vector2.zero; return; }
         
         Vector2 rawInput = ctx.ReadValue<Vector2>();
-        string currentTag = gameObject.tag;
+        string currentTag = NormalizePlayerTag(gameObject.tag);
 
         // ❌ CHẶN TRÙNG DI CHUYỂN: Con Lửa (Player1) chỉ nhận phím chữ, KHÔNG nhận phím mũi tên
         if (currentTag == "Player1" && (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)))
@@ -259,7 +262,7 @@ public class PlayerInputHandler : MonoBehaviour
         
         if (ctx.performed)
         {
-            string currentTag = gameObject.tag;
+            string currentTag = NormalizePlayerTag(gameObject.tag);
 
             // 🌟 ĐOẠN KIỂM TRA CHUẨN CỦA INPUT SYSTEM:
             // Lấy tên của nút bấm thực tế vừa được nhấn từ bàn phím
@@ -335,5 +338,42 @@ public class PlayerInputHandler : MonoBehaviour
         }
 
         KeybindingManager.ApplySavedOverrides(actionRef.action.actionMap.asset);
+    }
+
+    private void ApplyKeyboardMoveFallback()
+    {
+        float moveX = 0f;
+        string currentTag = NormalizePlayerTag(gameObject.tag);
+
+        if (currentTag == "Player1")
+        {
+            if (Input.GetKey(KeyCode.A)) moveX -= 1f;
+            if (Input.GetKey(KeyCode.D)) moveX += 1f;
+        }
+        else if (currentTag == "Player2")
+        {
+            if (Input.GetKey(KeyCode.LeftArrow)) moveX -= 1f;
+            if (Input.GetKey(KeyCode.RightArrow)) moveX += 1f;
+        }
+        else
+        {
+            return;
+        }
+
+        if (Mathf.Abs(moveX) > 0.01f)
+        {
+            MoveInput = new Vector2(moveX, MoveInput.y);
+            _usingKeyboardMoveFallback = true;
+        }
+        else if (_usingKeyboardMoveFallback)
+        {
+            MoveInput = new Vector2(0f, MoveInput.y);
+            _usingKeyboardMoveFallback = false;
+        }
+    }
+
+    private static string NormalizePlayerTag(string tagName)
+    {
+        return string.IsNullOrEmpty(tagName) ? string.Empty : tagName.Replace(" ", string.Empty);
     }
 }

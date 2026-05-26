@@ -90,11 +90,11 @@ public class PlayerController : MonoBehaviour
             {
                 _jumpRequested = true;
             }
+        }
 
-            if (currentTag == "Player2" && Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                _jumpRequested = true;
-            }
+        if (IsKeyboardJumpPressed(currentTag))
+        {
+            _jumpRequested = true;
         }
 
         if (isOnLadder)
@@ -271,6 +271,21 @@ public class PlayerController : MonoBehaviour
     private bool IsSupportingAnotherPlayer()
     {
         return supportDetector != null && supportDetector.CheckSupportingNow();
+    }
+
+    private static bool IsKeyboardJumpPressed(string playerTag)
+    {
+        if (playerTag == "Player1")
+        {
+            return Input.GetKeyDown(KeyCode.W);
+        }
+
+        if (playerTag == "Player2")
+        {
+            return Input.GetKeyDown(KeyCode.UpArrow);
+        }
+
+        return false;
     }
 
     private void UpdateGrounded()
