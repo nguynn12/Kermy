@@ -2,31 +2,30 @@ using UnityEngine;
 
 public class PlayerRiderStick : MonoBehaviour
 {
-    [SerializeField] private float minUpNormal = 0.85f; // Tăng lên 0.85 để chỉ dính khi thực sự ở đỉnh đầu (Tránh dính tay)
+    [SerializeField] private float minUpNormal = 0.85f;
 
     [Header("Stick")]
     [SerializeField] private LayerMask playerLayer;
     [SerializeField] private float unstickGraceSeconds = 0.1f;
     [SerializeField] private float supportProbeHeight = 0.08f;
 
-    // THÊM: Lấy Rigidbody của người bên dưới để truyền vận tốc
-    public Rigidbody2D ParentRigidbody { get; private set; } 
+    public Rigidbody2D ParentRigidbody { get; private set; }
 
     private Transform _currentParent;
+    private Rigidbody2D _rb;
     private Collider2D _col;
     private float _unstickTimer;
+    private Vector2 _lastParentPosition;
 
     private void Awake()
     {
+        _rb = GetComponent<Rigidbody2D>();
         _col = GetComponent<Collider2D>();
     }
 
     private void OnDisable()
     {
-        // Đã xóa SetParent(null) để khắc phục triệt để lỗi đỏ Console
-        _currentParent = null;
-        ParentRigidbody = null;
-        _unstickTimer = 0f;
+        ClearParent();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -36,16 +35,24 @@ public class PlayerRiderStick : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if (_currentParent != null) return;
+        if (_currentParent != null)
+        {
+            return;
+        }
+
         TryStick(collision);
     }
 
     private void FixedUpdate()
     {
-        if (_currentParent == null) return;
+        if (_currentParent == null)
+        {
+            return;
+        }
 
         if (IsStillSupportedByCurrentParent())
         {
+            FollowParentMotion();
             _unstickTimer = 0f;
             return;
         }
@@ -53,45 +60,111 @@ public class PlayerRiderStick : MonoBehaviour
         _unstickTimer += Time.fixedDeltaTime;
         if (_unstickTimer >= unstickGraceSeconds)
         {
-            _currentParent = null;
-            ParentRigidbody = null;
-            _unstickTimer = 0f;
+            ClearParent();
         }
     }
 
     private void TryStick(Collision2D collision)
     {
         PlayerController otherPlayer = collision.collider.GetComponent<PlayerController>();
-        if (otherPlayer == null || !otherPlayer.gameObject.activeInHierarchy) return;
+        if (otherPlayer == null || !otherPlayer.gameObject.activeInHierarchy)
+        {
+            return;
+        }
 
-        if (!IsStandingOnTop(collision)) return;
+        if (!IsStandingOnTop(collision))
+        {
+            return;
+        }
 
         _currentParent = otherPlayer.transform;
-        ParentRigidbody = otherPlayer.GetComponent<Rigidbody2D>(); // Lấy vận tốc người dưới
+        ParentRigidbody = otherPlayer.GetComponent<Rigidbody2D>();
+        _lastParentPosition = ParentRigidbody != null ? ParentRigidbody.position : (Vector2)_currentParent.position;
         _unstickTimer = 0f;
+    }
+
+    private void FollowParentMotion()
+    {
+        if (_rb == null || _currentParent == null)
+        {
+            return;
+        }
+
+        Vector2 currentParentPosition = ParentRigidbody != null ? ParentRigidbody.position : (Vector2)_currentParent.position;
+        Vector2 delta = currentParentPosition - _lastParentPosition;
+        if (delta != Vector2.zero)
+        {
+            _rb.position += delta;
+        }
+
+        _lastParentPosition = currentParentPosition;
     }
 
     private bool IsStillSupportedByCurrentParent()
     {
-        if (_currentParent == null) return false;
-        if (_col == null) return transform.position.y >= _currentParent.position.y;
+        if (_currentParent == null)
+        {
+            return false;
+        }
+
+        if (_col == null)
+        {
+            return transform.position.y >= _currentParent.position.y;
+        }
 
         Bounds b = _col.bounds;
-        // Thu nhỏ chiều rộng hộp quét (0.5f) để nếu trượt ra mép hông là rớt ngay, không bị dính lơ lửng
         Vector2 probeCenter = new Vector2(b.center.x, b.min.y - (supportProbeHeight * 0.5f));
-        Vector2 probeSize = new Vector2(b.size.x * 0.5f, supportProbeHeight);
+        Vector2 probeSize = new Vector2(b.size.x * 0.72f, supportProbeHeight);
 
-        Collider2D hit = Physics2D.OverlapBox(probeCenter, probeSize, 0f, playerLayer);
+        Collider2D hit = Physics2D.OverlapBox(probeCenter, probeSize, 0f, ResolvePlayerLayer());
         return hit != null && hit.transform == _currentParent;
     }
 
     private bool IsStandingOnTop(Collision2D collision)
     {
+        Collider2D otherCollider = collision.collider;
+        if (_col != null && otherCollider != null)
+        {
+            Bounds self = _col.bounds;
+            Bounds other = otherCollider.bounds;
+            bool aboveOther = self.min.y >= other.center.y;
+            bool closeToTop = Mathf.Abs(self.min.y - other.max.y) <= 0.25f;
+            bool horizontallyOverlapping = self.min.x < other.max.x && self.max.x > other.min.x;
+
+            if (aboveOther && closeToTop && horizontallyOverlapping)
+            {
+                return true;
+            }
+        }
+
         for (int i = 0; i < collision.contactCount; i++)
         {
-            Vector2 n = collision.GetContact(i).normal;
-            if (n.y >= minUpNormal) return true;
+            Vector2 normal = collision.GetContact(i).normal;
+            if (normal.y >= minUpNormal)
+            {
+                return true;
+            }
         }
+
         return false;
+    }
+
+    private LayerMask ResolvePlayerLayer()
+    {
+        if (playerLayer.value != 0)
+        {
+            return playerLayer;
+        }
+
+        int playerLayerIndex = LayerMask.NameToLayer("Player");
+        return playerLayerIndex >= 0 ? 1 << playerLayerIndex : Physics2D.AllLayers;
+    }
+
+    private void ClearParent()
+    {
+        _currentParent = null;
+        ParentRigidbody = null;
+        _unstickTimer = 0f;
+        _lastParentPosition = Vector2.zero;
     }
 }

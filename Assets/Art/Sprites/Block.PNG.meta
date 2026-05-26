@@ -11,6 +11,12 @@ TextureImporter:
   - first:
       213: -1470946536411257380
     second: Block_2
+<<<<<<< HEAD
+=======
+  - first:
+      213: 8508771087518894038
+    second: Block_3
+>>>>>>> origin/level3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -110,9 +116,15 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
+<<<<<<< HEAD
         y: 0
         width: 332
         height: 349
+=======
+        y: 2
+        width: 332
+        height: 350
+>>>>>>> origin/level3
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -132,9 +144,15 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 385
+<<<<<<< HEAD
         y: 1
         width: 332
         height: 349
+=======
+        y: 4
+        width: 332
+        height: 350
+>>>>>>> origin/level3
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,9 +172,15 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 779
+<<<<<<< HEAD
         y: 2
         width: 339
         height: 348
+=======
+        y: 5
+        width: 340
+        height: 349
+>>>>>>> origin/level3
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -171,6 +195,31 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+<<<<<<< HEAD
+=======
+    - serializedVersion: 2
+      name: Block_3
+      rect:
+        serializedVersion: 2
+        x: 1151
+        y: 0
+        width: 335
+        height: 358
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d78da2093a351670800000000000000
+      internalID: 8508771087518894038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+>>>>>>> origin/level3
     outline: []
     customData: 
     physicsShape: []
@@ -188,6 +237,10 @@ TextureImporter:
       Block_0: 2537882373423050008
       Block_1: 2189487477073400709
       Block_2: -1470946536411257380
+<<<<<<< HEAD
+=======
+      Block_3: 8508771087518894038
+>>>>>>> origin/level3
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

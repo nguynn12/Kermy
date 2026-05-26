@@ -78,6 +78,10 @@ public class AsymmetricCameraPillar : MonoBehaviour
 
         _candidateCommander = pc;
         _candidateInput = pc.GetComponent<PlayerInputHandler>();
+        if (_candidateInput != null)
+        {
+            _candidateInput.ClearActionPressed();
+        }
     }
 
     private void OnTriggerExit2D(Collider2D other)

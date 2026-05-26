@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     public LayerMask groundLayer;
     public LayerMask jumpSupportLayer;
 
+<<<<<<< HEAD
     // ====================================================================
     // 🔥 KHU VỰC AUDIO ĐÃ KẾT NỐI: Mạnh thả file tương ứng vào đây ngoài Unity nha
     // ====================================================================
@@ -27,15 +28,26 @@ public class PlayerController : MonoBehaviour
     public AudioClip walkSound;      // Thả file Mutant.wav vào đây
     public AudioClip collectSound;   // Thả file Pickup4.wav vào đây
     public AudioClip deathSound;     // Ô MỚI: Thả file âm thanh lúc chết vào đây
+=======
+    [Header("Slope Handling")]
+    [SerializeField] private float maxGroundedUpwardVelocity = 0.75f;
+    [SerializeField] private float jumpVelocityClampDelay = 0.22f;
+    [SerializeField] private float groundContactHeightTolerance = 0.15f;
+    [SerializeField] private float groundedGraceTime = 0.08f;
+    [SerializeField] private float minGroundNormalY = 0.5f;
+>>>>>>> origin/level3
 
     private Rigidbody2D rb;
     private PlayerInputHandler inputHandler;
     private PlayerSupportDetector supportDetector;
     private PlayerRiderStick riderStick;
+    private Collider2D bodyCollider;
 
     private bool isGrounded;
     private bool isOnLadder;
     private float originalGravityScale;
+    private float _ignoreGroundClampUntil;
+    private float _lastGroundedTime;
 
     private bool _controlEnabled = true;
     private bool _jumpRequested;
@@ -47,15 +59,24 @@ public class PlayerController : MonoBehaviour
 
     private readonly RaycastHit2D[] _groundRayHits = new RaycastHit2D[4];
 
+    public bool IsGrounded => isGrounded;
+
+    private float EffectiveMoveSpeed => inputHandler != null && inputHandler.moveSpeed > 0f ? inputHandler.moveSpeed : moveSpeed;
+    private float EffectiveJumpForce => inputHandler != null && inputHandler.jumpForce > 0f ? inputHandler.jumpForce : jumpForce;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         inputHandler = GetComponent<PlayerInputHandler>();
         supportDetector = GetComponent<PlayerSupportDetector>();
         riderStick = GetComponent<PlayerRiderStick>();
+<<<<<<< HEAD
         
         // Tự động tìm cái loa gắn trên con ếch
         audioSource = GetComponent<AudioSource>();
+=======
+        bodyCollider = FindBodyCollider();
+>>>>>>> origin/level3
 
         originalGravityScale = rb.gravityScale;
     }
@@ -141,6 +162,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+<<<<<<< HEAD
         float moveX = _trackedMoveX;
         float moveY = _trackedMoveY;
         float baseVelocityX = 0f;
@@ -152,6 +174,14 @@ public class PlayerController : MonoBehaviour
 
         float targetVelocityX = (moveX * moveSpeed) + baseVelocityX;
         
+=======
+        float moveX = inputHandler != null ? inputHandler.MoveInput.x : 0f;
+        float moveY = inputHandler != null ? inputHandler.MoveInput.y : 0f;
+
+        float targetVelocityX = moveX * EffectiveMoveSpeed;
+        rb.linearVelocity = new Vector2(targetVelocityX, rb.linearVelocity.y);
+
+>>>>>>> origin/level3
         if (isOnLadder)
         {
             targetVelocityX = 0f;
@@ -165,9 +195,17 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(new Vector2(forceX, 0f));
         }
 
+        ClampAccidentalSlopeLaunch();
+
         if (_jumpRequested)
         {
+<<<<<<< HEAD
             if ((isGrounded || _isForcedGroundedByTrap || isOnLadder) && (supportDetector == null || !supportDetector.IsSupportingPlayer))
+=======
+            _jumpRequested = false;
+
+            if ((isGrounded || isOnLadder) && !IsSupportingAnotherPlayer())
+>>>>>>> origin/level3
             {
                 Jump();
             }
@@ -178,7 +216,7 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
-        if (supportDetector != null && supportDetector.IsSupportingPlayer)
+        if (IsSupportingAnotherPlayer())
             return;
 
         if (isOnLadder)
@@ -188,6 +226,7 @@ public class PlayerController : MonoBehaviour
         }
 
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+<<<<<<< HEAD
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
 
         // ====================================================================
@@ -219,11 +258,26 @@ public class PlayerController : MonoBehaviour
         {
             audioSource.PlayOneShot(deathSound, 0.8f); // Phát tiếng chết âm lượng 80%
         }
+=======
+        _ignoreGroundClampUntil = Time.time + jumpVelocityClampDelay;
+        rb.AddForce(Vector2.up * EffectiveJumpForce, ForceMode2D.Impulse);
+>>>>>>> origin/level3
     }
 
     public void ApplyBounce(float force)
     {
+        if (IsSupportingAnotherPlayer())
+        {
+            return;
+        }
+
+        _ignoreGroundClampUntil = Time.time + jumpVelocityClampDelay;
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, force);
+    }
+
+    private bool IsSupportingAnotherPlayer()
+    {
+        return supportDetector != null && supportDetector.CheckSupportingNow();
     }
 
     public void SetMovementEnabled(bool enabled)
@@ -257,26 +311,110 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateGrounded()
     {
-        if (groundCheck == null)
+        if (Time.time < _ignoreGroundClampUntil && rb.linearVelocity.y > 0f)
         {
             isGrounded = false;
             return;
         }
 
         LayerMask mask = jumpSupportLayer.value != 0 ? jumpSupportLayer : groundLayer;
+
+        if (bodyCollider != null && IsGroundBelowBody(mask))
+        {
+            MarkGrounded();
+            return;
+        }
+
+        if (groundCheck == null)
+        {
+            isGrounded = Time.time <= _lastGroundedTime + groundedGraceTime;
+            return;
+        }
+
         float rayDistance = Mathf.Max(0.01f, groundCheckRadius + 0.05f);
         int hitCount = Physics2D.RaycastNonAlloc(groundCheck.position, Vector2.down, _groundRayHits, rayDistance, mask);
 
         for (int i = 0; i < hitCount; i++)
         {
             RaycastHit2D hit = _groundRayHits[i];
+<<<<<<< HEAD
             if (hit.collider == null || hit.rigidbody == rb || hit.normal.y < 0.5f) continue;
+=======
 
-            isGrounded = true;
+            if (hit.collider == null)
+                continue;
+
+            if (hit.rigidbody == rb)
+                continue;
+
+            if (hit.normal.y < minGroundNormalY)
+                continue;
+>>>>>>> origin/level3
+
+            MarkGrounded();
             return;
         }
 
-        isGrounded = false;
+        isGrounded = Time.time <= _lastGroundedTime + groundedGraceTime;
+    }
+
+    private Collider2D FindBodyCollider()
+    {
+        Collider2D[] colliders = GetComponents<Collider2D>();
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            Collider2D candidate = colliders[i];
+            if (candidate != null && candidate.enabled && !candidate.isTrigger)
+            {
+                return candidate;
+            }
+        }
+
+        return null;
+    }
+
+    private bool IsGroundBelowBody(LayerMask mask)
+    {
+        Bounds bounds = bodyCollider.bounds;
+        Vector2 castOrigin = new Vector2(bounds.center.x, bounds.min.y + 0.04f);
+        Vector2 castSize = new Vector2(bounds.size.x * 0.82f, 0.08f);
+        float castDistance = Mathf.Max(0.06f, groundCheckRadius + 0.08f);
+
+        int hitCount = Physics2D.BoxCastNonAlloc(castOrigin, castSize, 0f, Vector2.down, _groundRayHits, castDistance, mask);
+        for (int i = 0; i < hitCount; i++)
+        {
+            RaycastHit2D hit = _groundRayHits[i];
+            if (hit.collider == null || hit.rigidbody == rb)
+            {
+                continue;
+            }
+
+            if (hit.normal.y >= minGroundNormalY)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void MarkGrounded()
+    {
+        _lastGroundedTime = Time.time;
+        isGrounded = true;
+    }
+
+    private void ClampAccidentalSlopeLaunch()
+    {
+        if (_jumpRequested || !isGrounded || isOnLadder || Time.time < _ignoreGroundClampUntil)
+        {
+            return;
+        }
+
+        if (rb.linearVelocity.y > maxGroundedUpwardVelocity)
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, maxGroundedUpwardVelocity);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -293,6 +431,37 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        HandleGroundCollision(collision);
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        HandleGroundCollision(collision);
+    }
+
+    private void HandleGroundCollision(Collision2D collision)
+    {
+        if (Time.time < _ignoreGroundClampUntil || isOnLadder)
+        {
+            return;
+        }
+
+        for (int i = 0; i < collision.contactCount; i++)
+        {
+            ContactPoint2D contact = collision.GetContact(i);
+            if (contact.normal.y < minGroundNormalY)
+            {
+                continue;
+            }
+
+            MarkGrounded();
+            ClampAccidentalSlopeLaunch();
+            return;
+        }
+    }
+
     private void OnDrawGizmosSelected()
     {
         if (groundCheck != null)
@@ -301,7 +470,11 @@ public class PlayerController : MonoBehaviour
             Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
     }
+<<<<<<< HEAD
 
     public void ForceGroundedFromTrap(bool grounded) => _isForcedGroundedByTrap = grounded;
     public bool IsJumpRequested => _jumpRequested;
 }
+=======
+}
+>>>>>>> origin/level3

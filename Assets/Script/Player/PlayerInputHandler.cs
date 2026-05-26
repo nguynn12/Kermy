@@ -35,10 +35,12 @@ public class PlayerInputHandler : MonoBehaviour
     private bool _inputEnabled = true;
     private bool _jumpPressedThisFrame;
     private bool _actionPressedThisFrame;
+    private int _actionPressedFrame = -1;
 
     // Các biến dùng cho Di chuyển và Lật mặt
     private Rigidbody2D rb;
     private Animator anim; 
+    private PlayerController playerController;
     private bool isFacingRight = true;
     private bool isGrounded;
 
@@ -47,6 +49,7 @@ public class PlayerInputHandler : MonoBehaviour
         // Lấy component vật lý và animation của nhân vật
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>(); 
+        playerController = GetComponent<PlayerController>();
 
         // KHỞI TẠO OBJECT POOL CHO HIỆU ỨNG VĂNG HẠT
         dirtPool = new GameObject[poolSize];
@@ -62,6 +65,7 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void OnEnable()
     {
+        ApplySavedBindingOverrides(moveAction);
         BindAndEnable(moveAction, OnMove);
         BindAndEnable(jumpAction, OnJump);
         BindAndEnable(interactAction, OnInteract);
@@ -81,7 +85,11 @@ public class PlayerInputHandler : MonoBehaviour
         if (!_inputEnabled) return;
 
         // --- 1. KIỂM TRA CHẠM ĐẤT ---
-        if (groundCheck != null)
+        if (playerController != null)
+        {
+            isGrounded = playerController.IsGrounded;
+        }
+        else if (groundCheck != null)
         {
             isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
         }
@@ -194,9 +202,15 @@ public class PlayerInputHandler : MonoBehaviour
 
     public bool ConsumeActionPressed()
     {
-        bool pressed = _actionPressedThisFrame;
+        bool pressed = _actionPressedThisFrame && _actionPressedFrame == Time.frameCount;
         _actionPressedThisFrame = false;
         return pressed;
+    }
+
+    public void ClearActionPressed()
+    {
+        _actionPressedThisFrame = false;
+        _actionPressedFrame = -1;
     }
 
     private void ApplyInputEnabledState()
@@ -276,7 +290,12 @@ public class PlayerInputHandler : MonoBehaviour
     private void OnInteract(InputAction.CallbackContext ctx)
     {
         if (!_inputEnabled) { IsActionHeld = false; return; }
-        if (ctx.started) { IsActionHeld = true; _actionPressedThisFrame = true; }
+        if (ctx.started)
+        {
+            IsActionHeld = true;
+            _actionPressedThisFrame = true;
+            _actionPressedFrame = Time.frameCount;
+        }
         else if (ctx.canceled) { IsActionHeld = false; }
     }
 
@@ -306,5 +325,15 @@ public class PlayerInputHandler : MonoBehaviour
     private static void DisableIfNotNull(InputActionReference actionRef)
     {
         if (actionRef != null && actionRef.action != null) actionRef.action.Disable();
+    }
+
+    private static void ApplySavedBindingOverrides(InputActionReference actionRef)
+    {
+        if (actionRef == null || actionRef.action == null || actionRef.action.actionMap == null)
+        {
+            return;
+        }
+
+        KeybindingManager.ApplySavedOverrides(actionRef.action.actionMap.asset);
     }
 }

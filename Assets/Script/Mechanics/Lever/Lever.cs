@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 ﻿using System.Collections.Generic;
+=======
+using System.Collections.Generic;
+using System;
+>>>>>>> origin/level3
 using UnityEngine;
 
 public class Lever : MonoBehaviour
@@ -30,6 +35,10 @@ public class Lever : MonoBehaviour
     [SerializeField] private List<LaserTarget> lasers = new List<LaserTarget>();
 
     public bool IsOn { get; private set; }
+<<<<<<< HEAD
+=======
+    public event Action<bool> StateChanged;
+>>>>>>> origin/level3
 
     private readonly List<PlayerInputHandler> _playersInRange = new List<PlayerInputHandler>();
 
@@ -59,6 +68,14 @@ public class Lever : MonoBehaviour
         SetState(startOn);
     }
 
+<<<<<<< HEAD
+=======
+    private void Start()
+    {
+        SetState(startOn);
+    }
+
+>>>>>>> origin/level3
     private void Update()
     {
         for (int i = _playersInRange.Count - 1; i >= 0; i--)
@@ -85,9 +102,21 @@ public class Lever : MonoBehaviour
 
     public void SetState(bool on)
     {
+<<<<<<< HEAD
         IsOn = on;
         UpdateSprite();
         ApplyTargets();
+=======
+        bool changed = IsOn != on;
+        IsOn = on;
+        UpdateSprite();
+        ApplyTargets();
+
+        if (changed)
+        {
+            StateChanged?.Invoke(IsOn);
+        }
+>>>>>>> origin/level3
     }
 
     private void UpdateSprite()
@@ -110,9 +139,13 @@ public class Lever : MonoBehaviour
         {
             if (target.door != null)
             {
+<<<<<<< HEAD
                 // Tạm thời gọi hàm SetOpen thay vì SetSwitchOpen
                 // Hãy kiểm tra lại trong LinkedDoor.cs tên hàm đúng là gì
                 //target.door.SetOpen(IsOn == target.openWhenOn);
+=======
+                target.door.SetSwitchOpen(IsOn == target.openWhenOn);
+>>>>>>> origin/level3
             }
         }
 
@@ -120,7 +153,11 @@ public class Lever : MonoBehaviour
         {
             if (target.laser != null)
             {
+<<<<<<< HEAD
                 target.laser.SetState(IsOn == target.onWhenLeverOn);
+=======
+                target.laser.SetSwitchOn(IsOn == target.onWhenLeverOn);
+>>>>>>> origin/level3
             }
         }
     }
@@ -130,6 +167,10 @@ public class Lever : MonoBehaviour
         PlayerInputHandler input = other.GetComponentInParent<PlayerInputHandler>();
         if (input != null && !_playersInRange.Contains(input))
         {
+<<<<<<< HEAD
+=======
+            input.ClearActionPressed();
+>>>>>>> origin/level3
             _playersInRange.Add(input);
         }
     }
@@ -142,4 +183,8 @@ public class Lever : MonoBehaviour
             _playersInRange.Remove(input);
         }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/level3

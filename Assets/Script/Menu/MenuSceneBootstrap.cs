@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿using UnityEngine;
+=======
+using UnityEngine;
+>>>>>>> origin/level3
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
@@ -34,6 +38,7 @@ public class MenuSceneBootstrap : MonoBehaviour
 
         if (mainMenu != null)
         {
+<<<<<<< HEAD
             // Tạm tắt hàm Configure vì MainMenu của level2 không có hàm này
             // mainMenu.Configure(gameplaySceneName, optionsPanel);
 
@@ -45,6 +50,13 @@ public class MenuSceneBootstrap : MonoBehaviour
             AddButtonListener("Quit Button", mainMenu.QuitGame);
 
             // AddButtonListener("Options Back Button", mainMenu.HideOptions);
+=======
+            mainMenu.Configure(gameplaySceneName, optionsPanel);
+            AddButtonListener("Play Button", mainMenu.PlayGame);
+            AddButtonListener("Options Button", mainMenu.ShowOptions);
+            AddButtonListener("Quit Button", mainMenu.QuitGame);
+            AddButtonListener("Options Back Button", mainMenu.HideOptions);
+>>>>>>> origin/level3
         }
 
         AddButtonListener("Controls Button", ShowControlsPanel);
@@ -248,4 +260,8 @@ public class MenuSceneBootstrap : MonoBehaviour
         slider.onValueChanged.RemoveListener(action);
         slider.onValueChanged.AddListener(action);
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/level3
