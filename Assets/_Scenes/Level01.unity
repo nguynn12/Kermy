@@ -200,6 +200,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7947542664080361443, guid: 972c5a170465bd141891912acb914e5c, type: 3}
+      propertyPath: jumpSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 239ad35229e193245ad6e895efab6a4a, type: 3}
+    - target: {fileID: 7947542664080361443, guid: 972c5a170465bd141891912acb914e5c, type: 3}
+      propertyPath: walkSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 6662be501ed0f3f4da7c2e46bef91c6a, type: 3}
+    - target: {fileID: 7947542664080361443, guid: 972c5a170465bd141891912acb914e5c, type: 3}
+      propertyPath: deathSound
+      value: 
+      objectReference: {fileID: 8300000, guid: ea02120d3a47adf42bd7cee827cc26a0, type: 3}
+    - target: {fileID: 7947542664080361443, guid: 972c5a170465bd141891912acb914e5c, type: 3}
+      propertyPath: audioSource
+      value: 
+      objectReference: {fileID: 629921469}
+    - target: {fileID: 7947542664080361443, guid: 972c5a170465bd141891912acb914e5c, type: 3}
+      propertyPath: collectSound
+      value: 
+      objectReference: {fileID: 8300000, guid: e29f248aa2f7379449954665c080f55c, type: 3}
     - target: {fileID: 8706719114285764507, guid: 972c5a170465bd141891912acb914e5c, type: 3}
       propertyPath: m_Name
       value: Aqua
@@ -818,6 +838,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ignus
       objectReference: {fileID: 0}
+    - target: {fileID: 6648041261194501516, guid: 49d43d07acc5944469a12c0ce6f423a2, type: 3}
+      propertyPath: jumpSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 239ad35229e193245ad6e895efab6a4a, type: 3}
+    - target: {fileID: 6648041261194501516, guid: 49d43d07acc5944469a12c0ce6f423a2, type: 3}
+      propertyPath: walkSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 6662be501ed0f3f4da7c2e46bef91c6a, type: 3}
+    - target: {fileID: 6648041261194501516, guid: 49d43d07acc5944469a12c0ce6f423a2, type: 3}
+      propertyPath: deathSound
+      value: 
+      objectReference: {fileID: 8300000, guid: ea02120d3a47adf42bd7cee827cc26a0, type: 3}
+    - target: {fileID: 6648041261194501516, guid: 49d43d07acc5944469a12c0ce6f423a2, type: 3}
+      propertyPath: audioSource
+      value: 
+      objectReference: {fileID: 1554537383}
+    - target: {fileID: 6648041261194501516, guid: 49d43d07acc5944469a12c0ce6f423a2, type: 3}
+      propertyPath: collectSound
+      value: 
+      objectReference: {fileID: 8300000, guid: e29f248aa2f7379449954665c080f55c, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1007,7 +1047,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: b58edaee8bd69ed4e9bee4f029ba1616, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -1403,6 +1443,11 @@ MonoBehaviour:
   climbSpeed: 5
   jumpKey: 256
   canExitByJump: 1
+--- !u!82 &629921469 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 5898202577907908693, guid: 972c5a170465bd141891912acb914e5c, type: 3}
+  m_PrefabInstance: {fileID: 260732665}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &656353863 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5534592669092656902, guid: 49d43d07acc5944469a12c0ce6f423a2, type: 3}
@@ -35404,6 +35449,11 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!82 &1554537383 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 6443188129323254114, guid: 49d43d07acc5944469a12c0ce6f423a2, type: 3}
+  m_PrefabInstance: {fileID: 496908605}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1643630946
 GameObject:
   m_ObjectHideFlags: 0
