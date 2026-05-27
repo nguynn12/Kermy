@@ -33,8 +33,8 @@ public class DayNightTransformer : MonoBehaviour
     public TextMeshProUGUI interactText;
 
     [Header("--- PHÍM BẤM THEO NHÂN VẬT ---")]
-    public KeyCode character1Key = KeyCode.E;      // Dành cho Player 1 (Ignus)
-    public KeyCode character2Key = KeyCode.Alpha0; // Dành cho Player 2 (Aqua)
+    public KeyCode character1Key = KeyCode.Q;      // Dành cho Player 1 (Ignus)
+    public KeyCode character2Key = KeyCode.Space;  // Dành cho Player 2 (Aqua)
 
     private bool isDay = true;
     private GameObject currentOccupant;
@@ -49,7 +49,7 @@ public class DayNightTransformer : MonoBehaviour
 
     void Update()
     {
-        if (currentOccupant != null && Input.GetKeyDown(currentActiveKey))
+        if (currentOccupant != null && IsInteractionKeyPressed())
         {
             InteractWithLever();
         }
@@ -121,7 +121,7 @@ public class DayNightTransformer : MonoBehaviour
         else if (targetCharacter.CompareTag("Player 2"))
             currentActiveKey = character2Key;
         else
-            currentActiveKey = KeyCode.E; // fallback
+            currentActiveKey = KeyCode.None;
 
         if (interactUI != null)
         {
@@ -143,8 +143,15 @@ public class DayNightTransformer : MonoBehaviour
     {
         if (interactText == null) return;
         string keyName = key.ToString();
+        if (key == KeyCode.Space) keyName = "Space";
         if (keyName.StartsWith("Alpha")) keyName = keyName.Replace("Alpha", "");
+        if (keyName.StartsWith("Keypad")) keyName = keyName.Replace("Keypad", "");
         interactText.text = keyName;
+    }
+
+    private bool IsInteractionKeyPressed()
+    {
+        return currentActiveKey != KeyCode.None && Input.GetKeyDown(currentActiveKey);
     }
 
     public void InteractWithLever()

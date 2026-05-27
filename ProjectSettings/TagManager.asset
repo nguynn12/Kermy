@@ -11,6 +11,13 @@ TagManager:
   - Player 1
   - Player 2
   - TrapSap
+  - EnemyBullet
+  - Undefined
+  - PlayerBullet
+  - Enemy
+  - BossUlt
+  - Shield
+  - BossLazer
   layers:
   - Default
   - TransparentFX

@@ -140208,7 +140208,7 @@ PrefabInstance:
     - target: {fileID: 295597250640302779, guid: 9ef32ed4be07ff742805a47829900687, type: 3}
       propertyPath: nextScene
       value: 
-      objectReference: {fileID: 102900000, guid: d87b3ed941de12c4f98655f8c3c802a5, type: 3}
+      objectReference: {fileID: 102900000, guid: 24fea41583c10104b88e452e68b5f755, type: 3}
     - target: {fileID: 295597250640302779, guid: 9ef32ed4be07ff742805a47829900687, type: 3}
       propertyPath: nextSceneName
       value: Level02
@@ -140452,7 +140452,7 @@ PrefabInstance:
     - target: {fileID: 8420116086065244428, guid: 9d3e776bba659134ca12731b6c88d935, type: 3}
       propertyPath: nextScene
       value: 
-      objectReference: {fileID: 102900000, guid: d87b3ed941de12c4f98655f8c3c802a5, type: 3}
+      objectReference: {fileID: 102900000, guid: 24fea41583c10104b88e452e68b5f755, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

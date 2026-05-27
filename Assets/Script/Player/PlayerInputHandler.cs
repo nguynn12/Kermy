@@ -86,6 +86,7 @@ public class PlayerInputHandler : MonoBehaviour
         if (!_inputEnabled) return;
 
         ApplyKeyboardMoveFallback();
+        ApplyKeyboardActionFallback();
 
         // --- 1. KIỂM TRA CHẠM ĐẤT ---
         if (playerController != null)
@@ -293,6 +294,8 @@ public class PlayerInputHandler : MonoBehaviour
     private void OnInteract(InputAction.CallbackContext ctx)
     {
         if (!_inputEnabled) { IsActionHeld = false; return; }
+        if (!IsAllowedActionControl(ctx)) return;
+
         if (ctx.started)
         {
             IsActionHeld = true;
@@ -300,6 +303,55 @@ public class PlayerInputHandler : MonoBehaviour
             _actionPressedFrame = Time.frameCount;
         }
         else if (ctx.canceled) { IsActionHeld = false; }
+    }
+
+    private void ApplyKeyboardActionFallback()
+    {
+        KeyCode actionKey = GetActionKeyForCurrentPlayer();
+        if (actionKey == KeyCode.None)
+        {
+            return;
+        }
+
+        if (Input.GetKeyDown(actionKey))
+        {
+            IsActionHeld = true;
+            _actionPressedThisFrame = true;
+            _actionPressedFrame = Time.frameCount;
+        }
+        else if (Input.GetKeyUp(actionKey))
+        {
+            IsActionHeld = false;
+        }
+    }
+
+    private bool IsAllowedActionControl(InputAction.CallbackContext ctx)
+    {
+        if (Keyboard.current == null || ctx.control == null || ctx.control.device != Keyboard.current)
+        {
+            return false;
+        }
+
+        KeyCode expectedKey = GetActionKeyForCurrentPlayer();
+        if (expectedKey == KeyCode.Q)
+        {
+            return ctx.control == Keyboard.current.qKey;
+        }
+
+        if (expectedKey == KeyCode.Space)
+        {
+            return ctx.control == Keyboard.current.spaceKey;
+        }
+
+        return false;
+    }
+
+    private KeyCode GetActionKeyForCurrentPlayer()
+    {
+        string currentTag = NormalizePlayerTag(gameObject.tag);
+        if (currentTag == "Player1") return KeyCode.Q;
+        if (currentTag == "Player2") return KeyCode.Space;
+        return KeyCode.None;
     }
 
     private static void BindAndEnable(InputActionReference actionRef, System.Action<InputAction.CallbackContext> callback)

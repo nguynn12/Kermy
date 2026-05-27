@@ -424,7 +424,7 @@ PrefabInstance:
     - target: {fileID: 8420116086065244428, guid: 9d3e776bba659134ca12731b6c88d935, type: 3}
       propertyPath: nextScene
       value: 
-      objectReference: {fileID: 102900000, guid: 8c9cfa26abfee488c85f1582747f6a02, type: 3}
+      objectReference: {fileID: 102900000, guid: faf403b2fbea1ba4689322e853635934, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2866,11 +2866,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8352725676182470423, guid: 2f5a2f51f793ae54983e734371e31289, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -47.17
+      value: -32.95
       objectReference: {fileID: 0}
     - target: {fileID: 8352725676182470423, guid: 2f5a2f51f793ae54983e734371e31289, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 10.51
+      value: -9.33
       objectReference: {fileID: 0}
     - target: {fileID: 8352725676182470423, guid: 2f5a2f51f793ae54983e734371e31289, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3366,6 +3366,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f986946ffb8cf2b44a07233b116ad41a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Ladder
+  climbSpeed: 5
 --- !u!1 &1016481876 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8706719114285764507, guid: 972c5a170465bd141891912acb914e5c, type: 3}
@@ -13850,11 +13851,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2697837139041973322, guid: e61ee972f81158a4db3b05bf9d2d665a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 23.91
+      value: 8.3
       objectReference: {fileID: 0}
     - target: {fileID: 2697837139041973322, guid: e61ee972f81158a4db3b05bf9d2d665a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -16.64
+      value: 1.59
       objectReference: {fileID: 0}
     - target: {fileID: 2697837139041973322, guid: e61ee972f81158a4db3b05bf9d2d665a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -13940,8 +13941,8 @@ MonoBehaviour:
   nightFalloffStrength: 0.9
   interactUI: {fileID: 1973497460}
   interactText: {fileID: 1580996763}
-  character1Key: 101
-  character2Key: 256
+  character1Key: 113
+  character2Key: 32
 --- !u!61 &1310050974
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -15691,7 +15692,7 @@ PrefabInstance:
     - target: {fileID: 295597250640302779, guid: 9ef32ed4be07ff742805a47829900687, type: 3}
       propertyPath: nextScene
       value: 
-      objectReference: {fileID: 102900000, guid: 8c9cfa26abfee488c85f1582747f6a02, type: 3}
+      objectReference: {fileID: 102900000, guid: faf403b2fbea1ba4689322e853635934, type: 3}
     - target: {fileID: 295597250640302779, guid: 9ef32ed4be07ff742805a47829900687, type: 3}
       propertyPath: nextSceneName
       value: Level02
