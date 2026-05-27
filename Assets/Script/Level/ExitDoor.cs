@@ -21,6 +21,7 @@ public class ExitDoor : MonoBehaviour
 
     [Header("Transition")]
     [SerializeField] private int requiredPlayersInZone = 2;
+    [SerializeField] private UnityEngine.Object nextScene;
     [SerializeField] private string nextSceneName;
     [SerializeField] private float loadDelay = 1f;
 
@@ -45,6 +46,16 @@ public class ExitDoor : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         _audioSource = GetComponent<AudioSource>();
     }
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (nextScene != null)
+        {
+            nextSceneName = nextScene.name;
+        }
+    }
+#endif
 
     private void Awake()
     {
@@ -139,7 +150,6 @@ public class ExitDoor : MonoBehaviour
         }
 
         _enteredPlayers.Add(player);
-        HideEnteredPlayer(player);
         PlaySound(soundEnter);
         TryLoadNextLevel();
     }
@@ -173,7 +183,15 @@ public class ExitDoor : MonoBehaviour
             return;
         }
 
+        string configuredSceneName = GetConfiguredSceneName();
+        if (!string.IsNullOrEmpty(configuredSceneName) && !TryResolveSceneInBuild(configuredSceneName, out _))
+        {
+            Debug.LogError($"ExitDoor cannot load '{configuredSceneName}' because it is not in Build Profiles.");
+            return;
+        }
+
         _transitionTriggered = true;
+        HideEnteredPlayers();
         StartCoroutine(LoadNextLevelAfterDelay());
     }
 
@@ -184,9 +202,10 @@ public class ExitDoor : MonoBehaviour
             yield return new WaitForSeconds(loadDelay);
         }
 
-        if (!string.IsNullOrEmpty(nextSceneName))
+        string configuredSceneName = GetConfiguredSceneName();
+        if (!string.IsNullOrEmpty(configuredSceneName) && TryResolveSceneInBuild(configuredSceneName, out string sceneToLoad))
         {
-            SceneManager.LoadScene(nextSceneName);
+            SceneManager.LoadScene(sceneToLoad);
             yield break;
         }
 
@@ -194,6 +213,33 @@ public class ExitDoor : MonoBehaviour
         {
             LevelManager.Instance.LoadNextLevel();
         }
+    }
+
+    private string GetConfiguredSceneName()
+    {
+        return nextScene != null ? nextScene.name : nextSceneName;
+    }
+
+    private static bool TryResolveSceneInBuild(string sceneName, out string buildSceneName)
+    {
+        buildSceneName = null;
+        if (string.IsNullOrWhiteSpace(sceneName))
+        {
+            return false;
+        }
+
+        for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
+        {
+            string scenePath = SceneUtility.GetScenePathByBuildIndex(i);
+            string candidate = System.IO.Path.GetFileNameWithoutExtension(scenePath);
+            if (string.Equals(candidate, sceneName, System.StringComparison.OrdinalIgnoreCase))
+            {
+                buildSceneName = candidate;
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static int GetCollectedKeys()
@@ -242,6 +288,17 @@ public class ExitDoor : MonoBehaviour
         {
             playerBody.linearVelocity = Vector2.zero;
             playerBody.simulated = false;
+        }
+    }
+
+    private void HideEnteredPlayers()
+    {
+        foreach (PlayerController player in _enteredPlayers)
+        {
+            if (player != null)
+            {
+                HideEnteredPlayer(player);
+            }
         }
     }
 

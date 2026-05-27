@@ -158,3 +158,10 @@ MonoBehaviour:
   closedSprite: {fileID: 2509029349049421968, guid: 0048c5809ced65949bf7757544e60234, type: 3}
   openSprite: {fileID: 4870240462565428491, guid: 0048c5809ced65949bf7757544e60234, type: 3}
   requiredPlayersInZone: 2
+  nextScene: {fileID: 0}
+  nextSceneName: 
+  loadDelay: 1
+  requireMatchingElement: 0
+  requiredElement: 0
+  soundOpen: {fileID: 0}
+  soundEnter: {fileID: 0}

@@ -2187,6 +2187,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 1048421901}
     m_Modifications:
     - target: {fileID: 2479049298566475876, guid: 21a2314b4868eb84390111a0b6b8984c, type: 3}
+      propertyPath: nextScene
+      value: 
+      objectReference: {fileID: 102900000, guid: 82a06828600f23b4e8a92450042f6f53, type: 3}
+    - target: {fileID: 2479049298566475876, guid: 21a2314b4868eb84390111a0b6b8984c, type: 3}
       propertyPath: nextSceneName
       value: Level04
       objectReference: {fileID: 0}
@@ -2341,11 +2345,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4149894626083565974, guid: 1a6e05172c5e5ff448e7082c69764572, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1332
+      value: 1796
       objectReference: {fileID: 0}
     - target: {fileID: 4149894626083565974, guid: 1a6e05172c5e5ff448e7082c69764572, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 804
+      value: 1065
       objectReference: {fileID: 0}
     - target: {fileID: 5654642300299160430, guid: 1a6e05172c5e5ff448e7082c69764572, type: 3}
       propertyPath: m_AnchorMax.y
