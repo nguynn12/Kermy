@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class FinalBossHealth : MonoBehaviour
 {
@@ -13,6 +14,10 @@ public class FinalBossHealth : MonoBehaviour
     public float fadeDuration = 3f;  // Thời gian mờ dần (Mặc định 3 giây)
     // Biến khóa để đảm bảo Boss không bị chết 2 lần
     private bool isDead = false;
+
+    [Header("Ending Scene")]
+    public string endingSceneName = "ENDING";
+    public float endingLoadDelay = 0.5f;
 
     [Header("Winner Sound")]
     
@@ -135,6 +140,43 @@ public class FinalBossHealth : MonoBehaviour
         }
 
         // 5. XÓA SỔ BOSS KHỎI GAME (Đã mờ tịt mới xóa)
-        Destroy(gameObject);
+        if (endingLoadDelay > 0f)
+        {
+            yield return new WaitForSeconds(endingLoadDelay);
+        }
+
+        LoadEndingScene();
+    }
+
+    private void LoadEndingScene()
+    {
+        string sceneToLoad = ResolveSceneNameInBuild(endingSceneName);
+        if (string.IsNullOrEmpty(sceneToLoad))
+        {
+            Debug.LogError($"Ending scene '{endingSceneName}' is not in Build Profiles.");
+            return;
+        }
+
+        SceneManager.LoadScene(sceneToLoad);
+    }
+
+    private static string ResolveSceneNameInBuild(string sceneName)
+    {
+        if (string.IsNullOrWhiteSpace(sceneName))
+        {
+            return null;
+        }
+
+        for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
+        {
+            string scenePath = SceneUtility.GetScenePathByBuildIndex(i);
+            string buildSceneName = System.IO.Path.GetFileNameWithoutExtension(scenePath);
+            if (string.Equals(buildSceneName, sceneName, System.StringComparison.OrdinalIgnoreCase))
+            {
+                return buildSceneName;
+            }
+        }
+
+        return null;
     }
 }
