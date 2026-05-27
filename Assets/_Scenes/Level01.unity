@@ -1442,10 +1442,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66c854928151abe4d99d93bff56b0161, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerClimbController
-  upKey: 273
-  downKey: 274
   climbSpeed: 5
-  jumpKey: 256
   canExitByJump: 1
 --- !u!82 &629921469 stripped
 AudioSource:
@@ -2488,11 +2485,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4149894626083565974, guid: 1a6e05172c5e5ff448e7082c69764572, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1353
+      value: 1823
       objectReference: {fileID: 0}
     - target: {fileID: 4149894626083565974, guid: 1a6e05172c5e5ff448e7082c69764572, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 794
+      value: 1051
       objectReference: {fileID: 0}
     - target: {fileID: 5654642300299160430, guid: 1a6e05172c5e5ff448e7082c69764572, type: 3}
       propertyPath: m_AnchorMax.y

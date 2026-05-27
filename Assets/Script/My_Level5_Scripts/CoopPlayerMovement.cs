@@ -31,9 +31,17 @@ public class CoopPlayerMovement : MonoBehaviour
         // Reset lại input mỗi khung hình
         horizontalInput = 0f;
 
-        // Nhận phím di chuyển sang trái hoặc phải
-        if (Input.GetKey(moveLeftKey)) horizontalInput = -1f;
-        if (Input.GetKey(moveRightKey)) horizontalInput = 1f;
+        Vector2 configuredMove = KeybindingManager.GetMoveInputForTag(gameObject.tag);
+        if (configuredMove != Vector2.zero)
+        {
+            horizontalInput = configuredMove.x;
+        }
+        else
+        {
+            // Nhận phím di chuyển sang trái hoặc phải
+            if (Input.GetKey(moveLeftKey)) horizontalInput = -1f;
+            if (Input.GetKey(moveRightKey)) horizontalInput = 1f;
+        }
 
         // Quay mặt Sprite nhân vật theo hướng di chuyển (Flip)
         if (horizontalInput > 0)
@@ -45,7 +53,9 @@ public class CoopPlayerMovement : MonoBehaviour
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, groundLayer);
 
         // Xử lý lệnh nhảy khi nhấn phím và nhân vật đang đứng trên đất
-        if (Input.GetKeyDown(jumpKey) && isGrounded)
+        bool jumpPressed = KeybindingManager.GetJumpDownForTag(gameObject.tag)
+            || (jumpKey != KeyCode.None && Input.GetKeyDown(jumpKey));
+        if (jumpPressed && isGrounded)
         {
             // Mẹo Unity 6: Sử dụng 'linearVelocity' thay cho 'velocity' cũ
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);

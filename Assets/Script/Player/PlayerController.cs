@@ -99,35 +99,11 @@ public class PlayerController : MonoBehaviour
 
         if (isOnLadder)
         {
-            if (currentTag == "Player2")
-            {
-                if (Input.GetKey(KeyCode.UpArrow))
-                    _trackedMoveY = 1f;
-                else if (Input.GetKey(KeyCode.DownArrow))
-                    _trackedMoveY = -1f;
-                else
-                    _trackedMoveY = 0f;
-            }
-            else if (currentTag == "Player1")
-            {
-                if (Input.GetKey(KeyCode.W))
-                    _trackedMoveY = 1f;
-                else if (Input.GetKey(KeyCode.S))
-                    _trackedMoveY = -1f;
-                else
-                    _trackedMoveY = 0f;
-            }
+            _trackedMoveY = KeybindingManager.GetMoveInputForTag(currentTag).y;
         }
         else if (inputHandler == null || inputHandler.MoveInput.y == 0f)
         {
-            if (currentTag == "Player2" && !Input.GetKey(KeyCode.UpArrow) && !Input.GetKey(KeyCode.DownArrow))
-            {
-                _trackedMoveY = 0f;
-            }
-            else if (currentTag == "Player1")
-            {
-                _trackedMoveY = 0f;
-            }
+            _trackedMoveY = 0f;
         }
 
         if (isGrounded && !isOnLadder && Mathf.Abs(_trackedMoveX) > 0.1f)
@@ -275,17 +251,7 @@ public class PlayerController : MonoBehaviour
 
     private static bool IsKeyboardJumpPressed(string playerTag)
     {
-        if (playerTag == "Player1")
-        {
-            return Input.GetKeyDown(KeyCode.W);
-        }
-
-        if (playerTag == "Player2")
-        {
-            return Input.GetKeyDown(KeyCode.UpArrow);
-        }
-
-        return false;
+        return KeybindingManager.GetJumpDownForTag(playerTag);
     }
 
     private void UpdateGrounded()

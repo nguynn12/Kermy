@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using TMPro;
 
 [RequireComponent(typeof(Button))]
 public class KeybindingButton : MonoBehaviour
@@ -36,6 +37,7 @@ public class KeybindingButton : MonoBehaviour
         actionName = inputAction;
         bindingName = bindingPart;
         linkedButtonAction = linkedAction;
+        RefreshLabel();
     }
 
     public void RefreshLabel()
@@ -76,6 +78,16 @@ public class KeybindingButton : MonoBehaviour
 
         if (completed)
         {
+            int bindingIndex = GetBindingIndex(action);
+            string conflictDisplayName;
+            if (KeybindingManager.HasBindingConflict(action, bindingIndex, out conflictDisplayName))
+            {
+                action.RemoveBindingOverride(bindingIndex);
+                SetButtonText("Used by " + conflictDisplayName);
+                Invoke(nameof(RefreshLabel), 1.1f);
+                return;
+            }
+
             ApplyLinkedBinding();
             KeybindingManager.SaveOverrides(KeybindingManager.Actions);
         }
@@ -168,6 +180,12 @@ public class KeybindingButton : MonoBehaviour
         if (text != null)
         {
             text.text = value;
+        }
+
+        TextMeshProUGUI tmpText = button.GetComponentInChildren<TextMeshProUGUI>();
+        if (tmpText != null)
+        {
+            tmpText.text = value;
         }
     }
 

@@ -32,13 +32,8 @@ public class DayNightTransformer : MonoBehaviour
     [Tooltip("Kéo cái Text (TMP) nằm trong Button vào đây")]
     public TextMeshProUGUI interactText;
 
-    [Header("--- PHÍM BẤM THEO NHÂN VẬT ---")]
-    public KeyCode character1Key = KeyCode.Q;      // Dành cho Player 1 (Ignus)
-    public KeyCode character2Key = KeyCode.Space;  // Dành cho Player 2 (Aqua)
-
     private bool isDay = true;
     private GameObject currentOccupant;
-    private KeyCode currentActiveKey = KeyCode.None;
     private List<GameObject> playersInArea = new List<GameObject>();
 
     void Start()
@@ -58,7 +53,10 @@ public class DayNightTransformer : MonoBehaviour
     // Tách riêng hàm kiểm tra Tag để code gọn và dễ đọc hơn
     private bool IsPlayer(Collider2D collision)
     {
-        return collision.CompareTag("Player 1") || collision.CompareTag("Player 2");
+        return collision.CompareTag("Player 1")
+            || collision.CompareTag("Player 2")
+            || collision.CompareTag("Player1")
+            || collision.CompareTag("Player2");
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -115,43 +113,30 @@ public class DayNightTransformer : MonoBehaviour
     {
         currentOccupant = targetCharacter;
 
-        // ĐÃ SỬA: Xác định phím bấm trực tiếp qua Tag thay vì Tên
-        if (targetCharacter.CompareTag("Player 1"))
-            currentActiveKey = character1Key;
-        else if (targetCharacter.CompareTag("Player 2"))
-            currentActiveKey = character2Key;
-        else
-            currentActiveKey = KeyCode.None;
-
         if (interactUI != null)
         {
             interactUI.SetActive(true);
         }
 
         if (interactText != null)
-            UpdateUIText(currentActiveKey);
+            UpdateUIText();
     }
 
     private void ClearInteraction()
     {
         currentOccupant = null;
-        currentActiveKey = KeyCode.None;
         if (interactUI != null) interactUI.SetActive(false);
     }
 
-    private void UpdateUIText(KeyCode key)
+    private void UpdateUIText()
     {
         if (interactText == null) return;
-        string keyName = key.ToString();
-        if (key == KeyCode.Space) keyName = "Space";
-        if (keyName.StartsWith("Alpha")) keyName = keyName.Replace("Alpha", "");
-        if (keyName.StartsWith("Keypad")) keyName = keyName.Replace("Keypad", "");
-        interactText.text = keyName;
+        interactText.text = currentOccupant != null ? KeybindingManager.GetActionDisplayNameForTag(currentOccupant.tag) : "-";
     }
 
     private bool IsInteractionKeyPressed()
     {
-        return currentActiveKey != KeyCode.None && Input.GetKeyDown(currentActiveKey);
+        return currentOccupant != null && KeybindingManager.GetActionDownForTag(currentOccupant.tag);
     }
 
     public void InteractWithLever()

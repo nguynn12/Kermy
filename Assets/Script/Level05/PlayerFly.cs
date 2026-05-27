@@ -65,16 +65,22 @@ public class PlayerFly : MonoBehaviour
 
     private Vector2 ReadMovement()
     {
-        KeyCode up = ResolveUpKey();
-        KeyCode down = ResolveDownKey();
-        KeyCode left = ResolveLeftKey();
-        KeyCode right = ResolveRightKey();
+        ControlProfile profile = ResolveProfile();
+        if (profile == ControlProfile.Player1)
+        {
+            return KeybindingManager.GetMoveInputForMap("Player1_Map");
+        }
+
+        if (profile == ControlProfile.Player2)
+        {
+            return KeybindingManager.GetMoveInputForMap("Player2_Map");
+        }
 
         Vector2 movement = Vector2.zero;
-        if (Input.GetKey(up)) movement.y += 1f;
-        if (Input.GetKey(down)) movement.y -= 1f;
-        if (Input.GetKey(left)) movement.x -= 1f;
-        if (Input.GetKey(right)) movement.x += 1f;
+        if (Input.GetKey(upKey)) movement.y += 1f;
+        if (Input.GetKey(downKey)) movement.y -= 1f;
+        if (Input.GetKey(leftKey)) movement.x -= 1f;
+        if (Input.GetKey(rightKey)) movement.x += 1f;
         return movement;
     }
 
@@ -92,37 +98,5 @@ public class PlayerFly : MonoBehaviour
         }
 
         return ControlProfile.Player1;
-    }
-
-    private KeyCode ResolveUpKey()
-    {
-        ControlProfile profile = ResolveProfile();
-        if (profile == ControlProfile.Player1) return KeyCode.W;
-        if (profile == ControlProfile.Player2) return KeyCode.UpArrow;
-        return upKey;
-    }
-
-    private KeyCode ResolveDownKey()
-    {
-        ControlProfile profile = ResolveProfile();
-        if (profile == ControlProfile.Player1) return KeyCode.S;
-        if (profile == ControlProfile.Player2) return KeyCode.DownArrow;
-        return downKey;
-    }
-
-    private KeyCode ResolveLeftKey()
-    {
-        ControlProfile profile = ResolveProfile();
-        if (profile == ControlProfile.Player1) return KeyCode.A;
-        if (profile == ControlProfile.Player2) return KeyCode.LeftArrow;
-        return leftKey;
-    }
-
-    private KeyCode ResolveRightKey()
-    {
-        ControlProfile profile = ResolveProfile();
-        if (profile == ControlProfile.Player1) return KeyCode.D;
-        if (profile == ControlProfile.Player2) return KeyCode.RightArrow;
-        return rightKey;
     }
 }

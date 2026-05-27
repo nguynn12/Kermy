@@ -3,26 +3,20 @@ using UnityEngine.InputSystem;
 
 public class PlayerInputHandler : MonoBehaviour
 {
-    [Header("Cài đặt Di chuyển & Nhảy")]
+    [Header("Movement & Jump")]
     public float moveSpeed = 8f;
     public float jumpForce = 12f;
 
-    [Header("Cài đặt Chạm đất")]
+    [Header("Ground Check")]
     public Transform groundCheck;
     public float groundCheckRadius = 0.2f;
     public LayerMask groundLayer;
 
-    [Header("Cài đặt Hạt Đất (Particles)")]
-    public GameObject dirtPrefab; // Kéo thả file Prefab hạt đất/lửa/nước vào đây
-    public float spawnInterval = 0.1f; // Khoảng thời gian giữa các lần văng hạt đất
-    private float particleTimer;
-    
-    // Tạo Object Pool đơn giản bằng Mảng (Array)
-    private int poolSize = 15;
-    private GameObject[] dirtPool;
-    private int currentPoolIndex = 0;
+    [Header("Dirt Particles")]
+    public GameObject dirtPrefab;
+    public float spawnInterval = 0.1f;
 
-    [Header("Input Actions (Kéo thả từ Input Map)")]
+    [Header("Input Actions")]
     [SerializeField] private InputActionReference moveAction;
     [SerializeField] private InputActionReference jumpAction;
     [SerializeField] private InputActionReference interactAction;
@@ -32,34 +26,35 @@ public class PlayerInputHandler : MonoBehaviour
     public bool IsActionHeld { get; private set; }
     public bool IsInputEnabled => _inputEnabled;
 
+    private const int PoolSize = 15;
+
+    private Rigidbody2D rb;
+    private Animator anim;
+    private PlayerController playerController;
+    private GameObject[] dirtPool;
+    private bool isFacingRight = true;
+    private bool isGrounded;
     private bool _inputEnabled = true;
     private bool _jumpPressedThisFrame;
     private bool _actionPressedThisFrame;
-    private int _actionPressedFrame = -1;
-
-    // Các biến dùng cho Di chuyển và Lật mặt
-    private Rigidbody2D rb;
-    private Animator anim; 
-    private PlayerController playerController;
-    private bool isFacingRight = true;
-    private bool isGrounded;
     private bool _usingKeyboardMoveFallback;
+    private int currentPoolIndex;
+    private int _actionPressedFrame = -1;
+    private float particleTimer;
 
     private void Start()
     {
-        // Lấy component vật lý và animation của nhân vật
         rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>(); 
+        anim = GetComponent<Animator>();
         playerController = GetComponent<PlayerController>();
 
-        // KHỞI TẠO OBJECT POOL CHO HIỆU ỨNG VĂNG HẠT
-        dirtPool = new GameObject[poolSize];
-        for (int i = 0; i < poolSize; i++)
+        dirtPool = new GameObject[PoolSize];
+        for (int i = 0; i < dirtPool.Length; i++)
         {
             if (dirtPrefab != null)
             {
                 dirtPool[i] = Instantiate(dirtPrefab);
-                dirtPool[i].SetActive(false); 
+                dirtPool[i].SetActive(false);
             }
         }
     }
@@ -70,7 +65,6 @@ public class PlayerInputHandler : MonoBehaviour
         BindAndEnable(moveAction, OnMove);
         BindAndEnable(jumpAction, OnJump);
         BindAndEnable(interactAction, OnInteract);
-
         ApplyInputEnabledState();
     }
 
@@ -83,109 +77,27 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void Update()
     {
-        if (!_inputEnabled) return;
+        if (!_inputEnabled)
+        {
+            return;
+        }
 
         ApplyKeyboardMoveFallback();
         ApplyKeyboardActionFallback();
-
-        // --- 1. KIỂM TRA CHẠM ĐẤT ---
-        if (playerController != null)
-        {
-            isGrounded = playerController.IsGrounded;
-        }
-        else if (groundCheck != null)
-        {
-            isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
-        }
-        else
-        {
-            isGrounded = Mathf.Abs(rb.linearVelocity.y) < 0.01f;
-        }
-
-        // --- 2. LỰC DI CHUYỂN VẬT LÝ VÀ CHẠY ---
-        if (rb != null)
-        {
-            rb.linearVelocity = new Vector2(MoveInput.x * moveSpeed, rb.linearVelocity.y);
-        }
-
-        // --- 3. SPAWN HẠT KHI CHẠY ---
-        if (Mathf.Abs(MoveInput.x) > 0.1f && isGrounded)
-        {
-            particleTimer -= Time.deltaTime;
-            if (particleTimer <= 0f)
-            {
-                SpawnDirtFromPool(MoveInput.x);
-                particleTimer = spawnInterval; 
-            }
-        }
-        else
-        {
-            particleTimer = 0f; 
-        }
-
-        // --- 4. LẬT MẶT KHI QUAY ĐẦU ---
-        if (MoveInput.x > 0 && !isFacingRight)
-        {
-            Flip();
-        }
-        else if (MoveInput.x < 0 && isFacingRight)
-        {
-            Flip();
-        }
-
-        // --- 5. ANIMATION: CẬP NHẬT TRẠNG THÁI CHO ANIMATOR ---
-        if (anim != null)
-        {
-            bool isMoving = Mathf.Abs(MoveInput.x) > 0.1f;
-            anim.SetBool("isRunning", isMoving);
-            anim.SetBool("isGrounded", isGrounded);
-        }
+        UpdateGroundedState();
+        ApplyMovement();
+        UpdateDirtParticles();
+        UpdateFacingDirection();
+        UpdateAnimator();
     }
-
-    // --- HÀM LÔI HẠT RA TỪ POOL ĐỂ DÙNG ---
-    private void SpawnDirtFromPool(float directionX)
-    {
-        if (dirtPrefab == null) return; 
-
-        GameObject dirt = dirtPool[currentPoolIndex];
-        
-        DirtParticle particleScript = dirt.GetComponent<DirtParticle>();
-        if (particleScript != null && groundCheck != null)
-        {
-            particleScript.Spawn(groundCheck.position, directionX);
-        }
-
-        currentPoolIndex++;
-        if (currentPoolIndex >= poolSize)
-        {
-            currentPoolIndex = 0;
-        }
-    }
-
-    private void Flip()
-    {
-        isFacingRight = !isFacingRight;
-        Vector3 currentScale = transform.localScale;
-        currentScale.x *= -1;
-        transform.localScale = currentScale;
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        if (groundCheck != null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
-        }
-    }
-
-    // ==========================================
-    // CÁC HÀM XỬ LÝ INPUT (ĐÃ ĐƯỢC FIX LỖI TRÙNG PHÍM)
-    // ==========================================
 
     public void SetInputEnabled(bool enabled)
     {
-        if (_inputEnabled == enabled) return;
+        if (_inputEnabled == enabled)
+        {
+            return;
+        }
+
         _inputEnabled = enabled;
         ApplyInputEnabledState();
         if (!enabled)
@@ -217,6 +129,95 @@ public class PlayerInputHandler : MonoBehaviour
         _actionPressedFrame = -1;
     }
 
+    private void OnMove(InputAction.CallbackContext ctx)
+    {
+        if (!_inputEnabled)
+        {
+            MoveInput = Vector2.zero;
+            return;
+        }
+
+        MoveInput = ctx.ReadValue<Vector2>();
+    }
+
+    private void OnJump(InputAction.CallbackContext ctx)
+    {
+        if (!_inputEnabled || !ctx.performed)
+        {
+            return;
+        }
+
+        _jumpPressedThisFrame = true;
+        if (isGrounded && rb != null)
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+        }
+    }
+
+    private void OnInteract(InputAction.CallbackContext ctx)
+    {
+        if (!_inputEnabled)
+        {
+            IsActionHeld = false;
+            return;
+        }
+
+        if (!IsAllowedActionControl(ctx))
+        {
+            return;
+        }
+
+        if (ctx.started)
+        {
+            IsActionHeld = true;
+            _actionPressedThisFrame = true;
+            _actionPressedFrame = Time.frameCount;
+        }
+        else if (ctx.canceled)
+        {
+            IsActionHeld = false;
+        }
+    }
+
+    private void ApplyKeyboardMoveFallback()
+    {
+        Vector2 fallbackMove = KeybindingManager.GetMoveInputForTag(gameObject.tag);
+        if (Mathf.Abs(fallbackMove.x) > 0.01f || Mathf.Abs(fallbackMove.y) > 0.01f)
+        {
+            MoveInput = fallbackMove;
+            _usingKeyboardMoveFallback = true;
+        }
+        else if (_usingKeyboardMoveFallback)
+        {
+            MoveInput = Vector2.zero;
+            _usingKeyboardMoveFallback = false;
+        }
+    }
+
+    private void ApplyKeyboardActionFallback()
+    {
+        if (KeybindingManager.GetActionDownForTag(gameObject.tag))
+        {
+            IsActionHeld = true;
+            _actionPressedThisFrame = true;
+            _actionPressedFrame = Time.frameCount;
+        }
+        else if (KeybindingManager.GetActionUpForTag(gameObject.tag))
+        {
+            IsActionHeld = false;
+        }
+    }
+
+    private bool IsAllowedActionControl(InputAction.CallbackContext ctx)
+    {
+        if (Keyboard.current == null || ctx.control == null || ctx.control.device != Keyboard.current)
+        {
+            return false;
+        }
+
+        return KeybindingManager.IsActionControlForTag(gameObject.tag, ctx.control.path);
+    }
+
     private void ApplyInputEnabledState()
     {
         if (_inputEnabled)
@@ -233,125 +234,97 @@ public class PlayerInputHandler : MonoBehaviour
         }
     }
 
-    private void OnMove(InputAction.CallbackContext ctx)
+    private void UpdateGroundedState()
     {
-        if (!_inputEnabled) { MoveInput = Vector2.zero; return; }
-        
-        Vector2 rawInput = ctx.ReadValue<Vector2>();
-        string currentTag = NormalizePlayerTag(gameObject.tag);
-
-        // ❌ CHẶN TRÙNG DI CHUYỂN: Con Lửa (Player1) chỉ nhận phím chữ, KHÔNG nhận phím mũi tên
-        if (currentTag == "Player1" && (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)))
+        if (playerController != null)
         {
-            MoveInput = Vector2.zero;
-            return;
+            isGrounded = playerController.IsGrounded;
         }
-
-        // ❌ CHẶN TRÙNG DI CHUYỂN: Con Nước (Player2) chỉ nhận phím mũi tên, KHÔNG nhận phím A/D
-        if (currentTag == "Player2" && (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)))
+        else if (groundCheck != null)
         {
-            MoveInput = Vector2.zero;
-            return;
+            isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
         }
-
-        MoveInput = rawInput;
-    }
-
-   private void OnJump(InputAction.CallbackContext ctx)
-    {
-        if (!_inputEnabled) return;
-        
-        if (ctx.performed)
+        else if (rb != null)
         {
-            string currentTag = NormalizePlayerTag(gameObject.tag);
-
-            // 🌟 ĐOẠN KIỂM TRA CHUẨN CỦA INPUT SYSTEM:
-            // Lấy tên của nút bấm thực tế vừa được nhấn từ bàn phím
-            string activeKeyName = ctx.control.name; // Nó sẽ trả về chữ "w" hoặc "upArrow"
-
-            // 1. Nếu đây là con Lửa (Player1) nhưng nút vừa bấm lại là Mũi tên lên (upArrow) -> CHẶN
-            if (currentTag == "Player1" && activeKeyName.ToLower().Contains("arrow"))
-            {
-                return; 
-            }
-
-            // 2. Nếu đây là con Nước (Player2) nhưng nút vừa bấm lại là phím W -> CHẶN
-            if (currentTag == "Player2" && activeKeyName.ToLower() == "w")
-            {
-                return; 
-            }
-
-            // ---- NẾU ĐÚNG CHỦ QUYỀN THÌ MỚI CHO NHẢY ----
-            _jumpPressedThisFrame = true;
-
-            if (isGrounded && rb != null)
-            {
-                rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-            }
+            isGrounded = Mathf.Abs(rb.linearVelocity.y) < 0.01f;
         }
     }
 
-    private void OnInteract(InputAction.CallbackContext ctx)
+    private void ApplyMovement()
     {
-        if (!_inputEnabled) { IsActionHeld = false; return; }
-        if (!IsAllowedActionControl(ctx)) return;
-
-        if (ctx.started)
+        if (rb != null)
         {
-            IsActionHeld = true;
-            _actionPressedThisFrame = true;
-            _actionPressedFrame = Time.frameCount;
+            rb.linearVelocity = new Vector2(MoveInput.x * moveSpeed, rb.linearVelocity.y);
         }
-        else if (ctx.canceled) { IsActionHeld = false; }
     }
 
-    private void ApplyKeyboardActionFallback()
+    private void UpdateDirtParticles()
     {
-        KeyCode actionKey = GetActionKeyForCurrentPlayer();
-        if (actionKey == KeyCode.None)
+        if (Mathf.Abs(MoveInput.x) > 0.1f && isGrounded)
+        {
+            particleTimer -= Time.deltaTime;
+            if (particleTimer <= 0f)
+            {
+                SpawnDirtFromPool(MoveInput.x);
+                particleTimer = spawnInterval;
+            }
+        }
+        else
+        {
+            particleTimer = 0f;
+        }
+    }
+
+    private void SpawnDirtFromPool(float directionX)
+    {
+        if (dirtPrefab == null || dirtPool == null || dirtPool.Length == 0)
         {
             return;
         }
 
-        if (Input.GetKeyDown(actionKey))
+        GameObject dirt = dirtPool[currentPoolIndex];
+        DirtParticle particleScript = dirt != null ? dirt.GetComponent<DirtParticle>() : null;
+        if (particleScript != null && groundCheck != null)
         {
-            IsActionHeld = true;
-            _actionPressedThisFrame = true;
-            _actionPressedFrame = Time.frameCount;
+            particleScript.Spawn(groundCheck.position, directionX);
         }
-        else if (Input.GetKeyUp(actionKey))
+
+        currentPoolIndex++;
+        if (currentPoolIndex >= dirtPool.Length)
         {
-            IsActionHeld = false;
+            currentPoolIndex = 0;
         }
     }
 
-    private bool IsAllowedActionControl(InputAction.CallbackContext ctx)
+    private void UpdateFacingDirection()
     {
-        if (Keyboard.current == null || ctx.control == null || ctx.control.device != Keyboard.current)
+        if (MoveInput.x > 0 && !isFacingRight)
         {
-            return false;
+            Flip();
         }
-
-        KeyCode expectedKey = GetActionKeyForCurrentPlayer();
-        if (expectedKey == KeyCode.Q)
+        else if (MoveInput.x < 0 && isFacingRight)
         {
-            return ctx.control == Keyboard.current.qKey;
+            Flip();
         }
-
-        if (expectedKey == KeyCode.Space)
-        {
-            return ctx.control == Keyboard.current.spaceKey;
-        }
-
-        return false;
     }
 
-    private KeyCode GetActionKeyForCurrentPlayer()
+    private void Flip()
     {
-        string currentTag = NormalizePlayerTag(gameObject.tag);
-        if (currentTag == "Player1") return KeyCode.Q;
-        if (currentTag == "Player2") return KeyCode.Space;
-        return KeyCode.None;
+        isFacingRight = !isFacingRight;
+        Vector3 currentScale = transform.localScale;
+        currentScale.x *= -1;
+        transform.localScale = currentScale;
+    }
+
+    private void UpdateAnimator()
+    {
+        if (anim == null)
+        {
+            return;
+        }
+
+        anim.SetBool("isRunning", Mathf.Abs(MoveInput.x) > 0.1f);
+        anim.SetBool("isGrounded", isGrounded);
     }
 
     private static void BindAndEnable(InputActionReference actionRef, System.Action<InputAction.CallbackContext> callback)
@@ -392,40 +365,12 @@ public class PlayerInputHandler : MonoBehaviour
         KeybindingManager.ApplySavedOverrides(actionRef.action.actionMap.asset);
     }
 
-    private void ApplyKeyboardMoveFallback()
+    private void OnDrawGizmosSelected()
     {
-        float moveX = 0f;
-        string currentTag = NormalizePlayerTag(gameObject.tag);
-
-        if (currentTag == "Player1")
+        if (groundCheck != null)
         {
-            if (Input.GetKey(KeyCode.A)) moveX -= 1f;
-            if (Input.GetKey(KeyCode.D)) moveX += 1f;
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
-        else if (currentTag == "Player2")
-        {
-            if (Input.GetKey(KeyCode.LeftArrow)) moveX -= 1f;
-            if (Input.GetKey(KeyCode.RightArrow)) moveX += 1f;
-        }
-        else
-        {
-            return;
-        }
-
-        if (Mathf.Abs(moveX) > 0.01f)
-        {
-            MoveInput = new Vector2(moveX, MoveInput.y);
-            _usingKeyboardMoveFallback = true;
-        }
-        else if (_usingKeyboardMoveFallback)
-        {
-            MoveInput = new Vector2(0f, MoveInput.y);
-            _usingKeyboardMoveFallback = false;
-        }
-    }
-
-    private static string NormalizePlayerTag(string tagName)
-    {
-        return string.IsNullOrEmpty(tagName) ? string.Empty : tagName.Replace(" ", string.Empty);
     }
 }

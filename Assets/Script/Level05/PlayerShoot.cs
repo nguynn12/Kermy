@@ -32,7 +32,7 @@ public class PlayerShoot : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(ResolveShootKey()) && Time.time >= nextFireTime)
+        if (IsShootPressed() && Time.time >= nextFireTime)
         {
             Shoot();
             nextFireTime = Time.time + fireRate;
@@ -54,12 +54,12 @@ public class PlayerShoot : MonoBehaviour
         }
     }
 
-    private KeyCode ResolveShootKey()
+    private bool IsShootPressed()
     {
         ControlProfile profile = ResolveProfile();
-        if (profile == ControlProfile.Player1) return KeyCode.Q;
-        if (profile == ControlProfile.Player2) return KeyCode.Space;
-        return shootKey;
+        if (profile == ControlProfile.Player1) return KeybindingManager.GetActionDownForTag("Player1");
+        if (profile == ControlProfile.Player2) return KeybindingManager.GetActionDownForTag("Player2");
+        return shootKey != KeyCode.None && Input.GetKeyDown(shootKey);
     }
 
     private ControlProfile ResolveProfile()
