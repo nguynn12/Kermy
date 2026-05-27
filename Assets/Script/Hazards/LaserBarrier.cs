@@ -170,9 +170,21 @@ public class LaserBarrier : MonoBehaviour
             return;
         }
 
+        // Kiểm tra xem thứ đụng vào laser có component PlayerHealth không
         PlayerHealth health = other.GetComponent<PlayerHealth>();
         if (health != null)
         {
+            // Tìm component PlayerController nằm chung trên con nhân vật đó
+            PlayerController controller = other.GetComponent<PlayerController>();
+            
+            if (controller != null)
+            {
+                // Gọi hàm phát tiếng chết độc lập để không lo bị ngắt tiếng khi Player biến mất
+                // (Giả sử bạn sửa hàm phát âm thanh trong PlayerController như hướng dẫn trước)
+                controller.PlayDeathSound(); 
+            }
+
+            // Kích hoạt hàm xử lý chết của bạn
             health.Kill();
         }
     }
