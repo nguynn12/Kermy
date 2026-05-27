@@ -40,10 +40,20 @@ public class TeleportPortal : MonoBehaviour
         other.transform.position = destination.position;
         AudioManager.Instance?.PlayTeleport();
 
-        // ② Báo camera split
+        // ② Báo camera frame lại cả hai nhân vật
         var camHandler = FindAnyObjectByType<TeleportCameraHandler>();
         if (camHandler != null)
+        {
             camHandler.OnPlayerTeleported();
+        }
+        else
+        {
+            var cameraController = FindAnyObjectByType<CameraController>();
+            if (cameraController != null)
+            {
+                cameraController.FramePlayersImmediately();
+            }
+        }
 
         // ③ Bắt đầu cooldown
         if (status == null)

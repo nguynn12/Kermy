@@ -2,7 +2,7 @@
 
 // Gắn vào GameObject thang
 // Cần: BoxCollider2D Is Trigger (bao phủ toàn bộ thang)
-public class Ladder : MonoBehaviour
+public class Ladders : MonoBehaviour
 {
     [Header("Tốc độ leo")]
     [SerializeField] private float climbSpeed = 5f;

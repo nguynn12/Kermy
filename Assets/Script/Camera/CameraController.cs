@@ -21,10 +21,10 @@ public class CameraController : MonoBehaviour
 
     // --- ZOOM SETTINGS ĐÃ ĐƯỢC CHUẨN HÓA ---
     [Header("Zoom Settings (Pico Park Style)")]
-    [SerializeField] private float minZoom = 6.5f;        
-    [SerializeField] private float maxZoom = 14f;       
-    [SerializeField] private float framingPadding = 2f;
-    [SerializeField] private float zoomSmoothTime = 5f; 
+    [SerializeField] private float minZoom = 6.5f;
+    [SerializeField] private float maxZoom = 30f;
+    [SerializeField] private float framingPadding = 3f;
+    [SerializeField] private float zoomSmoothTime = 5f;
     // ----------------------------------------
 
     [Header("Camera Bounds")]
@@ -49,6 +49,7 @@ public class CameraController : MonoBehaviour
 
     private CameraState _state = CameraState.FollowCentroid;
     private Vector3 _followVelocity;
+    private float _zoomVelocity;
 
     private Camera _rightCamera;
     private Rect _rightCameraDefaultRect;
@@ -120,6 +121,7 @@ public class CameraController : MonoBehaviour
 
     private void TickFollowCentroid()
     {
+        EnsureTargetsAssigned();
         if (player1 == null || player2 == null) return;
 
         // 1. DI CHUYỂN
@@ -130,12 +132,16 @@ public class CameraController : MonoBehaviour
         {
             Vector2 playerDelta = player1.position - player2.position;
             float aspect = Mathf.Max(_rightCamera.aspect, 0.01f);
-            float requiredZoomByWidth = Mathf.Abs(playerDelta.x) * 0.5f / aspect + framingPadding;
+            float requiredZoomByWidth = (Mathf.Abs(playerDelta.x) * 0.5f + framingPadding) / aspect;
             float requiredZoomByHeight = Mathf.Abs(playerDelta.y) * 0.5f + framingPadding;
             float targetZoom = Mathf.Max(minZoom, requiredZoomByWidth, requiredZoomByHeight);
             
             targetZoom = Mathf.Clamp(targetZoom, minZoom, maxZoom);
-            _rightCamera.orthographicSize = Mathf.Lerp(_rightCamera.orthographicSize, targetZoom, Time.deltaTime * zoomSmoothTime);
+            _rightCamera.orthographicSize = Mathf.SmoothDamp(
+                _rightCamera.orthographicSize,
+                targetZoom,
+                ref _zoomVelocity,
+                Mathf.Max(0.01f, 1f / zoomSmoothTime));
         }
 
         target = ClampCameraPosition(target);
@@ -150,6 +156,40 @@ public class CameraController : MonoBehaviour
         Vector2 input = commanderLookAction.action.ReadValue<Vector2>();
         Vector3 delta = new Vector3(input.x, input.y, 0f) * (freeLookSpeed * Time.deltaTime);
         transform.position = ClampCameraPosition(transform.position + delta);
+    }
+
+    public void FramePlayersImmediately()
+    {
+        EnsureTargetsAssigned();
+        if (player1 == null || player2 == null)
+        {
+            return;
+        }
+
+        if (_rightCamera == null)
+        {
+            _rightCamera = GetComponent<Camera>();
+        }
+
+        Vector3 centroid = (player1.position + player2.position) * 0.5f;
+        transform.position = ClampCameraPosition(new Vector3(
+            centroid.x + followOffset.x,
+            centroid.y + followOffset.y,
+            transform.position.z));
+
+        if (_rightCamera == null)
+        {
+            return;
+        }
+
+        Vector2 playerDelta = player1.position - player2.position;
+        float aspect = Mathf.Max(_rightCamera.aspect, 0.01f);
+        float requiredZoomByWidth = (Mathf.Abs(playerDelta.x) * 0.5f + framingPadding) / aspect;
+        float requiredZoomByHeight = Mathf.Abs(playerDelta.y) * 0.5f + framingPadding;
+        _rightCamera.orthographicSize = Mathf.Clamp(
+            Mathf.Max(minZoom, requiredZoomByWidth, requiredZoomByHeight),
+            minZoom,
+            maxZoom);
     }
 
     private void TickAsymmetricSplit()
@@ -336,5 +376,33 @@ public class CameraController : MonoBehaviour
         }
 
         return cameraBoundsMax;
+    }
+
+    private void EnsureTargetsAssigned()
+    {
+        if (player1 != null && player2 != null)
+        {
+            return;
+        }
+
+        PlayerController[] players = FindObjectsByType<PlayerController>(FindObjectsSortMode.None);
+        foreach (PlayerController player in players)
+        {
+            string normalizedTag = player.tag.Replace(" ", string.Empty);
+            if (player1 == null && normalizedTag == "Player1")
+            {
+                player1 = player.transform;
+            }
+            else if (player2 == null && normalizedTag == "Player2")
+            {
+                player2 = player.transform;
+            }
+        }
+
+        if ((player1 == null || player2 == null) && players.Length >= 2)
+        {
+            player1 ??= players[0].transform;
+            player2 ??= players[1].transform;
+        }
     }
 }
