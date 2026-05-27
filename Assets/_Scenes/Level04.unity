@@ -40176,6 +40176,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9005381394347204682, guid: 1a6e05172c5e5ff448e7082c69764572, type: 3}
+      propertyPath: mainMenuSceneName
+      value: MainMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 9005381394347204682, guid: 1a6e05172c5e5ff448e7082c69764572, type: 3}
+      propertyPath: mainMenuSceneAsset
+      value: 
+      objectReference: {fileID: 102900000, guid: d6b7b22b76eb4a11a1f9c924afb55530, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
