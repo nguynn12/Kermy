@@ -1,56 +1,58 @@
-# Kermy: The Elemental Leap
+# 🐸 Kermy's Adventure
 
-**Kermy** là một trò chơi hành động nền tảng (2D Action-Platformer) đầy kịch tính, nơi người chơi điều khiển những chú ếch dũng cảm trong hành trình giải cứu vương quốc đầm lầy. Game kết hợp khéo léo giữa kỹ năng di chuyển lắt léo, cơ chế chiến đấu khắc chế nguyên tố và hệ thống thay đổi ngày đêm độc đáo để vượt qua những thử thách khắc nghiệt.
+**Kermy's Adventure** là một trò chơi hành động đi ngang (2D Platformer) đầy kịch tính, nơi người chơi điều khiển chú ếch Kermy dũng cảm vượt qua các vùng đất nguy hiểm. Game kết hợp nhuần nhuyễn giữa kỹ năng di chuyển lắt léo và cơ chế chiến đấu chiến thuật dựa trên hệ thống khắc chế nguyên tố.
 
-## 🎮 Hình ảnh Game (Gameplay)
-![Gameplay Screenshot](https://via.placeholder.com/800x450.png?text=Kermy+Gameplay+Action)
-*Hình ảnh minh họa chú ếch chiến đấu với Boss trong môi trường thay đổi ngày đêm.*
+## 📸 Screenshot / Gameplay
+![Gameplay Placeholder](https://via.placeholder.com/800x450.png?text=Kermy+Gameplay+Screenshot)
+*Hình ảnh Kermy chiến đấu với Boss tại Level 5*
 
-## 🚀 Hướng dẫn Cài đặt và Chạy
-1. **Yêu cầu:** Đã cài đặt [Unity Hub](https://unity.com/download) và **Unity Editor 6** (hoặc phiên bản 2022.3 LTS trở lên).
-2. **Tải dự án:** Clone repository này hoặc giải nén thư mục dự án `Kermy`.
-3. **Mở dự án:**
-   - Mở Unity Hub -> Chọn `Add` -> Trỏ đến thư mục `Kermy`.
-   - Chọn phiên bản Editor phù hợp để mở.
-4. **Chạy Game:**
-   - Tìm đến thư mục `Assets/Scenes`.
-   - Mở Scene `MenuGame` hoặc `Level05`.
-   - Nhấn nút **Play** (biểu tượng hình tam giác) ở giữa phía trên Editor.
+## 🗺️ Hành trình qua các Level (1 - 5)
 
-## 👥 Danh sách Thành viên & Phân công
-| Họ và Tên | Vai trò | Công việc cụ thể |
-|-----------|---------|------------------|
-| **Thành viên A** | Team Leader & Programmer | Phát triển hệ thống di chuyển (Coop), Logic Boss và Đạn. |
-| **Thành viên B** | Gameplay Designer | Thiết kế cơ chế khắc chế nguyên tố (Lửa/Nước) và Day/Night Lever. |
-| **Thành viên C** | UI/UX Artist | Thiết kế Giao diện Victory, Thanh máu Boss và hệ thống Star Rating. |
-| **Thành viên D** | Sound & VFX Specialist | Quản lý hiệu ứng hạt (Dirt Particle), âm thanh chiến thắng và nhạc nền. |
+*   **Level 1: Khởi đầu hành trình** - Làm quen với các thao tác di chuyển cơ bản, nhảy và leo thang. Người chơi sẽ học cách thu thập những viên ngọc đầu tiên.
+*   **Level 2: Khu rừng đầm lầy** - Thử thách khả năng phản xạ với kẻ thù bay (Dơi). Bắt đầu xuất hiện cơ chế tìm chìa khóa để mở cổng dịch chuyển.
+*   **Level 3: Hang động nguyên tố** - Tập trung vào kỹ năng nhảy platform chính xác. Các cạm bẫy môi trường xuất hiện dày đặc hơn.
+*   **Level 4: Hang động Dơi** - Giới thiệu cơ chế đạn nguyên tố. Người chơi phải học cách sử dụng đúng loại đạn để vượt qua các lính canh có giáp.
+*   **Level 5: Đại chiến Rồng & Boss Cuối** - Màn chơi bùng nổ nhất:
+    *   **Mini-Boss:** Đối đầu với cặp rồng Lửa và Nước. Người chơi phải sử dụng hệ thống khắc chế (Nước khắc Lửa, Lửa khắc Nước) để gây x2 sát thương.
+    *   **Final Boss:** Trận chiến đa giai đoạn với Boss khổng lồ có thanh máu (Health Bar), tia laser cảnh báo và chiêu cuối (Ultimate) cực mạnh.
+    *   **Hệ thống xếp hạng:** Sau khi thắng, bạn sẽ được đánh giá từ 1 đến 5 sao dựa trên tỉ lệ ngọc thu thập được.
 
-## 🛠 Công nghệ sử dụng
-- **Engine:** Unity 6 - Tận dụng tính năng `linearVelocity` mới cho vật lý mượt mà.
-- **Ngôn ngữ:** C# Scripting.
-- **Đồ họa:** 2D Sprite với Universal Render Pipeline (URP) cho hệ thống ánh sáng 2D (Light2D).
-- **UI:** TextMesh Pro (TMP) cho hiển thị văn bản chất lượng cao.
-- **Hệ thống Input:** Keybinding Manager tùy chỉnh hỗ trợ chơi đơn và co-op (2 người chơi).
+## 🛠️ Công nghệ sử dụng
 
-## ✨ Tính năng nổi bật
-- **Cơ chế Nguyên tố:** Đạn hệ Lửa gây sát thương gấp đôi Boss hệ Nước và ngược lại.
-- **Hệ thống Ngày/Đêm:** Sử dụng đòn bẩy (Lever) để thay đổi môi trường, kích hoạt các lối đi bí mật hoặc vật thể ẩn.
-- **Hệ thống Xếp hạng:** Đánh giá chiến thắng dựa trên số lượng Ngọc (Gems) thu thập được theo thang điểm 5 sao.
-- **Hiệu ứng Vật lý:** Hạt bụi (Dirt Particles) và hiệu ứng mờ dần (Fade out) khi Boss bị tiêu diệt.
+*   **Game Engine:** Unity 2022.3+ (LTS).
+*   **Ngôn ngữ:** C# (Csharp).
+*   **Hệ thống AI:** State Machine cho Boss và Enemy Movement.
+*   **Âm thanh:** AudioManager Singleton quản lý nhạc nền (BGM) và hiệu ứng (SFX).
+*   **UI:** TextMeshPro cho hiển thị chữ và hệ thống Slider cho thanh máu Boss.
+
+## 🚀 Hướng dẫn cài đặt và chạy
+
+1.  **Yêu cầu:** Máy tính đã cài đặt Unity Hub và Unity Editor phiên bản phù hợp.
+2.  **Tải về:** Clone repository này hoặc tải file Zip của dự án.
+3.  **Mở dự án:**
+    *   Mở Unity Hub -> Add -> Chọn thư mục `Kermy`.
+    *   Chờ Unity import các tài nguyên (Assets).
+4.  **Chạy game:**
+    *   Vào thư mục `Assets/Scenes`.
+    *   Mở scene `MenuGame` hoặc `Level01`.
+    *   Nhấn nút **Play** trên Unity Editor.
+
+## 👥 Danh sách thành viên + Phân công
+
+| STT | Thành viên |
+| :-- | :--- |
+| 1 | **Tạ Nhật Nguyên** |
+| 2 | **Nguyễn Nhất Minh** |
+| 3 | **Võ Hùng Mạnh** |
+| 4 | **Nguyễn Văn Thuận** |
+| 5 | **Trần Ngọc Bảo Phước** |
 
 ## 💻 Yêu cầu hệ thống
-### Tối thiểu (Minimum):
-- **OS:** Windows 10 64-bit.
-- **CPU:** Intel Core i3 hoặc AMD tương đương.
-- **Memory:** 4 GB RAM.
-- **Graphics:** Card đồ họa tích hợp hỗ trợ DirectX 11.
-- **Storage:** 500 MB chỗ trống khả dụng.
 
-### Khuyến khích (Recommended):
-- **OS:** Windows 11.
-- **CPU:** Intel Core i5 trở lên.
-- **Memory:** 8 GB RAM.
-- **Graphics:** NVIDIA GeForce GTX 1050 hoặc tốt hơn để trải nghiệm ánh sáng URP tốt nhất.
+*   **Hệ điều hành:** Windows 10/11 (64-bit) hoặc macOS.
+*   **Bộ nhớ (RAM):** Tối thiểu 4GB.
+*   **Card đồ họa:** Hỗ trợ DirectX 11 hoặc OpenGL Core.
+*   **Dung lượng trống:** Khoảng 500MB.
 
 ---
-*© 2024 LTG Demo - Kermy Project. Phát triển cho mục đích học tập và giải trí.*
+*© 2024 LTG Demo Team - Dự án học tập và phát triển game Kermy.*
