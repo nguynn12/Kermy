@@ -160,6 +160,11 @@ public class PlayerRiderStick : MonoBehaviour
         return playerLayerIndex >= 0 ? 1 << playerLayerIndex : Physics2D.AllLayers;
     }
 
+    public void ForceDetach()
+    {
+        ClearParent();
+    }
+
     private void ClearParent()
     {
         _currentParent = null;

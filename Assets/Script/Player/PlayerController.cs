@@ -49,6 +49,10 @@ public class PlayerController : MonoBehaviour
     private float _trackedMoveX;
     private float _trackedMoveY;
     private bool _isForcedGroundedByTrap;
+    private bool _isAnchoredByCamera;
+    private bool _hasSavedCameraAnchorState;
+    private RigidbodyConstraints2D _constraintsBeforeCameraAnchor;
+    private float _gravityBeforeCameraAnchor;
 
     private readonly RaycastHit2D[] _groundRayHits = new RaycastHit2D[4];
 
@@ -119,6 +123,14 @@ public class PlayerController : MonoBehaviour
     {
         UpdateGrounded();
 
+        if (_isAnchoredByCamera)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+            _jumpRequested = false;
+            return;
+        }
+
         if (!_controlEnabled)
         {
             rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
@@ -128,14 +140,7 @@ public class PlayerController : MonoBehaviour
 
         float moveX = _trackedMoveX;
         float moveY = _trackedMoveY;
-        float baseVelocityX = 0f;
-
-        if (riderStick != null && riderStick.ParentRigidbody != null)
-        {
-            baseVelocityX = riderStick.ParentRigidbody.linearVelocity.x;
-        }
-
-        float targetVelocityX = (moveX * EffectiveMoveSpeed) + baseVelocityX;
+        float targetVelocityX = moveX * EffectiveMoveSpeed;
 
         if (isOnLadder)
         {
@@ -173,6 +178,7 @@ public class PlayerController : MonoBehaviour
             rb.gravityScale = originalGravityScale;
         }
 
+        riderStick?.ForceDetach();
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
         _ignoreGroundClampUntil = Time.time + jumpVelocityClampDelay;
         rb.AddForce(Vector2.up * EffectiveJumpForce, ForceMode2D.Impulse);
@@ -241,6 +247,47 @@ public class PlayerController : MonoBehaviour
         if (inputHandler != null)
         {
             inputHandler.SetInputEnabled(enabled);
+        }
+    }
+
+    public void SetCameraUseAnchored(bool anchored)
+    {
+        if (_isAnchoredByCamera == anchored)
+        {
+            return;
+        }
+
+        _isAnchoredByCamera = anchored;
+
+        if (rb == null)
+        {
+            return;
+        }
+
+        if (anchored)
+        {
+            if (!_hasSavedCameraAnchorState)
+            {
+                _constraintsBeforeCameraAnchor = rb.constraints;
+                _gravityBeforeCameraAnchor = rb.gravityScale;
+                _hasSavedCameraAnchorState = true;
+            }
+
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+            rb.gravityScale = 0f;
+            rb.constraints = RigidbodyConstraints2D.FreezePositionX
+                | RigidbodyConstraints2D.FreezePositionY
+                | RigidbodyConstraints2D.FreezeRotation;
+            _jumpRequested = false;
+            _trackedMoveX = 0f;
+            _trackedMoveY = 0f;
+        }
+        else if (_hasSavedCameraAnchorState)
+        {
+            rb.constraints = _constraintsBeforeCameraAnchor;
+            rb.gravityScale = _gravityBeforeCameraAnchor;
+            _hasSavedCameraAnchorState = false;
         }
     }
 

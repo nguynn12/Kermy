@@ -79,6 +79,7 @@ public class PlayerInputHandler : MonoBehaviour
     {
         if (!_inputEnabled)
         {
+            ApplyIdleAnimatorState();
             return;
         }
 
@@ -106,6 +107,9 @@ public class PlayerInputHandler : MonoBehaviour
             IsActionHeld = false;
             _jumpPressedThisFrame = false;
             _actionPressedThisFrame = false;
+            _actionPressedFrame = -1;
+            particleTimer = 0f;
+            ApplyIdleAnimatorState();
         }
     }
 
@@ -324,6 +328,17 @@ public class PlayerInputHandler : MonoBehaviour
         }
 
         anim.SetBool("isRunning", Mathf.Abs(MoveInput.x) > 0.1f);
+        anim.SetBool("isGrounded", isGrounded);
+    }
+
+    private void ApplyIdleAnimatorState()
+    {
+        if (anim == null)
+        {
+            return;
+        }
+
+        anim.SetBool("isRunning", false);
         anim.SetBool("isGrounded", isGrounded);
     }
 

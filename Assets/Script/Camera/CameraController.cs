@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class CameraController : MonoBehaviour
 {
@@ -44,8 +45,10 @@ public class CameraController : MonoBehaviour
     [SerializeField] private Camera leftCamera;
     [SerializeField] private float leftCameraOrthoSize = 3.5f;
     [SerializeField] private Vector2 leftFollowOffset;
+    [SerializeField] private Vector2 leftCameraFocusOffset = new Vector2(0f, 0.5f);
     [SerializeField] private float leftFollowSmoothTime = 0.12f;
     [SerializeField] private int dividerWidthPixels = 6;
+    [SerializeField] private int cameraMountedVisualLayer = 1;
 
     private CameraState _state = CameraState.FollowCentroid;
     private Vector3 _followVelocity;
@@ -63,6 +66,16 @@ public class CameraController : MonoBehaviour
     private PlayerInputHandler _splitCommanderInput;
     private Vector3 _splitRightCameraBasePos;
     private Vector3 _leftFollowVelocity;
+    private string _splitCommanderTag;
+    private Transform _leftCameraOriginalParent;
+    private Vector3 _leftCameraOriginalLocalPosition;
+    private Vector3 _leftCameraOriginalLocalScale;
+    private Quaternion _leftCameraOriginalLocalRotation;
+    private Rect _leftCameraDefaultRect;
+    private float _leftCameraDefaultOrthoSize;
+    private int _leftCameraDefaultCullingMask;
+    private readonly List<SpriteRenderer> _cameraMountedRenderers = new List<SpriteRenderer>();
+    private readonly List<int> _cameraMountedRendererLayers = new List<int>();
     private RectTransform _dividerRect;
     private Canvas _dividerCanvas;
 
@@ -75,6 +88,9 @@ public class CameraController : MonoBehaviour
         if (leftCamera != null)
         {
             leftCamera.enabled = false;
+            _leftCameraDefaultRect = leftCamera.rect;
+            _leftCameraDefaultOrthoSize = leftCamera.orthographicSize;
+            _leftCameraDefaultCullingMask = leftCamera.cullingMask;
         }
     }
 
@@ -196,25 +212,11 @@ public class CameraController : MonoBehaviour
     {
         if (_rightCamera == null) return;
 
-        if (_splitCommanderInput != null)
+        if (!string.IsNullOrEmpty(_splitCommanderTag))
         {
-            Vector2 input = _splitCommanderInput.MoveInput;
+            Vector2 input = KeybindingManager.GetMoveInputForTag(_splitCommanderTag);
             Vector3 delta = new Vector3(input.x, input.y, 0f) * (freeLookSpeed * Time.deltaTime);
             transform.position = ClampCameraPosition(transform.position + delta);
-        }
-
-        if (leftCamera != null && _splitCommander != null)
-        {
-            Vector3 desired = new Vector3(
-                _splitCommander.position.x + leftFollowOffset.x,
-                _splitCommander.position.y + leftFollowOffset.y,
-                leftCamera.transform.position.z);
-
-            leftCamera.transform.position = ClampCameraPosition(Vector3.SmoothDamp(
-                leftCamera.transform.position,
-                desired,
-                ref _leftFollowVelocity,
-                leftFollowSmoothTime));
         }
     }
 
@@ -236,6 +238,7 @@ public class CameraController : MonoBehaviour
         _activePillar = pillar;
         _splitCommander = commanderTransform;
         _splitCommanderInput = commanderInput;
+        _splitCommanderTag = commanderTransform != null ? commanderTransform.tag : string.Empty;
 
         if (_rightCamera == null)
         {
@@ -247,15 +250,37 @@ public class CameraController : MonoBehaviour
             }
         }
 
-        if (_rightCamera != null) _rightCamera.rect = new Rect(leftViewportWidth, 0f, 1f - leftViewportWidth, 1f);
+        if (_rightCamera != null)
+        {
+            _rightCamera.rect = new Rect(leftViewportWidth, 0f, 1f - leftViewportWidth, 1f);
+        }
 
         if (leftCamera != null)
         {
+            _leftCameraOriginalParent = leftCamera.transform.parent;
+            _leftCameraOriginalLocalPosition = leftCamera.transform.localPosition;
+            _leftCameraOriginalLocalRotation = leftCamera.transform.localRotation;
+            _leftCameraOriginalLocalScale = leftCamera.transform.localScale;
+
+            if (_leftCameraOriginalParent != null)
+            {
+                leftCamera.transform.SetParent(null, true);
+            }
+
             leftCamera.enabled = true;
             leftCamera.rect = new Rect(0f, 0f, leftViewportWidth, 1f);
             leftCamera.orthographicSize = leftCameraOrthoSize;
+
+            if (_splitCommander != null)
+            {
+                leftCamera.transform.position = ClampCameraPosition(new Vector3(
+                    _splitCommander.position.x + leftFollowOffset.x + leftCameraFocusOffset.x,
+                    _splitCommander.position.y + leftFollowOffset.y + leftCameraFocusOffset.y,
+                    leftCamera.transform.position.z));
+            }
         }
 
+        HideCameraMountedVisualsFromLeftCamera();
         EnsureDivider();
         UpdateDividerRect();
         _splitRightCameraBasePos = transform.position;
@@ -269,7 +294,9 @@ public class CameraController : MonoBehaviour
         _activePillar = null;
         _splitCommander = null;
         _splitCommanderInput = null;
+        _splitCommanderTag = string.Empty;
         _leftFollowVelocity = Vector3.zero;
+        RestoreCameraMountedVisualLayers();
 
         if (_rightCamera != null)
         {
@@ -277,11 +304,73 @@ public class CameraController : MonoBehaviour
             _rightCamera.orthographicSize = _rightCameraDefaultOrthoSize;
         }
 
-        if (leftCamera != null) leftCamera.enabled = false;
+        if (leftCamera != null)
+        {
+            leftCamera.enabled = false;
+            leftCamera.rect = _leftCameraDefaultRect;
+            leftCamera.orthographicSize = _leftCameraDefaultOrthoSize;
+            leftCamera.cullingMask = _leftCameraDefaultCullingMask;
+
+            if (_leftCameraOriginalParent != null)
+            {
+                leftCamera.transform.SetParent(_leftCameraOriginalParent, false);
+                leftCamera.transform.localPosition = _leftCameraOriginalLocalPosition;
+                leftCamera.transform.localRotation = _leftCameraOriginalLocalRotation;
+                leftCamera.transform.localScale = _leftCameraOriginalLocalScale;
+            }
+        }
 
         if (_dividerRect != null) _dividerRect.gameObject.SetActive(false);
 
         _state = CameraState.FollowCentroid;
+    }
+
+    private void HideCameraMountedVisualsFromLeftCamera()
+    {
+        RestoreCameraMountedVisualLayers();
+
+        if (_rightCamera == null || cameraMountedVisualLayer < 0 || cameraMountedVisualLayer > 31)
+        {
+            return;
+        }
+
+        SpriteRenderer[] renderers = _rightCamera.GetComponentsInChildren<SpriteRenderer>(true);
+        foreach (SpriteRenderer renderer in renderers)
+        {
+            if (renderer == null || renderer.transform == _rightCamera.transform)
+            {
+                continue;
+            }
+
+            _cameraMountedRenderers.Add(renderer);
+            _cameraMountedRendererLayers.Add(renderer.gameObject.layer);
+            renderer.gameObject.layer = cameraMountedVisualLayer;
+        }
+
+        if (leftCamera != null)
+        {
+            leftCamera.cullingMask &= ~(1 << cameraMountedVisualLayer);
+        }
+    }
+
+    private void RestoreCameraMountedVisualLayers()
+    {
+        for (int i = 0; i < _cameraMountedRenderers.Count; i++)
+        {
+            SpriteRenderer renderer = _cameraMountedRenderers[i];
+            if (renderer != null)
+            {
+                renderer.gameObject.layer = _cameraMountedRendererLayers[i];
+            }
+        }
+
+        _cameraMountedRenderers.Clear();
+        _cameraMountedRendererLayers.Clear();
+
+        if (leftCamera != null)
+        {
+            leftCamera.cullingMask = _leftCameraDefaultCullingMask;
+        }
     }
 
     private void EnsureDivider()

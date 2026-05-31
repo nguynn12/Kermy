@@ -9,6 +9,13 @@ public class AsymmetricCameraPillar : MonoBehaviour
     [Header("Commander")]
     [SerializeField] private PlayerController allowedCommander;
 
+    [Header("Visual State")]
+    [SerializeField] private SpriteRenderer stateRenderer;
+    [SerializeField] private Sprite idleSprite;
+    [SerializeField] private Sprite inUseSprite;
+    [SerializeField] private Color idleColor = Color.white;
+    [SerializeField] private Color inUseColor = Color.cyan;
+
     private PlayerController _candidateCommander;
     private PlayerInputHandler _candidateInput;
 
@@ -23,6 +30,13 @@ public class AsymmetricCameraPillar : MonoBehaviour
         {
             col.isTrigger = true;
         }
+
+        if (stateRenderer == null)
+        {
+            stateRenderer = GetComponent<SpriteRenderer>();
+        }
+
+        ApplyVisualState(false);
     }
 
     private void Update()
@@ -34,12 +48,12 @@ public class AsymmetricCameraPillar : MonoBehaviour
 
         if (_isInUse)
         {
-            if (_activeCommanderInput == null)
+            if (_activeCommander == null)
             {
                 return;
             }
 
-            if (_activeCommanderInput.ConsumeActionPressed())
+            if (IsActionPressed(_activeCommander, _activeCommanderInput))
             {
                 StopUsing();
             }
@@ -109,7 +123,9 @@ public class AsymmetricCameraPillar : MonoBehaviour
         _activeCommander = commander;
         _activeCommanderInput = commanderInput;
         _isInUse = true;
-        commander.SetMovementEnabled(false);
+        commander.SetControlEnabled(false);
+        commander.SetCameraUseAnchored(true);
+        ApplyVisualState(true);
         cameraController.EnterAsymmetricSplitMode(this, commander.transform, commanderInput);
     }
 
@@ -124,10 +140,43 @@ public class AsymmetricCameraPillar : MonoBehaviour
         cameraController.ExitAsymmetricSplitMode(this);
         if (_activeCommander != null)
         {
-            _activeCommander.SetMovementEnabled(true);
+            _activeCommander.SetCameraUseAnchored(false);
+            _activeCommander.SetControlEnabled(true);
         }
 
+        ApplyVisualState(false);
         _activeCommander = null;
         _activeCommanderInput = null;
+    }
+
+    private bool IsActionPressed(PlayerController commander, PlayerInputHandler commanderInput)
+    {
+        if (commander != null && KeybindingManager.GetActionDownForTag(commander.tag))
+        {
+            return true;
+        }
+
+        return commanderInput != null && commanderInput.ConsumeActionPressed();
+    }
+
+    private void ApplyVisualState(bool inUse)
+    {
+        if (stateRenderer == null)
+        {
+            return;
+        }
+
+        Sprite nextSprite = inUse ? inUseSprite : idleSprite;
+        if (nextSprite != null)
+        {
+            stateRenderer.sprite = nextSprite;
+        }
+
+        stateRenderer.color = inUse ? inUseColor : idleColor;
+    }
+
+    private void OnDisable()
+    {
+        StopUsing();
     }
 }
