@@ -1,4 +1,4 @@
-# Kermy
+﻿# Kermy
 
 > Game 2D Local Co-op Puzzle Platformer được phát triển bằng Unity 6.
 
@@ -33,7 +33,7 @@ Game lấy cảm hứng từ các trò chơi đề cao tính phối hợp như *
 
 ## Screen Shot
 
-Đặt ảnh vào thư mục `Docs/Screenshots/` và thay đúng tên file trong bảng dưới đây.
+Một số Screen shot trong Game:
 
 <table>
   <tr>
