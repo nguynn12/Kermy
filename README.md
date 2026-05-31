@@ -35,12 +35,24 @@ Game lấy cảm hứng từ các trò chơi đề cao tính phối hợp như *
 
 Đặt ảnh vào thư mục `Docs/Screenshots/` và thay đúng tên file trong bảng dưới đây.
 
-|  |  |
-| --- | --- |
-| **Hình 1: Main Menu**<br><br>![Main Menu](Docs/Screenshots/main-menu.png) | **Hình 2: Gameplay Level 01**<br><br>![Gameplay Level 01](Docs/Screenshots/level-01.png) |
-| **Hình 3: Puzzle Co-op**<br><br>![Puzzle Co-op](Docs/Screenshots/puzzle-coop.png) | **Hình 4: Split Camera**<br><br>![Split Camera](Docs/Screenshots/split-camera.png) |
-| **Hình 5: Teleport Portal**<br><br>![Teleport Portal](Docs/Screenshots/teleport.png) | **Hình 6: Trap And Hazard**<br><br>![Trap And Hazard](Docs/Screenshots/trap-hazard.png) |
-| **Hình 7: Boss Battle**<br><br>![Boss Battle](Docs/Screenshots/boss-battle.png) | **Hình 8: Ending Scene**<br><br>![Ending Scene](Docs/Screenshots/ending-scene.png) |
+<table>
+  <tr>
+    <td width="50%" valign="top"><strong>Hình 1: Main Menu</strong><br><br><img src="Docs/Screenshots/main-menu.png" alt="Main Menu" width="100%"></td>
+    <td width="50%" valign="top"><strong>Hình 2: Gameplay Level 01</strong><br><br><img src="Docs/Screenshots/level-01.png" alt="Gameplay Level 01" width="100%"></td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top"><strong>Hình 3: Puzzle Co-op</strong><br><br><img src="Docs/Screenshots/puzzle-coop.png" alt="Puzzle Co-op" width="100%"></td>
+    <td width="50%" valign="top"><strong>Hình 4: Split Camera</strong><br><br><img src="Docs/Screenshots/split-camera.png" alt="Split Camera" width="100%"></td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top"><strong>Hình 5: Teleport Portal</strong><br><br><img src="Docs/Screenshots/teleport.png" alt="Teleport Portal" width="100%"></td>
+    <td width="50%" valign="top"><strong>Hình 6: Trap And Hazard</strong><br><br><img src="Docs/Screenshots/trap-hazard.png" alt="Trap And Hazard" width="100%"></td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top"><strong>Hình 7: Boss Battle</strong><br><br><img src="Docs/Screenshots/boss-battle.png" alt="Boss Battle" width="100%"></td>
+    <td width="50%" valign="top"><strong>Hình 8: Ending Scene</strong><br><br><img src="Docs/Screenshots/ending-scene.png" alt="Ending Scene" width="100%"></td>
+  </tr>
+</table>
 
 ---
 
